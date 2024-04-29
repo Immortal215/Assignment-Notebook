@@ -5,185 +5,194 @@ struct Main: View {
     @State var screenHeight = UIScreen.main.bounds.height
     // @AppStorage("assignmentCount") var assignmentCount = 0
     
-    @State var retrieveSubjectsArray = UserDefaults.standard.array(forKey: "subjects") as! [String]? ?? []
+    @State var retrieveSubjectsArray = UserDefaults.standard.array(forKey: "subjects") as! [String]? ?? [String()]
     @State var subjects : [String] = [String()]
     
-    
-    @State var retrieveNames = UserDefaults.standard.array(forKey: "names") as! [String]? ?? []
+    @State var retrieveNames = UserDefaults.standard.array(forKey: "names") as! [String]? ?? [String()]
     @State var names : [String] = [String()]
     
-    @State var retrieveInfoArray = UserDefaults.standard.array(forKey: "description") as! [String]? ?? []
+    @State var retrieveInfoArray = UserDefaults.standard.array(forKey: "description") as! [String]? ?? [String()]
     @State var infoArray : [String] = [String()]
     
     @State var retrieveDateArray = UserDefaults.standard.array(forKey: "date") as! [String]? ?? []
-    @State var dates : [String] = [String()]
+    @State var dates : [String] = []
     
     @State var showAlert = false
     @State var showDelete = false
     @State var loadedData = false
     @State var caughtUp = false
+    @State var deleted = false
+    @State var error = false 
+    
     @State var description = ""
     @State var name = ""
     @State var subject = ""
     @State var date = ""
-    @State var dateFormatter = DateFormatter()
-    @State var deleted = false 
+
     
-    @State var stringList = [[""], [""], [""], [""]]
+    @State var dateFormatter = DateFormatter()
+    
+    
+   // @State var stringList = [[""], [""], [""], [""]]
     
     
     
     var body: some View {
-        
-        Button {
-            
-            names = retrieveNames 
-            infoArray = retrieveInfoArray 
-            subjects = retrieveSubjectsArray 
-            dates = retrieveDateArray 
-            dateFormatter.dateFormat = "YY, MMM d, HH:mm:"
-            
-            stringList[0] = names
-            stringList[1] = infoArray
-            stringList[2] = subjects
-            stringList[3] = dates
-            
-            if stringList != [[""], [""], [""], [""]] {
-                caughtUp = true
-                loadedData = true 
-            } else {
-                caughtUp = false
-                
-            }
-            
-            
-        } label: {
-            VStack {
-                Image(systemName:loadedData ?  "checkmark.icloud.fill" : "exclamationmark.icloud.fill")
-                    .resizable()
-                    .frame(width: 50, height: 37.5, alignment: .center)
-                    .foregroundStyle(loadedData ? .green : .red)
-                Text(loadedData ? "Data Loaded" : "Need to load data")
-                    .foregroundStyle(loadedData ? .green : .red)
-            }
-        }
-        
-        
-        
-        VStack {
-            
-            Text("Assignment Notebook")
-                .font(Font.custom("SF Compact Rounded", fixedSize: (screenWidth/25)))
-                .frame(width: screenWidth, height: 100, alignment: .center)
-                .fontWeight(.bold)
-            
-            
-            Divider()
-            VStack {
-                HStack {
-                    Button {
-                        infoArray = []                  
-                        UserDefaults.standard.set(infoArray, forKey: "description")    
-                        names = []                  
-                        UserDefaults.standard.set(names, forKey: "names")  
-                        dates = []                  
-                        UserDefaults.standard.set(dates, forKey: "date")
-                        subjects = []                  
-                        UserDefaults.standard.set(subjects, forKey: "subjects")  
-                        print(retrieveInfoArray)
+        ZStack {
+            Button {
+                //might work
+                retrieveSubjectsArray = UserDefaults.standard.array(forKey: "subjects") as! [String]? ?? []
+                retrieveNames = UserDefaults.standard.array(forKey: "names") as! [String]? ?? []
+                retrieveDateArray = UserDefaults.standard.array(forKey: "date") as! [String]? ?? []
+                retrieveInfoArray = UserDefaults.standard.array(forKey: "description") as! [String]? ?? []
                         
-                        stringList[0] = []
-                        stringList[1] = []
-                        stringList[2] = []
-                        stringList[3] = []
-                        
-                        deleted = true
-                        caughtUp = true
-                        
-                    } label: {
-                        VStack{
-                            Image(systemName: "trash.square")
-                                .resizable()
-                                .frame(width: 100,height: 100, alignment: .center)
-                                .foregroundStyle(.red)
-                            Text("Delete All")
-                                .foregroundStyle(.red)
-                        }
-                    }
-                    
-                    
-                    Button {
-                        showAlert.toggle()
-                    } label: {
-                        VStack {
-                            Image(systemName: "plus.square")
-                                .resizable()
-                                .frame(width: 100,height: 100, alignment: .center)
-                                .foregroundStyle(.green)
-                            Text("Add Assignment")
-                                .foregroundStyle(.green)
-                            
-                        }
-                    }
-                    .alert("Make Your Assignment!", isPresented: $showAlert) {
-                        
-                        TextField("Title", text: $name)
-                        
-                        Divider()
-                        
-                        TextField("Description", text: $description)
-                        
-                        Divider()
-                        
-                        TextField("Subject", text: $subject)
-                        
-                        Button("Create Assignment") {
-                            
-                            print(retrieveInfoArray)
-                            names.append(name)
-                            UserDefaults.standard.set(names, forKey: "names")
-                            
-                            infoArray.append(description)                        
-                            UserDefaults.standard.set(infoArray, forKey: "description")
-                            
-                            
-                            subjects.append(subject)
-                            UserDefaults.standard.set(subjects, forKey: "subjects")
-                            
-                            dates.append(date)
-                            UserDefaults.standard.set(dates, forKey: "dates")
-                            
-                            stringList[0] = names
-                            stringList[1] = infoArray
-                            stringList[2] = subjects
-                            stringList[3] = dates
-                            
-                            caughtUp = false
-                            deleted = false
-                            print(retrieveInfoArray)
-                            
-                            
-                            
-                            
-                        }
-                        
-                        
-                    }
-                    
+                if loadedData == false {
+                    names = retrieveNames 
+                    infoArray = retrieveInfoArray 
+                    subjects = retrieveSubjectsArray 
+                    dates = retrieveDateArray 
+                    dateFormatter.dateFormat = "YY, MMM d, HH:mm:"
                     
                 }
                 
-                Text(caughtUp ? "You are all caught up!" : "")
-                    .font(.title)
-                    .padding(caughtUp ? 30 : 0)
-                
-                
-                if loadedData == true {
+                if infoArray != [] {
+                    caughtUp = false
                     
+                } else {
+                    caughtUp = true
+                    
+                }
+                error = false 
+                loadedData = true 
+                
+                
+            } label: {
+                VStack {
+                    Image(systemName:loadedData ?  "checkmark.icloud.fill" : "exclamationmark.icloud.fill")
+                        .resizable()
+                        .frame(width: 50, height: 37.5, alignment: .center)
+                        .foregroundStyle(loadedData ? .green : .red)
+                    Text(loadedData ? "Data Loaded" : "Need to load data")
+                        .foregroundStyle(loadedData ? .green : .red)
+                }
+            }
+            .offset(x: (screenWidth/2.5), y: -(screenHeight/2.5))
+            
+            
+            
+            VStack {
+                
+                Text("Assignment Notebook")
+                    .font(Font.custom("SF Compact Rounded", fixedSize: (screenWidth/25)))
+                    .frame(width: screenWidth, height: 100, alignment: .center)
+                    .fontWeight(.bold)
+                
+                
+                Divider()
+                VStack {
+                    HStack {
+                        Button {
+                            infoArray = []                  
+                            UserDefaults.standard.set(infoArray, forKey: "description")    
+                            names = []                  
+                            UserDefaults.standard.set(names, forKey: "names")  
+                            dates = []                  
+                            UserDefaults.standard.set(dates, forKey: "date")
+                            subjects = []                  
+                            UserDefaults.standard.set(subjects, forKey: "subjects")  
+                            print(retrieveInfoArray)
+                            
+                            
+                            deleted = true
+                            caughtUp = true
+                            
+                        } label: {
+                            VStack{
+                                Image(systemName: "trash.square")
+                                    .resizable()
+                                    .frame(width:loadedData ?  100 : 0,height: loadedData ? 100 : 0, alignment: .center)
+                                    .foregroundStyle(.red)
+                                Text("Delete All")
+                                    .foregroundStyle(loadedData ? .red : .clear)
+                                    .frame(width:  loadedData ? 100 : 0)
+                            }
+                           
+                        }
+                        
+                        
+                        Button {
+                            if loadedData == true {
+                                showAlert.toggle()
+                                
+                            } else {
+                                error = true 
+                            }
+                        } label: {
+                            VStack {
+                                Image(systemName: error ? "x.square" : "plus.square")
+                                    .resizable()
+                                    .frame(width: 100,height: 100, alignment: .center)
+                                    .foregroundStyle(error ? .red : .green)
+                                Text(error ? "Load Data First!" : "Add Assignment")
+                                    .foregroundStyle(error ? .red : .green)
+                                
+                            }
+                        }
+                        .alert("Make Your Assignment!", isPresented: $showAlert) {
+                            
+                            TextField("Title", text: $name)
+                            
+                            Divider()
+                            
+                            TextField("Description", text: $description)
+                            
+                            Divider()
+                            
+                            TextField("Subject", text: $subject)
+                            
+                            Button("Create Assignment") {
+                                
+                                print(retrieveInfoArray)
+                                names.append(name)
+                                UserDefaults.standard.set(names, forKey: "names")
+                                
+                                infoArray.append(description)                        
+                                UserDefaults.standard.set(infoArray, forKey: "description")
+                                
+                                
+                                subjects.append(subject)
+                                UserDefaults.standard.set(subjects, forKey: "subjects")
+                                
+                                dates.append(date)
+                                UserDefaults.standard.set(dates, forKey: "date")
+                                
+                                
+                                caughtUp = false
+                                deleted = false
+                                print(retrieveInfoArray)
+                                
+                                
+                                
+                                
+                            }
+                            
+                            
+                        }
+                        
+                        
+                    }
+                    
+                    Text(caughtUp ? "You are all caught up!" : "")
+                        .font(.title)
+                        .padding(caughtUp ? 30 : 0)
+                    
+                    
+                    if loadedData == true {
+                        
                         List {
                             
-                            ForEach(stringList[0], id: \.self) { index in
-                                let stringer : Int = stringList[0].firstIndex(of: index)!
+                            ForEach(infoArray, id: \.self) { stringer in
+                                let index : Int = infoArray.firstIndex(of: stringer)!
                                 
                                 if deleted == false {
                                     VStack {
@@ -201,20 +210,19 @@ struct Main: View {
                                             
                                             VStack {
                                                 HStack {
-                                                    Text(stringList[0][stringer])
+                                                    Text(names[index] ?? "")
                                                     Divider()
-                                                    Text(stringList[2][stringer])
+                                                    Text(subjects[index] ?? "")
                                                 }
                                                 Divider()
                                                 VStack {
-                                                    if !infoArray.isEmpty {
-                                                        Text(stringList[1][stringer])
+                                                        Text(stringer)
                                                         Divider()
                                                         
-                                                        let dater = dateFormatter.date(from: stringList[3][stringer])
+                                                        let dater = dateFormatter.date(from: dates[index])
                                                         Text(dater ?? Date.now, format: .dateTime.hour().minute())
                                                         
-                                                    }
+                                                    
                                                     
                                                     
                                                     // There is some problem with the date picking code
@@ -247,12 +255,13 @@ struct Main: View {
                                 }
                             } 
                         }  
+                        
+                    }
                     
-                }
-                
-                
-                
-            } 
+                    
+                    
+                } 
+            }
             
         }   
         .onAppear {
@@ -262,12 +271,9 @@ struct Main: View {
             dates = retrieveDateArray 
             dateFormatter.dateFormat = "YY, MMM d, HH:mm:"
             
-            stringList[0] = names
-            stringList[1] = infoArray
-            stringList[2] = subjects
-            stringList[3] = dates
             
-            print(stringList)
+            
+            
             
         }
         
