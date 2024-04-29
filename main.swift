@@ -23,17 +23,19 @@ struct Main: View {
     @State var caughtUp = false
     @State var deleted = false
     @State var error = false 
+    @State var selectDelete : [Bool] = []
+    @State var boxesFilled = false
     
     @State var description = ""
     @State var name = ""
     @State var subject = ""
     @State var date = ""
-
+    
     
     @State var dateFormatter = DateFormatter()
     
     
-   // @State var stringList = [[""], [""], [""], [""]]
+    // @State var stringList = [[""], [""], [""], [""]]
     
     
     
@@ -45,12 +47,16 @@ struct Main: View {
                 retrieveNames = UserDefaults.standard.array(forKey: "names") as! [String]? ?? []
                 retrieveDateArray = UserDefaults.standard.array(forKey: "date") as! [String]? ?? []
                 retrieveInfoArray = UserDefaults.standard.array(forKey: "description") as! [String]? ?? []
-                        
+                
                 if loadedData == false {
                     names = retrieveNames 
                     infoArray = retrieveInfoArray 
                     subjects = retrieveSubjectsArray 
                     dates = retrieveDateArray 
+                    selectDelete = []
+                    for i in 0..<infoArray.count {
+                        selectDelete.append(false)
+                    }
                     dateFormatter.dateFormat = "YY, MMM d, HH:mm:"
                     
                 }
@@ -92,6 +98,7 @@ struct Main: View {
                 VStack {
                     HStack {
                         Button {
+                            
                             infoArray = []                  
                             UserDefaults.standard.set(infoArray, forKey: "description")    
                             names = []                  
@@ -116,7 +123,7 @@ struct Main: View {
                                     .foregroundStyle(loadedData ? .red : .clear)
                                     .frame(width:  loadedData ? 100 : 0)
                             }
-                           
+                            
                         }
                         
                         
@@ -141,46 +148,64 @@ struct Main: View {
                         .alert("Make Your Assignment!", isPresented: $showAlert) {
                             
                             TextField("Title", text: $name)
+
                             
                             Divider()
                             
                             TextField("Description", text: $description)
+                          
+                     
                             
                             Divider()
                             
                             TextField("Subject", text: $subject)
+                      
+                      
                             
                             Button("Create Assignment") {
-                                
-                                print(retrieveInfoArray)
-                                names.append(name)
-                                UserDefaults.standard.set(names, forKey: "names")
-                                
-                                infoArray.append(description)                        
-                                UserDefaults.standard.set(infoArray, forKey: "description")
-                                
-                                
-                                subjects.append(subject)
-                                UserDefaults.standard.set(subjects, forKey: "subjects")
-                                
-                                dates.append(date)
-                                UserDefaults.standard.set(dates, forKey: "date")
-                                
-                                
-                                caughtUp = false
-                                deleted = false
-                                print(retrieveInfoArray)
-                                
-                                
+                                if subject != "" && name != "" && description != "" {                                                print(retrieveInfoArray)
+                                    names.append(name)
+                                    UserDefaults.standard.set(names, forKey: "names")
+                                    
+                                    infoArray.append(description)                        
+                                    UserDefaults.standard.set(infoArray, forKey: "description")
+                                    
+                                    
+                                    subjects.append(subject)
+                                    UserDefaults.standard.set(subjects, forKey: "subjects")
+                                    
+                                    dates.append(date)
+                                    UserDefaults.standard.set(dates, forKey: "date")
+                                    
+                                    selectDelete.append(false)
+                                    
+                                    caughtUp = false
+                                    deleted = false
+                                    print(retrieveInfoArray)
+                                } else {
+                                    boxesFilled = true 
+                                    
+                                }
+                                                                  
                                 
                                 
                             }
+                          
+
                             
                             
                         }
-                        
+                                              
                         
                     }
+                    .alert("DID NOT ENTER SUFFICENT DATA",isPresented: $boxesFilled) {
+                        
+                        
+                        Button("Ok", role:.cancel) {
+                            
+                        }
+                    }
+
                     
                     Text(caughtUp ? "You are all caught up!" : "")
                         .font(.title)
@@ -198,13 +223,36 @@ struct Main: View {
                                     VStack {
                                         HStack{  
                                             
+                                            
                                             Button {
+                                                selectDelete[index].toggle()
+                                                if selectDelete[index] == false {
+                                                    infoArray.remove(at: index)
+                                                    names.remove(at: index)
+                                                    subjects.remove(at: index)
+                                                    dates.remove(at: index)
+                                                    
+                                                    UserDefaults.standard.set(names, forKey: "names")
+                                                    
+                                                    UserDefaults.standard.set(infoArray, forKey: "description")
+                                                    
+                                                    UserDefaults.standard.set(subjects, forKey: "subjects")
+                                                    
+                                                    UserDefaults.standard.set(dates, forKey: "date")
+                                                }
                                                 
                                             } label: {
-                                                Image(systemName: "checkmark.square")
-                                                    .resizable()
-                                                    .frame(width: deleted ? 0 : 75,height: deleted ?  0 : 75, alignment: .center)
-                                                    .foregroundStyle(.blue)
+                                                if selectDelete[index] == false {
+                                                    Image(systemName: "checkmark.square")
+                                                        .resizable()
+                                                        .frame(width: deleted ? 0 : 75,height: deleted ?  0 : 75, alignment: .center)
+                                                        .foregroundStyle(.blue)
+                                                } else {
+                                                    Image(systemName: "trash.square" )
+                                                        .resizable()
+                                                        .frame(width: deleted ? 0 : 75,height: deleted ?  0 : 75, alignment: .center)
+                                                        .foregroundStyle(.red)
+                                                }
                                             }
                                             Divider()
                                             
@@ -216,12 +264,12 @@ struct Main: View {
                                                 }
                                                 Divider()
                                                 VStack {
-                                                        Text(stringer)
-                                                        Divider()
-                                                        
-                                                        let dater = dateFormatter.date(from: dates[index])
-                                                        Text(dater ?? Date.now, format: .dateTime.hour().minute())
-                                                        
+                                                    Text(stringer)
+                                                    Divider()
+                                                    
+                                                    let dater = dateFormatter.date(from: dates[index])
+                                                    Text(dater ?? Date.now, format: .dateTime.hour().minute())
+                                                    
                                                     
                                                     
                                                     
@@ -250,6 +298,7 @@ struct Main: View {
                                         }
                                         
                                     }
+                                    
                                     .foregroundStyle(.blue)
                                     .padding(10)
                                 }
@@ -269,8 +318,8 @@ struct Main: View {
             infoArray = retrieveInfoArray 
             subjects = retrieveSubjectsArray 
             dates = retrieveDateArray 
-            dateFormatter.dateFormat = "YY, MMM d, HH:mm:"
-            
+            dateFormatter.dateFormat = "YY, MMM d, HH:mm"
+        
             
             
             
