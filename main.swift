@@ -3,7 +3,6 @@ import SwiftUI
 struct Main: View {
     @State var screenWidth = UIScreen.main.bounds.width
     @State var screenHeight = UIScreen.main.bounds.height
-    // @AppStorage("assignmentCount") var assignmentCount = 0
     
     @State var retrieveSubjectsArray = UserDefaults.standard.array(forKey: "subjects") as! [String]? ?? [String()]
     @State var subjects : [String] = [String()]
@@ -17,19 +16,22 @@ struct Main: View {
     @State var retrieveDateArray = UserDefaults.standard.array(forKey: "date") as! [String]? ?? []
     @State var dates : [String] = []
     
+    @State var description = ""
+    @State var name = ""
+    @State var subject = ""
+    @State var date = ""
+    @State var daterio : [Date] = [Date()]
+    
     @State var showAlert = false
     @State var showDelete = false
     @State var loadedData = false
     @State var caughtUp = false
     @State var deleted = false
     @State var error = false 
-    @State var selectDelete : [Bool] = []
     @State var boxesFilled = false
+    @State var settings = false 
+    @State var selectDelete : [Bool] = []
     
-    @State var description = ""
-    @State var name = ""
-    @State var subject = ""
-    @State var date = ""
     
     
     @State var dateFormatter = DateFormatter()
@@ -41,6 +43,24 @@ struct Main: View {
     
     var body: some View {
         ZStack {
+            Button {
+                settings = true   
+            } label: {
+                VStack {
+                    Image(systemName: "gear")
+                        .resizable()
+                        .frame(width: 50, height: 50, alignment: .center)
+                        .foregroundStyle(.gray)
+                    Text("Settings")
+                        .foregroundStyle(.gray)
+                }
+            }
+            .offset(x: -(screenWidth/2.5), y: -(screenHeight/2.75))
+            .alert("Settings", isPresented: $settings) { 
+                Text("Work In Progress")
+            }
+            
+            
             Button {
                 //might work
                 retrieveSubjectsArray = UserDefaults.standard.array(forKey: "subjects") as! [String]? ?? []
@@ -54,7 +74,7 @@ struct Main: View {
                     subjects = retrieveSubjectsArray 
                     dates = retrieveDateArray 
                     selectDelete = []
-                    for i in 0..<infoArray.count {
+                    for _ in 0..<infoArray.count {
                         selectDelete.append(false)
                     }
                     dateFormatter.dateFormat = "YY, MMM d, HH:mm:"
@@ -82,7 +102,7 @@ struct Main: View {
                         .foregroundStyle(loadedData ? .green : .red)
                 }
             }
-            .offset(x: (screenWidth/2.5), y: -(screenHeight/2.5))
+            .offset(x: (screenWidth/2.5), y: -(screenHeight/2.75))
             
             
             
@@ -148,19 +168,19 @@ struct Main: View {
                         .alert("Make Your Assignment!", isPresented: $showAlert) {
                             
                             TextField("Title", text: $name)
-
+                            
                             
                             Divider()
                             
                             TextField("Description", text: $description)
-                          
-                     
+                            
+                            
                             
                             Divider()
                             
                             TextField("Subject", text: $subject)
-                      
-                      
+                            
+                            
                             
                             Button("Create Assignment") {
                                 if subject != "" && name != "" && description != "" {                                                print(retrieveInfoArray)
@@ -186,16 +206,16 @@ struct Main: View {
                                     boxesFilled = true 
                                     
                                 }
-                                                                  
+                                
                                 
                                 
                             }
-                          
-
+                            
+                            
                             
                             
                         }
-                                              
+                        
                         
                     }
                     .alert("DID NOT ENTER SUFFICENT DATA",isPresented: $boxesFilled) {
@@ -205,7 +225,7 @@ struct Main: View {
                             
                         }
                     }
-
+                    
                     
                     Text(caughtUp ? "You are all caught up!" : "")
                         .font(.title)
@@ -215,103 +235,91 @@ struct Main: View {
                     if loadedData == true {
                         
                         List {
-                            
-                            ForEach(infoArray, id: \.self) { stringer in
-                                let index : Int = infoArray.firstIndex(of: stringer)!
+                            ForEach(infoArray.indices, id: \.self) { index in
+                                let stringer = infoArray[index]
                                 
-                                if deleted == false {
-                                    VStack {
-                                        HStack{  
+                                VStack {
+                                    HStack {
+                                        Button {
+                                            selectDelete[index].toggle()
                                             
-                                            
-                                            Button {
-                                                selectDelete[index].toggle()
-                                                if selectDelete[index] == false {
-                                                    infoArray.remove(at: index)
-                                                    names.remove(at: index)
-                                                    subjects.remove(at: index)
-                                                    dates.remove(at: index)
-                                                    
-                                                    UserDefaults.standard.set(names, forKey: "names")
-                                                    
-                                                    UserDefaults.standard.set(infoArray, forKey: "description")
-                                                    
-                                                    UserDefaults.standard.set(subjects, forKey: "subjects")
-                                                    
-                                                    UserDefaults.standard.set(dates, forKey: "date")
-                                                }
+                                            if selectDelete[index] == false {
+                                                infoArray.remove(at: index)
+                                                names.remove(at: index)
+                                                subjects.remove(at: index)
+                                                dates.remove(at: index)
                                                 
-                                            } label: {
-                                                if selectDelete[index] == false {
-                                                    Image(systemName: "checkmark.square")
-                                                        .resizable()
-                                                        .frame(width: deleted ? 0 : 75,height: deleted ?  0 : 75, alignment: .center)
-                                                        .foregroundStyle(.blue)
-                                                } else {
-                                                    Image(systemName: "trash.square" )
-                                                        .resizable()
-                                                        .frame(width: deleted ? 0 : 75,height: deleted ?  0 : 75, alignment: .center)
-                                                        .foregroundStyle(.red)
+                                                UserDefaults.standard.set(names, forKey: "names")
+                                                UserDefaults.standard.set(infoArray, forKey: "description")
+                                                UserDefaults.standard.set(subjects, forKey: "subjects")
+                                                UserDefaults.standard.set(dates, forKey: "date")
+                                                
+                                                if infoArray.isEmpty {
+                                                    caughtUp = true
                                                 }
+                                            }
+                                            
+                                        } label: {
+                                            if selectDelete[index] == false {
+                                                Image(systemName: "checkmark.square")
+                                                    .resizable()
+                                                    .frame(width: deleted ? 0 : 75, height: deleted ? 0 : 75, alignment: .center)
+                                                    .foregroundStyle(.blue)
+                                            } else {
+                                                Image(systemName: "trash.square")
+                                                    .resizable()
+                                                    .frame(width: deleted ? 0 : 75, height: deleted ? 0 : 75, alignment: .center)
+                                                    .foregroundStyle(.red)
+                                            }
+                                        }
+                                        Divider()
+                                        
+                                        VStack {
+                                            HStack {
+                                                Text(names[index])
+                                                Divider()
+                                                Text(subjects[index])
                                             }
                                             Divider()
-                                            
                                             VStack {
-                                                HStack {
-                                                    Text(names[index] ?? "")
-                                                    Divider()
-                                                    Text(subjects[index] ?? "")
-                                                }
+                                                Text(stringer)
                                                 Divider()
-                                                VStack {
-                                                    Text(stringer)
-                                                    Divider()
-                                                    
-                                                    let dater = dateFormatter.date(from: dates[index])
-                                                    Text(dater ?? Date.now, format: .dateTime.hour().minute())
-                                                    
-                                                    
-                                                    
-                                                    
-                                                    // There is some problem with the date picking code
-                                                    //                                    let dater = dateFormatter.date(from: stringList[3][stringer]) ?? Date()
-                                                    //                                   
-                                                    // WORK IN PROGRESS DATE
-                                                    //                            DatePicker(
-                                                    //                                        "Due Date",
-                                                    //                                        selection: $dater,
-                                                    //                                        displayedComponents: [.hourAndMinute, .date]
-                                                    //                                    ) 
-                                                    //                                    
-                                                    //                                    Button {
-                                                    //                                        dates.append(dater.formatted())
-                                                    //                                        UserDefaults.standard.set(dates, forKey: "dates")
-                                                    //                                    } label : {
-                                                    //                                        Text("Append Date")
-                                                    //                                    }
-                                                    //                                    
-                                                } 
                                                 
-                                            }
-                                            
-                                            
+                                                let dater = dateFormatter.date(from: dates[index])
+                                                Text(dater ?? Date(), format: .dateTime.hour().minute())
+                                                
+                                                
+                                                
+                                                // There is some problem with the date picking code
+                                                
+                                                //                                   
+                                                // WORK IN PROGRESS DATE
+                                                //                                                daterio[index] = dater ?? Date()
+                                                //                                                
+                                                //                                                DatePicker(
+                                                //                                                    "Due Date",
+                                                //                                                    selection: $daterio[index],
+                                                //                                                    displayedComponents: [.hourAndMinute, .date]
+                                                //                                                ) 
+                                                //                                                
+                                                //                                                Button {
+                                                //                                                    dates.append(dater.formatted() ?? Date())
+                                                //                                                    UserDefaults.standard.set(dates, forKey: "date")
+                                                //                                                } label : {
+                                                //                                                    Text("Append Date")
+                                                //                                                }
+                                                
+                                            } 
                                         }
-                                        
                                     }
-                                    
-                                    .foregroundStyle(.blue)
-                                    .padding(10)
-                                }
-                            } 
-                        }  
-                        
-                    }
-                    
-                    
-                    
+                                }  
+                            }
+                            .foregroundStyle(.blue)
+                            .padding(10)
+                        }
+                    } 
                 } 
             }
-            
         }   
         .onAppear {
             names = retrieveNames 
@@ -319,15 +327,8 @@ struct Main: View {
             subjects = retrieveSubjectsArray 
             dates = retrieveDateArray 
             dateFormatter.dateFormat = "YY, MMM d, HH:mm"
-        
-            
-            
-            
             
         }
-        
-        
     }
-    
 }
 
