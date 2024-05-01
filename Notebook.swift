@@ -56,7 +56,7 @@ struct Notebook: View {
                         .foregroundStyle(.gray)
                 }
             }
-            .offset(x: -(screenWidth/2.5), y: -(screenHeight/2.75))
+            .offset(x: -(screenWidth/2.5), y: -(screenHeight/2.1))
             .alert("Settings", isPresented: $settings) { 
                 Button("Work In Progress", role: .cancel) {
                     
@@ -106,7 +106,7 @@ struct Notebook: View {
                         .foregroundStyle(loadedData ? .green : .red)
                 }
             }
-            .offset(x: (screenWidth/2.5), y: -(screenHeight/2.75))
+            .offset(x: (screenWidth/2.5), y: -(screenHeight/2.1))
             
             
             
@@ -290,8 +290,10 @@ struct Notebook: View {
                                                 Divider()
                                                 
                                                 let dater = dateFormatter.date(from: dates[index])
-                                                Text(dater ?? Date(), format: .dateTime.hour().minute())
-                                                
+                                                HStack {
+                                                    Text("Made : ")
+                                                    Text(dater ?? Date(), format: .dateTime.hour().minute())
+                                                }
                                                 
                                                 
                                                 // There is some problem with the date picking code
@@ -335,4 +337,3 @@ struct Notebook: View {
         }
     }
 }
-
