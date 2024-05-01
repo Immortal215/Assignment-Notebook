@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct Main: View {
+struct Notebook: View {
     @State var screenWidth = UIScreen.main.bounds.width
     @State var screenHeight = UIScreen.main.bounds.height
     
@@ -44,21 +44,25 @@ struct Main: View {
     var body: some View {
         ZStack {
             Button {
-                settings = true   
+                settings.toggle()   
             } label: {
                 VStack {
                     Image(systemName: "gear")
                         .resizable()
                         .frame(width: 50, height: 50, alignment: .center)
                         .foregroundStyle(.gray)
+                        .rotationEffect(Angle(degrees: settings ? -55.0 : 30.0))
                     Text("Settings")
                         .foregroundStyle(.gray)
                 }
             }
             .offset(x: -(screenWidth/2.5), y: -(screenHeight/2.75))
             .alert("Settings", isPresented: $settings) { 
-                Text("Work In Progress")
+                Button("Work In Progress", role: .cancel) {
+                    
+                }
             }
+            .animation(.easeInOut(duration: 1))
             
             
             Button {
