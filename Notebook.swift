@@ -31,6 +31,7 @@ struct Notebook: View {
     @State var boxesFilled = false
     @State var settings = false 
     @State var selectDelete : [Bool] = []
+    @State var assignmentAnimation = false 
     
     
     
@@ -56,7 +57,10 @@ struct Notebook: View {
                         .foregroundStyle(.gray)
                 }
             }
-            .offset(x: -(screenWidth/2.5), y: -(screenHeight/2.1))
+            
+            // 2.1 for computer but 2.75 for ipad 
+            
+            .offset(x: -(screenWidth/2.5), y: -(screenHeight/2.75))
             .alert("Settings", isPresented: $settings) { 
                 Button("Work In Progress", role: .cancel) {
                     
@@ -81,7 +85,7 @@ struct Notebook: View {
                     for _ in 0..<infoArray.count {
                         selectDelete.append(false)
                     }
-                    dateFormatter.dateFormat = "YY, MMM d, HH:mm:"
+                    dateFormatter.dateFormat = "YY, MMM d, HH:mm"
                     
                 }
                 
@@ -106,7 +110,10 @@ struct Notebook: View {
                         .foregroundStyle(loadedData ? .green : .red)
                 }
             }
-            .offset(x: (screenWidth/2.5), y: -(screenHeight/2.1))
+            
+            // 2.1 for computer 2.75 for ipad
+            .offset(x: (screenWidth/2.5), y: -(screenHeight/2.75))
+            
             
             
             
@@ -131,7 +138,7 @@ struct Notebook: View {
                             UserDefaults.standard.set(dates, forKey: "date")
                             subjects = []                  
                             UserDefaults.standard.set(subjects, forKey: "subjects")  
-                            print(retrieveInfoArray)
+                         
                             
                             
                             deleted = true
@@ -144,11 +151,12 @@ struct Notebook: View {
                                     .frame(width:loadedData ?  100 : 0,height: loadedData ? 100 : 0, alignment: .center)
                                     .foregroundStyle(.red)
                                 Text("Delete All")
-                                    .foregroundStyle(loadedData ? .red : .clear)
-                                    .frame(width:  loadedData ? 100 : 0)
+                                    .foregroundStyle(.red)
+                                    .frame(width:  loadedData ? 150 : 0)
                             }
                             
                         }
+                        .animation(.snappy(duration: 1, extraBounce: 0.1))
                         
                         
                         Button {
@@ -162,13 +170,16 @@ struct Notebook: View {
                             VStack {
                                 Image(systemName: error ? "x.square" : "plus.square")
                                     .resizable()
-                                    .frame(width: 100,height: 100, alignment: .center)
+                                
                                     .foregroundStyle(error ? .red : .green)
+                                    .frame(width:loadedData ?  100 : 0,height: loadedData ? 100 : 0, alignment: .center)
                                 Text(error ? "Load Data First!" : "Add Assignment")
                                     .foregroundStyle(error ? .red : .green)
+                                    .frame(width:  loadedData ? 150 : 0)
                                 
                             }
                         }
+                        .animation(.snappy(duration: 1, extraBounce: 0.1))
                         .alert("Make Your Assignment!", isPresented: $showAlert) {
                             
                             TextField("Title", text: $name)
@@ -187,7 +198,7 @@ struct Notebook: View {
                             
                             
                             Button("Create Assignment") {
-                                if subject != "" && name != "" && description != "" {                                                print(retrieveInfoArray)
+                                if subject != "" && name != "" && description != "" {                         
                                     names.append(name)
                                     UserDefaults.standard.set(names, forKey: "names")
                                     
@@ -197,15 +208,17 @@ struct Notebook: View {
                                     
                                     subjects.append(subject)
                                     UserDefaults.standard.set(subjects, forKey: "subjects")
-                                    
-                                    dates.append(date)
+                                
+                                
+                                    dates.append(Date.now.formatted())
                                     UserDefaults.standard.set(dates, forKey: "date")
                                     
                                     selectDelete.append(false)
                                     
                                     caughtUp = false
                                     deleted = false
-                                    print(retrieveInfoArray)
+                                    assignmentAnimation = true  
+                                    
                                 } else {
                                     boxesFilled = true 
                                     
@@ -230,7 +243,7 @@ struct Notebook: View {
                         }
                     }
                     
-                    
+                    Divider()                    
                     Text(caughtUp ? "You are all caught up!" : "")
                         .font(.title)
                         .padding(caughtUp ? 30 : 0)
@@ -241,6 +254,7 @@ struct Notebook: View {
                         List {
                             ForEach(infoArray.indices, id: \.self) { index in
                                 let stringer = infoArray[index]
+                                let dater = dateFormatter.date(from: dates[index])
                                 
                                 VStack {
                                     HStack {
@@ -264,36 +278,47 @@ struct Notebook: View {
                                             }
                                             
                                         } label: {
-                                            if selectDelete[index] == false {
-                                                Image(systemName: "checkmark.square")
-                                                    .resizable()
-                                                    .frame(width: deleted ? 0 : 75, height: deleted ? 0 : 75, alignment: .center)
-                                                    .foregroundStyle(.blue)
-                                            } else {
-                                                Image(systemName: "trash.square")
-                                                    .resizable()
-                                                    .frame(width: deleted ? 0 : 75, height: deleted ? 0 : 75, alignment: .center)
-                                                    .foregroundStyle(.red)
-                                            }
+                                            Text("")
+                                                .overlay(
+                                                    Image(systemName: selectDelete[index] ? "trash.square" : "checkmark.square")
+                                                        .resizable()
+                                                        .frame(width: deleted ? 0 : 75, height: deleted ? 0 : 75, alignment: .center)
+                                                        .foregroundStyle(selectDelete[index] ? .red : .blue)
+                                                .offset(x:-50)      
+                                                        
+                                                )
+                                                .frame(width:0,height:0,alignment: .center)
+                                                
+                                              
                                         }
+                                        
                                         Divider()
+                                            
                                         
                                         VStack {
                                             HStack {
                                                 Text(names[index])
                                                 Divider()
+                                                   
                                                 Text(subjects[index])
                                             }
+                                            .offset(x:-100)
                                             Divider()
+                                                .frame(maxWidth: screenWidth/5)
+                                                .offset(x:-100)
+                                            
                                             VStack {
                                                 Text(stringer)
+                                                    .offset(x:-100)
                                                 Divider()
+                                               
                                                 
-                                                let dater = dateFormatter.date(from: dates[index])
-                                                HStack {
-                                                    Text("Made : ")
-                                                    Text(dater ?? Date(), format: .dateTime.hour().minute())
-                                                }
+                                                // Dates are still using Date() not dater, idk why 
+                                                
+                                                Text("Made : \(dater ?? Date(), format: .dateTime.day().month().year().hour().minute())")
+                                                    .offset(x:300)
+                                                    
+                                                
                                                 
                                                 
                                                 // There is some problem with the date picking code
@@ -319,20 +344,46 @@ struct Notebook: View {
                                         }
                                     }
                                 }  
+                                
                             }
+                            
                             .foregroundStyle(.blue)
                             .padding(10)
+                            .offset(x:100)
                         }
+                        .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.8, blendDuration: 1.0)) 
                     } 
                 } 
             }
         }   
         .onAppear {
+            retrieveSubjectsArray = UserDefaults.standard.array(forKey: "subjects") as! [String]? ?? []
+            retrieveNames = UserDefaults.standard.array(forKey: "names") as! [String]? ?? []
+            retrieveDateArray = UserDefaults.standard.array(forKey: "date") as! [String]? ?? []
+            retrieveInfoArray = UserDefaults.standard.array(forKey: "description") as! [String]? ?? []
+            
             names = retrieveNames 
             infoArray = retrieveInfoArray 
             subjects = retrieveSubjectsArray 
             dates = retrieveDateArray 
+            selectDelete = []
+            for _ in 0..<infoArray.count {
+                selectDelete.append(false)
+            }
             dateFormatter.dateFormat = "YY, MMM d, HH:mm"
+            
+            
+            if infoArray != [] {
+                caughtUp = false
+                
+            } else {
+                caughtUp = true
+                
+            }
+            error = false 
+            loadedData = true 
+            
+            
             
         }
     }
