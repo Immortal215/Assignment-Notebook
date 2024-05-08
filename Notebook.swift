@@ -33,15 +33,9 @@ struct Notebook: View {
     @State var selectDelete : [Bool] = []
     @State var assignmentAnimation = false 
     
-    
-    
     @State var dateFormatter = DateFormatter()
     
-    
     // @State var stringList = [[""], [""], [""], [""]]
-    
-    
-    
     var body: some View {
         ZStack {
             Button {
@@ -67,7 +61,6 @@ struct Notebook: View {
                 }
             }
             .animation(.easeInOut(duration: 1))
-            
             
             Button {
                 //might work
@@ -99,13 +92,13 @@ struct Notebook: View {
                 error = false 
                 loadedData = true 
                 
-                
             } label: {
                 VStack {
                     Image(systemName:loadedData ?  "checkmark.icloud.fill" : "exclamationmark.icloud.fill")
                         .resizable()
                         .frame(width: 50, height: 37.5, alignment: .center)
                         .foregroundStyle(loadedData ? .green : .red)
+                    
                     Text(loadedData ? "Data Loaded" : "Need to load data")
                         .foregroundStyle(loadedData ? .green : .red)
                 }
@@ -114,16 +107,12 @@ struct Notebook: View {
             // 2.1 for computer 2.75 for ipad
             .offset(x: (screenWidth/2.5), y: -(screenHeight/2.75))
             
-            
-            
-            
             VStack {
                 
                 Text("Assignment Notebook")
                     .font(Font.custom("SF Compact Rounded", fixedSize: (screenWidth/25)))
                     .frame(width: screenWidth, height: 100, alignment: .center)
                     .fontWeight(.bold)
-                
                 
                 Divider()
                 VStack {
@@ -138,8 +127,6 @@ struct Notebook: View {
                             UserDefaults.standard.set(dates, forKey: "date")
                             subjects = []                  
                             UserDefaults.standard.set(subjects, forKey: "subjects")  
-                         
-                            
                             
                             deleted = true
                             caughtUp = true
@@ -150,6 +137,7 @@ struct Notebook: View {
                                     .resizable()
                                     .frame(width:loadedData ?  100 : 0,height: loadedData ? 100 : 0, alignment: .center)
                                     .foregroundStyle(.red)
+                                
                                 Text("Delete All")
                                     .foregroundStyle(.red)
                                     .frame(width:  loadedData ? 150 : 0)
@@ -157,7 +145,6 @@ struct Notebook: View {
                             
                         }
                         .animation(.snappy(duration: 1, extraBounce: 0.1))
-                        
                         
                         Button {
                             if loadedData == true {
@@ -170,9 +157,9 @@ struct Notebook: View {
                             VStack {
                                 Image(systemName: error ? "x.square" : "plus.square")
                                     .resizable()
-                                
                                     .foregroundStyle(error ? .red : .green)
                                     .frame(width:loadedData ?  100 : 0,height: loadedData ? 100 : 0, alignment: .center)
+                                
                                 Text(error ? "Load Data First!" : "Add Assignment")
                                     .foregroundStyle(error ? .red : .green)
                                     .frame(width:  loadedData ? 150 : 0)
@@ -184,18 +171,13 @@ struct Notebook: View {
                             
                             TextField("Title", text: $name)
                             
-                            
                             Divider()
                             
                             TextField("Description", text: $description)
                             
-                            
-                            
                             Divider()
                             
                             TextField("Subject", text: $subject)
-                            
-                            
                             
                             Button("Create Assignment") {
                                 if subject != "" && name != "" && description != "" {                         
@@ -208,8 +190,8 @@ struct Notebook: View {
                                     
                                     subjects.append(subject)
                                     UserDefaults.standard.set(subjects, forKey: "subjects")
-                                
-                                
+                                    
+                                    
                                     dates.append(Date.now.formatted())
                                     UserDefaults.standard.set(dates, forKey: "date")
                                     
@@ -221,19 +203,9 @@ struct Notebook: View {
                                     
                                 } else {
                                     boxesFilled = true 
-                                    
                                 }
-                                
-                                
-                                
                             }
-                            
-                            
-                            
-                            
                         }
-                        
-                        
                     }
                     .alert("DID NOT ENTER SUFFICENT DATA",isPresented: $boxesFilled) {
                         
@@ -247,7 +219,6 @@ struct Notebook: View {
                     Text(caughtUp ? "You are all caught up!" : "")
                         .font(.title)
                         .padding(caughtUp ? 30 : 0)
-                    
                     
                     if loadedData == true {
                         
@@ -284,22 +255,21 @@ struct Notebook: View {
                                                         .resizable()
                                                         .frame(width: deleted ? 0 : 75, height: deleted ? 0 : 75, alignment: .center)
                                                         .foregroundStyle(selectDelete[index] ? .red : .blue)
-                                                .offset(x:-50)      
-                                                        
+                                                        .offset(x:-50)      
+                                                    
                                                 )
                                                 .frame(width:0,height:0,alignment: .center)
-                                                
-                                              
+                                            
+                                            
                                         }
                                         
                                         Divider()
-                                            
                                         
                                         VStack {
                                             HStack {
                                                 Text(names[index])
                                                 Divider()
-                                                   
+                                                
                                                 Text(subjects[index])
                                             }
                                             .offset(x:-100)
@@ -311,15 +281,12 @@ struct Notebook: View {
                                                 Text(stringer)
                                                     .offset(x:-100)
                                                 Divider()
-                                               
+                                                
                                                 
                                                 // Dates are still using Date() not dater, idk why 
                                                 
                                                 Text("Made : \(dater ?? Date(), format: .dateTime.day().month().year().hour().minute())")
                                                     .offset(x:300)
-                                                    
-                                                
-                                                
                                                 
                                                 // There is some problem with the date picking code
                                                 
@@ -382,8 +349,6 @@ struct Notebook: View {
             }
             error = false 
             loadedData = true 
-            
-            
             
         }
     }
