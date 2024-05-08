@@ -16,6 +16,10 @@ struct Notebook: View {
     @State var retrieveDateArray = UserDefaults.standard.array(forKey: "date") as! [String]? ?? []
     @State var dates : [String] = []
     
+    @State var retrieveDueArray = UserDefaults.standard.array(forKey: "due") as! [Date]? ?? []
+    @State var dueDates : [Date] = []
+    
+    
     @State var description = ""
     @State var name = ""
     @State var subject = ""
@@ -67,6 +71,7 @@ struct Notebook: View {
                 retrieveSubjectsArray = UserDefaults.standard.array(forKey: "subjects") as! [String]? ?? []
                 retrieveNames = UserDefaults.standard.array(forKey: "names") as! [String]? ?? []
                 retrieveDateArray = UserDefaults.standard.array(forKey: "date") as! [String]? ?? []
+                retrieveDueArray = UserDefaults.standard.array(forKey: "due") as! [Date]? ?? []
                 retrieveInfoArray = UserDefaults.standard.array(forKey: "description") as! [String]? ?? []
                 
                 if loadedData == false {
@@ -74,11 +79,12 @@ struct Notebook: View {
                     infoArray = retrieveInfoArray 
                     subjects = retrieveSubjectsArray 
                     dates = retrieveDateArray 
+                    dueDates = retrieveDueArray
                     selectDelete = []
                     for _ in 0..<infoArray.count {
                         selectDelete.append(false)
                     }
-                    dateFormatter.dateFormat = "YY, MMM d, HH:mm"
+                    dateFormatter.dateFormat = "M/d/yyyy, h:mm a"
                     
                 }
                 
@@ -125,6 +131,8 @@ struct Notebook: View {
                             UserDefaults.standard.set(names, forKey: "names")  
                             dates = []                  
                             UserDefaults.standard.set(dates, forKey: "date")
+                            dueDates = []                  
+                            UserDefaults.standard.set(dueDates, forKey: "due")
                             subjects = []                  
                             UserDefaults.standard.set(subjects, forKey: "subjects")  
                             
@@ -195,6 +203,9 @@ struct Notebook: View {
                                     dates.append(Date.now.formatted())
                                     UserDefaults.standard.set(dates, forKey: "date")
                                     
+                                    dueDates.append(Date.now)
+                                    UserDefaults.standard.set(dueDates, forKey: "due")
+                                    
                                     selectDelete.append(false)
                                     
                                     caughtUp = false
@@ -225,11 +236,12 @@ struct Notebook: View {
                         List {
                             ForEach(infoArray.indices, id: \.self) { index in
                                 let stringer = infoArray[index]
-                                let dater = dateFormatter.date(from: dates[index])
                                 
                                 VStack {
+                                    
                                     HStack {
                                         Button {
+                                            
                                             selectDelete[index].toggle()
                                             
                                             if selectDelete[index] == false {
@@ -263,6 +275,7 @@ struct Notebook: View {
                                             
                                         }
                                         
+                                        
                                         Divider()
                                         
                                         VStack {
@@ -283,29 +296,28 @@ struct Notebook: View {
                                                 Divider()
                                                 
                                                 
-                                                // Dates are still using Date() not dater, idk why 
                                                 
-                                                Text("Made : \(dater ?? Date(), format: .dateTime.day().month().year().hour().minute())")
-                                                    .offset(x:300)
+                                                HStack {
+                                                    Text("Due : ")
+                                                    
+                                                    DatePicker(
+                                                        "Due Date",
+                                                        selection: $dueDates[index],
+                                                        displayedComponents: [.hourAndMinute, .date]
+                                                    ) 
+                                                    .onTapGesture {
+                                                        UserDefaults.standard.set(dueDates, forKey: "due")
+                                                    }
+                                                    
+                                                    
+                                                    Divider()
+                                                    Text("Made : \(dates[index])")
+                                                        .offset(x:0)
+                                                }
+                                                .offset(x:-300)
                                                 
-                                                // There is some problem with the date picking code
                                                 
-                                                //                                   
-                                                // WORK IN PROGRESS DATE
-                                                //                                                daterio[index] = dater ?? Date()
-                                                //                                                
-                                                //                                                DatePicker(
-                                                //                                                    "Due Date",
-                                                //                                                    selection: $daterio[index],
-                                                //                                                    displayedComponents: [.hourAndMinute, .date]
-                                                //                                                ) 
-                                                //                                                
-                                                //                                                Button {
-                                                //                                                    dates.append(dater.formatted() ?? Date())
-                                                //                                                    UserDefaults.standard.set(dates, forKey: "date")
-                                                //                                                } label : {
-                                                //                                                    Text("Append Date")
-                                                //                                                }
+                                                
                                                 
                                             } 
                                         }
@@ -328,16 +340,18 @@ struct Notebook: View {
             retrieveNames = UserDefaults.standard.array(forKey: "names") as! [String]? ?? []
             retrieveDateArray = UserDefaults.standard.array(forKey: "date") as! [String]? ?? []
             retrieveInfoArray = UserDefaults.standard.array(forKey: "description") as! [String]? ?? []
+            retrieveDueArray = UserDefaults.standard.array(forKey: "due") as! [Date]? ?? []
             
             names = retrieveNames 
             infoArray = retrieveInfoArray 
             subjects = retrieveSubjectsArray 
             dates = retrieveDateArray 
+            dueDates = retrieveDueArray
             selectDelete = []
             for _ in 0..<infoArray.count {
                 selectDelete.append(false)
             }
-            dateFormatter.dateFormat = "YY, MMM d, HH:mm"
+            dateFormatter.dateFormat = "M/d/yyyy, h:mm a"
             
             
             if infoArray != [] {
