@@ -43,6 +43,7 @@ struct Notebook: View {
     var body: some View {
         ZStack {
             Button {
+                
                 settings.toggle()   
             } label: {
                 VStack {
@@ -65,6 +66,7 @@ struct Notebook: View {
                 }
             }
             .animation(.easeInOut(duration: 1))
+            
             
             Button {
                 //might work
@@ -154,6 +156,7 @@ struct Notebook: View {
                         }
                         .animation(.snappy(duration: 1, extraBounce: 0.1))
                         
+                        
                         Button {
                             if loadedData == true {
                                 showAlert.toggle()
@@ -235,8 +238,7 @@ struct Notebook: View {
                         
                         List {
                             ForEach(infoArray.indices, id: \.self) { index in
-                                let stringer = infoArray[index]
-                                
+                            
                                 VStack {
                                     
                                     HStack {
@@ -249,11 +251,13 @@ struct Notebook: View {
                                                 names.remove(at: index)
                                                 subjects.remove(at: index)
                                                 dates.remove(at: index)
+                                                dueDates.remove(at: index)
                                                 
                                                 UserDefaults.standard.set(names, forKey: "names")
                                                 UserDefaults.standard.set(infoArray, forKey: "description")
                                                 UserDefaults.standard.set(subjects, forKey: "subjects")
                                                 UserDefaults.standard.set(dates, forKey: "date")
+                                                UserDefaults.standard.set(dueDates, forKey: "due")
                                                 
                                                 if infoArray.isEmpty {
                                                     caughtUp = true
@@ -270,28 +274,27 @@ struct Notebook: View {
                                                         .offset(x:-50)      
                                                     
                                                 )
-                                                .frame(width:0,height:0,alignment: .center)
-                                            
-                                            
-                                        }
+                                            .frame(width:0,height:0,alignment: .center)                 }
                                         
                                         
                                         Divider()
                                         
                                         VStack {
                                             HStack {
-                                                Text(names[index])
-                                                Divider()
-                                                
                                                 Text(subjects[index])
+                                                
+                                                Divider()                      
+                                                Text(names[index])
+                                                
                                             }
+                                            
                                             .offset(x:-100)
                                             Divider()
                                                 .frame(maxWidth: screenWidth/5)
                                                 .offset(x:-100)
                                             
                                             VStack {
-                                                Text(stringer)
+                                                Text(infoArray[index])
                                                     .offset(x:-100)
                                                 Divider()
                                                 
@@ -305,16 +308,18 @@ struct Notebook: View {
                                                         selection: $dueDates[index],
                                                         displayedComponents: [.hourAndMinute, .date]
                                                     ) 
+                                                    .offset(x:-585)
                                                     .onTapGesture {
                                                         UserDefaults.standard.set(dueDates, forKey: "due")
                                                     }
                                                     
                                                     
-                                                    Divider()
-                                                    Text("Made : \(dates[index])")
-                                                        .offset(x:0)
+                                                    //     Divider()
+                                                    Text("Created : \(dates[index])")
+                                                        .offset(x:-100)
+                                                    
                                                 }
-                                                .offset(x:-300)
+                                                
                                                 
                                                 
                                                 
