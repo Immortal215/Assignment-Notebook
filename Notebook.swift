@@ -37,7 +37,7 @@ struct Notebook: View {
     @State var selectDelete : [Bool] = []
     @State var assignmentAnimation = false 
     
-    @State var dateFormatter = DateFormatter()
+   @State var dateFormatter = DateFormatter()
     
     // @State var stringList = [[""], [""], [""], [""]]
     var body: some View {
@@ -238,7 +238,7 @@ struct Notebook: View {
                         
                         List {
                             ForEach(infoArray.indices, id: \.self) { index in
-                            
+                                
                                 VStack {
                                     
                                     HStack {
@@ -281,9 +281,11 @@ struct Notebook: View {
                                         
                                         VStack {
                                             HStack {
+                                                
                                                 Text(subjects[index])
                                                 
-                                                Divider()                      
+                                                Divider()
+                                                
                                                 Text(names[index])
                                                 
                                             }
@@ -304,11 +306,11 @@ struct Notebook: View {
                                                     Text("Due : ")
                                                     
                                                     DatePicker(
-                                                        "Due Date",
+                                                        "",
                                                         selection: $dueDates[index],
                                                         displayedComponents: [.hourAndMinute, .date]
                                                     ) 
-                                                    .offset(x:-585)
+                                                    .offset(x:-575)
                                                     .onTapGesture {
                                                         UserDefaults.standard.set(dueDates, forKey: "due")
                                                     }
