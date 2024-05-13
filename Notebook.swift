@@ -19,6 +19,8 @@ struct Notebook: View {
     @State var retrieveDueArray = UserDefaults.standard.array(forKey: "due") as! [Date]? ?? []
     @State var dueDates : [Date] = []
     
+    @AppStorage("duedatesetter") var dueDateSetter = "One Day" 
+    @AppStorage("organizedAssignments") var organizedAssignments = "Created By Descending (Recent to Oldest)"
     
     @State var description = ""
     @State var name = ""
@@ -206,7 +208,16 @@ struct Notebook: View {
                                     dates.append(Date.now.formatted())
                                     UserDefaults.standard.set(dates, forKey: "date")
                                     
-                                    dueDates.append(Date.now)
+                                    if dueDateSetter == "One Day" {
+                                        dueDates.append(Date(timeIntervalSinceNow: 86400))
+                                    } else if dueDateSetter == "One Hour"  {
+                                        dueDates.append(Date(timeIntervalSinceNow: 3600))
+                                    } else if dueDateSetter == "6 Hours"  {
+                                        dueDates.append(Date(timeIntervalSinceNow: 21600))
+                                    } else if dueDateSetter == "Two Days"  {
+                                        dueDates.append(Date(timeIntervalSinceNow: 172800))
+                                    }
+                                    
                                     UserDefaults.standard.set(dueDates, forKey: "due")
                                     
                                     selectDelete.append(false)
@@ -362,6 +373,26 @@ struct Notebook: View {
             
             
             if infoArray != [] {
+                
+                if dates != [] {
+                    if organizedAssignments == "Created By Descending (Recent to Oldest)" {
+                        let sortedIndices = dates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
+                        
+                        subjects = sortedIndices.map { retrieveSubjectsArray[$0] }
+                        names = sortedIndices.map { retrieveNames[$0] }
+                        infoArray = sortedIndices.map { retrieveInfoArray[$0] }
+                        dates = sortedIndices.map { retrieveDateArray[$0] }
+                        dueDates = sortedIndices.map { retrieveDueArray[$0] }
+                    } else if organizedAssignments == "Created By Ascending (Oldest to Recent)" {
+                        let sortedIndices = dates.indices.sorted(by: { dueDates[$0] > dueDates[$1] })
+                        
+                        subjects = sortedIndices.map { retrieveSubjectsArray[$0] }
+                        names = sortedIndices.map { retrieveNames[$0] }
+                        infoArray = sortedIndices.map { retrieveInfoArray[$0] }
+                        dates = sortedIndices.map { retrieveDateArray[$0] }
+                        dueDates = sortedIndices.map { retrieveDueArray[$0] }
+                    }
+                }
                 caughtUp = false
                 
             } else {
