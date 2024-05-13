@@ -63,7 +63,7 @@ struct Homepage: View {
                         if loadedData == true {
                             if caughtUp != true {
                                 List {
-                                    ForEach(0..<infoArray.count, id: \.self) { index in
+                                    ForEach(0..<3, id: \.self) { index in
                                         VStack {
                                             
                                             HStack {
