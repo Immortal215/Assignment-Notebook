@@ -19,7 +19,7 @@ struct Homepage: View {
     @State var retrieveDueArray = UserDefaults.standard.array(forKey: "due") as! [Date]? ?? []
     @State var dueDates : [Date] = []
     
-    
+    @State var val = 0
     @State var description = ""
     @State var name = ""
     @State var subject = ""
@@ -60,10 +60,11 @@ struct Homepage: View {
                             .font(.title)
                             .padding(caughtUp ? 30 : 0)
                         
-                        if loadedData == true {
-                            if caughtUp != true {
+                        if loadedData == true && caughtUp != true {
+                            
                                 List {
-                                    ForEach(0..<3, id: \.self) { index in
+                                    // make this order via due date not just the info array
+                                    ForEach(0..<val, id: \.self) { index in
                                         VStack {
                                             
                                             HStack {
@@ -165,7 +166,7 @@ struct Homepage: View {
                                         
                                     
                                 
-                            }
+                        
                         }
                     }
                   //  .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.8, blendDuration:1.0))
@@ -211,7 +212,19 @@ struct Homepage: View {
             }
             error = false 
             loadedData = true 
+         
+            val = infoArray.count
+            
+            if val > 3 {
+                val = 3
+            }
+            
+            
             
         }
     }
+    
 }
+
+
+
