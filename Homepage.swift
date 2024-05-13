@@ -19,12 +19,13 @@ struct Homepage: View {
     @State var retrieveDueArray = UserDefaults.standard.array(forKey: "due") as! [Date]? ?? []
     @State var dueDates : [Date] = []
     
+    @State var daterio : [Date] = [Date()]
+    
     @State var val = 0
     @State var description = ""
     @State var name = ""
     @State var subject = ""
     @State var date = ""
-    @State var daterio : [Date] = [Date()]
     
     @State var showAlert = false
     @State var showDelete = false
@@ -62,126 +63,106 @@ struct Homepage: View {
                         
                         if loadedData == true && caughtUp != true {
                             
-                                List {
-                                    // make this order via due date not just the info array
-                                    ForEach(0..<val, id: \.self) { index in
-                                        VStack {
-                                            
-                                            HStack {
-                                                Button {
-                                                    
-                                                    selectDelete[index].toggle()
-                                                    
-                                                    if selectDelete[index] == false {
-                                                        infoArray.remove(at: index)
-                                                        names.remove(at: index)
-                                                        subjects.remove(at: index)
-                                                        dates.remove(at: index)
-                                                        dueDates.remove(at: index)
-                                                        
-                                                        UserDefaults.standard.set(names, forKey: "names")
-                                                        UserDefaults.standard.set(infoArray, forKey: "description")
-                                                        UserDefaults.standard.set(subjects, forKey: "subjects")
-                                                        UserDefaults.standard.set(dates, forKey: "date")
-                                                        UserDefaults.standard.set(dueDates, forKey: "due")
-                                                        
-                                                        if infoArray.isEmpty {
-                                                            caughtUp = true
-                                                        }
-                                                    }
-                                                    
-                                                } label: {
-                                                    Text("")
-                                                        .overlay(
-                                                            Image(systemName: selectDelete[index] ? "trash.square" : "checkmark.square")
-                                                                .resizable()
-                                                                .frame(width: deleted ? 0 : 75, height: deleted ? 0 : 75, alignment: .center)
-                                                                .foregroundStyle(selectDelete[index] ? .red : .blue)
-                                                                .offset(x:-50)      
-                                                            
-                                                        )
-                                                    .frame(width:0,height:0,alignment: .center)                 }
+                            List {
+                                // make this order via due date not just the info array
+                                ForEach(0..<val, id: \.self) { index in
+                                    
+                                    VStack {
+                                        
+                                        HStack {
+                                            Button {
                                                 
+                                                selectDelete[index].toggle()
+                                                
+                                                if selectDelete[index] == false {
+                                                    infoArray.remove(at: index)
+                                                    names.remove(at: index)
+                                                    subjects.remove(at: index)
+                                                    dates.remove(at: index)
+                                                    dueDates.remove(at: index)
+                                                    
+                                                    UserDefaults.standard.set(names, forKey: "names")
+                                                    UserDefaults.standard.set(infoArray, forKey: "description")
+                                                    UserDefaults.standard.set(subjects, forKey: "subjects")
+                                                    UserDefaults.standard.set(dates, forKey: "date")
+                                                    UserDefaults.standard.set(dueDates, forKey: "due")
+                                                    
+                                                    if infoArray.isEmpty {
+                                                        caughtUp = true
+                                                    }
+                                                }
+                                                
+                                            } label: {
+                                                Text("")
+                                                    .overlay(
+                                                        Image(systemName: selectDelete[index] ? "trash.square" : "checkmark.square")
+                                                            .resizable()
+                                                            .frame(width: deleted ? 0 : 75, height: deleted ? 0 : 75, alignment: .center)
+                                                            .foregroundStyle(selectDelete[index] ? .red : .blue)
+                                                            .offset(x:-50)      
+                                                        
+                                                    )
+                                                .frame(width:0,height:0,alignment: .center)                 }
+                                            
+                                            
+                                            Divider()
+                                            
+                                            VStack {
+                                                HStack {
+                                                    
+                                                    Text(subjects[index])
+                                                    
+                                                    Divider()
+                                                    
+                                                    Text(names[index])
+                                                    
+                                                }
                                                 
                                                 Divider()
+                                                    .frame(maxWidth: screenWidth/5)
                                                 
                                                 VStack {
-                                                    HStack {
-                                                        
-                                                        Text(subjects[index])
-                                                        
-                                                        Divider()
-                                                        
-                                                        Text(names[index])
-                                                        
-                                                    }
-                                                    
-                                                    .offset(x:-50)
+                                                    Text(infoArray[index])
                                                     Divider()
-                                                        .frame(maxWidth: screenWidth/5)
-                                                        .offset(x:-50)
+                                                        .frame(maxWidth: screenWidth/3)
                                                     
-                                                    VStack {
-                                                        Text(infoArray[index])
-                                                            .offset(x:-50)
-                                                        Divider()
-                                                        
-                                                        
-                                                        
-                                                        HStack {
-                                                            Text("Due : ")
-                                                            
-                                                            DatePicker(
-                                                                "",
-                                                                selection: $dueDates[index],
-                                                                displayedComponents: [.hourAndMinute, .date]
-                                                            ) 
-                                                            .offset(x:-205)
-                                                            .onTapGesture {
-                                                                UserDefaults.standard.set(dueDates, forKey: "due")
-                                                            }
-                                                            
-                                                            
-                                                        }
-                                                        .offset(x:50)
-                                                        
-                                                        
-                                                        
-                                                        
-                                                        
-                                                    } 
-                                                }
+                                                    
+                                                    Text("Due : \(dueDates[index].formatted()) ")
+                                                    
+                                                    
+                                                } 
                                             }
-                                        }  
-                                        
-                                    }
+                                            
+                                        }
+                                    }  
                                     
-                                    .foregroundStyle(.blue)
-                                    .padding(10)
-                                    .offset(x:100)
                                 }
-                                .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.8, blendDuration: 1.0)) 
-                            
-                        
-                                        
-                                    
                                 
-                        
+                                .foregroundStyle(.blue)
+                                .padding(10)
+                                .offset(x:100)
+                            }
+                            .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.8, blendDuration: 1.0)) 
+                            
+                            
                         }
                     }
-                  //  .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.8, blendDuration:1.0))
+                    
                     VStack {
                         Text("Other Content!")
                             .font(Font.custom("SF Compact Rounded", fixedSize: (screenWidth/25)))
                             .frame(width: screenWidth/2, height: 100, alignment: .center)
                         Divider()
                             .frame(width: 400)
+                        List {
+                            
+                        }
                     }
                 }
                 
                 
             }
-              .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.8, blendDuration: 1.0)) 
+            .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.8, blendDuration: 1.0)) 
             
         }
         .onAppear {
@@ -197,14 +178,25 @@ struct Homepage: View {
             dates = retrieveDateArray 
             dueDates = retrieveDueArray
             selectDelete = []
-            for _ in 0..<infoArray.count {
-                selectDelete.append(false)
-            }
+            selectDelete = Array(repeating: false, count: infoArray.count)
             dateFormatter.dateFormat = "M/d/yyyy, h:mm a"
             
             
             if infoArray != [] {
                 caughtUp = false
+                
+                if dueDates != [] {
+                    
+                    
+                    let sortedIndices = dueDates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
+                    
+                    // Rearrange all arrays based on sorted indices
+                    subjects = sortedIndices.map { retrieveSubjectsArray[$0] }
+                    names = sortedIndices.map { retrieveNames[$0] }
+                    infoArray = sortedIndices.map { retrieveInfoArray[$0] }
+                    dates = sortedIndices.map { retrieveDateArray[$0] }
+                    dueDates = sortedIndices.map { retrieveDueArray[$0] }
+                }
                 
             } else {
                 caughtUp = true
@@ -212,12 +204,12 @@ struct Homepage: View {
             }
             error = false 
             loadedData = true 
-         
-            val = infoArray.count
             
-            if val > 3 {
-                val = 3
-            }
+            val = min(infoArray.count, 3)
+            
+            
+            
+            
             
             
             
@@ -225,6 +217,13 @@ struct Homepage: View {
     }
     
 }
+
+
+
+
+
+
+
 
 
 
