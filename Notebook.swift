@@ -92,7 +92,7 @@ struct Notebook: View {
             
             VStack {
                 
-                Text("Assignment Notebook")
+                Text("Planner")
                     .font(Font.custom("SF Compact Rounded", fixedSize: (screenWidth/25)))
                     .frame(width: screenWidth, height: 100, alignment: .center)
                     .fontWeight(.bold)
