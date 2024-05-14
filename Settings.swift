@@ -47,7 +47,7 @@ struct Settinger: View {
                     }
                     
                     VStack {
-                        Text("WIP1")
+                        Text("PomoTimer")
                         Divider()
                             .frame(width:100)
                         List {
