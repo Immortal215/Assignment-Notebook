@@ -11,10 +11,10 @@ struct ContentView: View {
                 
             }
             
-            Text("WIP").tabItem {
+            Pomo().tabItem {
                 HStack {
-                    Image(systemName: "network.slash")
-                    Text("W.I.P.")
+                    Image(systemName: "timer")
+                    Text("Pomo Timer")
                 }
             }
             
