@@ -45,33 +45,6 @@ struct Notebook: View {
     var body: some View {
         ZStack {
             Button {
-                
-                settings.toggle()   
-            } label: {
-                VStack {
-                    Image(systemName: "gear")
-                        .resizable()
-                        .frame(width: 50, height: 50, alignment: .center)
-                        .foregroundStyle(.gray)
-                        .rotationEffect(Angle(degrees: settings ? -55.0 : 30.0))
-                    Text("Settings")
-                        .foregroundStyle(.gray)
-                }
-            }
-            
-            // 2.1 for computer but 2.75 for ipad 
-            
-            .offset(x: -(screenWidth/2.5), y: -(screenHeight/2.75))
-            .alert("Settings", isPresented: $settings) { 
-                Button("Work In Progress", role: .cancel) {
-                    
-                }
-            }
-            .animation(.easeInOut(duration: 1))
-            
-            
-            Button {
-                //might work
                 retrieveSubjectsArray = UserDefaults.standard.array(forKey: "subjects") as! [String]? ?? []
                 retrieveNames = UserDefaults.standard.array(forKey: "names") as! [String]? ?? []
                 retrieveDateArray = UserDefaults.standard.array(forKey: "date") as! [String]? ?? []
