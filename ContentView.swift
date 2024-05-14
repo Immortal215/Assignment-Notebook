@@ -26,16 +26,12 @@ struct ContentView: View {
             }
             
             
-            
-            
-            Text("WIP").tabItem {
+            Settinger().tabItem {
                 HStack {
-                    Image(systemName: "network.slash")
-                    Text("W.I.P.")
+                    Image(systemName: "gearshape")
+                    Text("Settings")
                 }
             }
-            
-            Settinger().tabItem {Image(systemName: "gearshape")}
         }
     }
 }
