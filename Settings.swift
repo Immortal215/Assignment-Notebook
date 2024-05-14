@@ -22,8 +22,8 @@ struct Settinger: View {
                                 
                                 Divider()
                                 Picker("",selection: $dueDateSetter) { 
-                                    ForEach(dueDaters, id: \.self) {
-                                        Text($0)
+                                    ForEach(dueDaters, id: \.self) { i in
+                                        Text(i)
                                     }
                                 } 
                                 .frame(alignment: .trailing)
@@ -37,14 +37,15 @@ struct Settinger: View {
                                 Divider()
                                 
                                 Picker("" , selection: $organizedAssignments) { 
-                                    ForEach(organizationOptions, id: \.self) {
-                                        Text($0)
+                                    ForEach(organizationOptions, id: \.self) { i in
+                                        Text(i)
                                     }
                                 }                            
                             }
-                            .frame(height:100)
+                           
                         }
                     }
+                    
                     VStack {
                         Text("WIP1")
                         Divider()
@@ -54,11 +55,11 @@ struct Settinger: View {
                                 Text("")
                                 
                                 Divider()
-//                                Picker("",selection: $dueDateSetter) { 
-//                                    ForEach(dueDaters, id: \.self) {
-//                                        Text($0)
-//                                    }
-//                                } 
+                                //                                Picker("",selection: $dueDateSetter) { 
+                                //                                    ForEach(dueDaters, id: \.self) {
+                                //                                        Text($0)
+                                //                                    }
+                                //                                } 
 //                                .frame(alignment: .trailing)
                                 
                             }
@@ -77,39 +78,8 @@ struct Settinger: View {
                             }
                         }
                     }
-                    VStack {
-                        Text("WIP2")
-                        Divider()
-                            .frame(width:100)
-                        List {
-                            HStack {
-                                Text("")
-                                
-                                Divider()
-//                                Picker("",selection: $dueDateSetter) { 
-//                                    ForEach(dueDaters, id: \.self) {
-//                                        Text($0)
-//                                    }
-//                                } 
-//                                .frame(alignment: .trailing)
-                                
-                            }
-                            
-                            
-                            HStack {
-                                Text("")
-                                
-                                Divider()
-                                
-//                                Picker("" , selection: $organizedAssignments) { 
-//                                    ForEach(organizationOptions, id: \.self) {
-//                                        Text($0)
-//                                    }
-//                                }                            
-                            }
-                            
-                        }
-                    }
+        
+                    
                     
                 }
             }
