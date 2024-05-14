@@ -5,7 +5,7 @@
 
 ### Home Screen
 
-> Shows the most urgent assignments! (3 closest) 
+> Shows the most urgent assignments! (3 most urgent) 
 
 > Shows your current stopwatch and Pomo for easy viewing
 
