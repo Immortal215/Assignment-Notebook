@@ -40,6 +40,44 @@ struct Homepage: View {
     
     @State var dateFormatter = DateFormatter()
     
+    
+    // time stuff
+    @AppStorage("pomotimer") var pomoTime = 1500
+    @AppStorage("breakTime") var breakTime = 300
+    @AppStorage("breaks") var breaks = 4 
+    @AppStorage("pomoOpened") var pomoOpened = false 
+    @AppStorage("opened") var opened = false
+    
+    
+    
+    var minutes: String {
+        //MARK: Stretch #3 - Part II
+        let time = (progressTime % 3600) / 60
+        return time < 10 ? "0\(time)" : "\(time)"
+    }
+    
+    var seconds: String {
+        //MARK: Stretch #3 - Part III
+        let time = progressTime % 60
+        return time < 10 ? "0\(time)" : "\(time)"
+    }
+    
+    @AppStorage("progressTime") var progressTime = 0
+    
+    var minutesPomo: String {
+        //MARK: Stretch #3 - Part II
+        let time = (progressTimePomo % 3600) / 60
+        return time < 10 ? "0\(time)" : "\(time)"
+    }
+    
+    var secondsPomo: String {
+        //MARK: Stretch #3 - Part III
+        let time = progressTimePomo % 60
+        return time < 10 ? "0\(time)" : "\(time)"
+    }
+    
+    @AppStorage("progressPomo") var progressTimePomo = 0
+  
     var body: some View {
         ZStack {
             
@@ -149,13 +187,14 @@ struct Homepage: View {
                     }
                     
                     VStack {
-                        Text("Other Content!")
+                        Text("Pomo Timer!")
                             .font(Font.custom("SF Compact Rounded", fixedSize: (screenWidth/25)))
                             .frame(width: screenWidth/2, height: 100, alignment: .center)
                         Divider()
                             .frame(width: 400)
                         List {
-                            
+                            Text("\(minutes):\(seconds)")
+                            Text("\(minutesPomo):\(secondsPomo)")
                         }
                     }
                 }
@@ -206,6 +245,19 @@ struct Homepage: View {
             loadedData = true 
             
             val = min(infoArray.count, 3)
+            
+            if pomoOpened != true {
+                progressTimePomo = pomoTime
+                pomoOpened = true 
+            }   
+            progressTimePomo = progressTimePomo
+            
+            if opened != true {
+                progressTime = 0 
+                opened = true 
+            }   
+            progressTime = progressTime
+            
             
             
             
