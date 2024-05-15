@@ -16,6 +16,15 @@ struct Settinger: View {
     @AppStorage("opened") var opened = false
     
     
+    @AppStorage("subjectcolor") var subjectColor : String = "#FFFFFF"
+    @State var hexSubjectColor : Color = Color.white
+    
+    @AppStorage("titlecolor") var titleColor : String = "#FFFFFF"
+    @State var hexTitleColor : Color = Color.white
+    
+    @AppStorage("descolor") var descriptionColor : String = "#FFFFFF"
+    @State var hexDescriptionColor : Color = Color.white
+    
     
     var body: some View {
         ZStack {
@@ -39,7 +48,7 @@ struct Settinger: View {
                                 
                             }
                             
-                            
+                    
                             HStack {
                                 Text("Assignment Organization Order")
                                 
@@ -51,7 +60,35 @@ struct Settinger: View {
                                     }
                                 }                            
                             }
-                            
+                            DisclosureGroup("Color Modifications") { 
+                                HStack {
+                                    
+                                    ColorPicker("Subject : ", selection: $hexSubjectColor)
+                                        .onChange(of: hexSubjectColor) { newValue in
+                                            subjectColor = newValue.toHexString()
+                                        }
+                                    
+                                    
+                                }
+                                HStack {
+                                    
+                                    ColorPicker("Title : ", selection: $hexTitleColor)
+                                        .onChange(of: hexTitleColor) { i in
+                                            titleColor = i.toHexString()
+                                        }
+                                    
+                                    
+                                }
+                                HStack {
+                                    
+                                    ColorPicker("Description : ", selection: $hexDescriptionColor)
+                                        .onChange(of: hexDescriptionColor) { newValue in
+                                            descriptionColor = newValue.toHexString()
+                                        }
+                                    
+                                    
+                                }
+                            }
                         }
                     }
                     
@@ -99,6 +136,7 @@ struct Settinger: View {
                                     }
                                 
                             }
+                            
                         }   
                     }
                     
@@ -107,13 +145,44 @@ struct Settinger: View {
                 }
             }
         }  
+        .onAppear {
+            hexSubjectColor = Color(hex: subjectColor)
+            hexTitleColor = Color(hex: titleColor)
+            hexDescriptionColor = Color(hex: descriptionColor)
+        }
         .onChange(of: pomoTime) {
             pomoOpened = false 
-           
+            
             if timerOptions.contains(String(pomoTime)) == true {
                 textPomo = ""
             }
             
         }
+    }
+}
+
+extension Color {
+    init(hex: String) {
+        let scanner = Scanner(string: hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted))
+        var color: UInt64 = 0
+        
+        scanner.scanHexInt64(&color)
+        
+        let mask = 0x000000FF
+        let red = Double(Int(color >> 16) & mask) / 255.0
+        let green = Double(Int(color >> 8) & mask) / 255.0
+        let blue = Double(Int(color) & mask) / 255.0
+        
+        self.init(red: red, green: green, blue: blue)
+    }
+    
+    func toHexString() -> String {
+        guard let components = UIColor(self).cgColor.components else { return "#FFFFFF" }
+        
+        let r = Int(components[0] * 255.0)
+        let g = Int(components[1] * 255.0)
+        let b = Int(components[2] * 255.0)
+        
+        return String(format: "#%02X%02X%02X", r, g, b)
     }
 }
