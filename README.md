@@ -26,4 +26,7 @@
 > Data saves on the device.
 
 
+### Settings 
+
+> Change controls throughout the app
 ## Created for Ipad
