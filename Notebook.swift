@@ -22,6 +22,11 @@ struct Notebook: View {
     @AppStorage("duedatesetter") var dueDateSetter = "One Day" 
     @AppStorage("organizedAssignments") var organizedAssignments = "Created By Descending (Recent to Oldest)"
     
+    @AppStorage("subjectcolor") var subjectColor : String = "#FFFFFF"
+    @AppStorage("titlecolor") var titleColor : String = "#FFFFFF"
+    @AppStorage("descolor") var descriptionColor : String = "#FFFFFF"
+    
+    
     @State var description = ""
     @State var name = ""
     @State var subject = ""
@@ -39,7 +44,7 @@ struct Notebook: View {
     @State var selectDelete : [Bool] = []
     @State var assignmentAnimation = false 
     
-   @State var dateFormatter = DateFormatter()
+    @State var dateFormatter = DateFormatter()
     
     // @State var stringList = [[""], [""], [""], [""]]
     var body: some View {
@@ -258,43 +263,50 @@ struct Notebook: View {
                                                         .offset(x:-50)      
                                                     
                                                 )
-                                            .frame(width:0,height:0,alignment: .center)                 }
-                                        
+                                                .frame(width:0,height:0,alignment: .center)   
+                                        }
+                                        .offset(x:100)          
                                         
                                         Divider()
+                                            .offset(x:100)
                                         
                                         VStack {
                                             HStack {
                                                 
                                                 Text(subjects[index])
+                                                    .foregroundStyle(Color(hex: subjectColor))
+                                                
                                                 
                                                 Divider()
                                                 
                                                 Text(names[index])
+                                                    .foregroundStyle(Color(hex: titleColor))
                                                 
                                             }
                                             
-                                            .offset(x:-100)
+                                            
                                             Divider()
                                                 .frame(maxWidth: screenWidth/5)
-                                                .offset(x:-100)
+                                            
                                             
                                             VStack {
                                                 Text(infoArray[index])
-                                                    .offset(x:-100)
-                                                Divider()
+                                                    .foregroundStyle(Color(hex: descriptionColor))
                                                 
+                                                Divider()
+                                                    .offset(x:100)
                                                 
                                                 
                                                 HStack {
                                                     Text("Due : ")
+                                                        .offset(x:100)
                                                     
                                                     DatePicker(
                                                         "",
                                                         selection: $dueDates[index],
                                                         displayedComponents: [.hourAndMinute, .date]
                                                     ) 
-                                                    .offset(x:-575)
+                                                    .offset(x:-475)
                                                     .onTapGesture {
                                                         UserDefaults.standard.set(dueDates, forKey: "due")
                                                     }
@@ -302,7 +314,7 @@ struct Notebook: View {
                                                     
                                                     //     Divider()
                                                     Text("Created : \(dates[index])")
-                                                        .offset(x:-100)
+                                                    
                                                     
                                                 }
                                                 
@@ -319,10 +331,12 @@ struct Notebook: View {
                             
                             .foregroundStyle(.blue)
                             .padding(10)
-                            .offset(x:100)
+                            
+                            
                         }
                         .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.8, blendDuration: 1.0)) 
                     } 
+                    
                 } 
             }
         }   
@@ -378,3 +392,4 @@ struct Notebook: View {
         }
     }
 }
+
