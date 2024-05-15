@@ -14,7 +14,7 @@
 
 > Stopwatch to measure how long you are working and studying
 
-> Pomodoro timer used to effectivley study and take 5 minute breaks after every 25 minutes and a 20 minute break after a set number of pomo sessions.
+> Pomodoro timer used to effectively study and take 5 minute breaks every 25 minutes
 
 
 ### Assignment Notebook 
