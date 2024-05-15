@@ -7,7 +7,7 @@ struct ContentView: View {
         TabView {
             Homepage().tabItem {
                 Image(systemName: "house.fill")
-                
+             
                 
             }
             
@@ -16,13 +16,15 @@ struct ContentView: View {
                     Image(systemName: "timer")
                     Text("Pomo Timer")
                 }
+           
             }
             
             Notebook().tabItem {
                 HStack {
                     Image(systemName: "text.book.closed.fill")
-                    Text("Assignment Notebook")
+                    Text("Planner")
                 }
+              
             }
             
             
@@ -31,7 +33,9 @@ struct ContentView: View {
                     Image(systemName: "gearshape")
                     Text("Settings")
                 }
+             
             }
         }
+      
     }
 }
