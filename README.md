@@ -28,5 +28,5 @@
 
 ### Settings 
 
-> Change controls throughout the app
+> Change organization and color throughout the app
 ## Created for Ipad
