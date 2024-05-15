@@ -6,6 +6,8 @@ struct Pomo: View {
     @AppStorage("breaks") var breaks = 4 
     @AppStorage("pomoOpened") var pomoOpened = false 
     @AppStorage("opened") var opened = false
+    @AppStorage("currentBreaks") var currentBreaks = 0 
+    @AppStorage("breakText") var breakText = false  
     
     var timer: Timer {
         //MARK: Stretch #3 - Part I
@@ -32,7 +34,13 @@ struct Pomo: View {
     var timerPomo: Timer {
         //MARK: Stretch #3 - Part I
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {_ in
-            progressTimePomo -= 1
+            if progressTimePomo > 0 {
+                progressTimePomo -= 1
+            } else {
+                progressTimePomo = breakTime
+                currentBreaks += 1
+                breakText = true
+            }
         }
     }
     
@@ -72,7 +80,6 @@ struct Pomo: View {
                                     RoundedRectangle(cornerRadius: 20)
                                         .foregroundStyle(.green)
                                         .opacity(0.3)
-                                        .animation(.bouncy(duration: 1, extraBounce: 0.1))
                                         .overlay(
                                             Text("Start")
                                                 .font(.custom("", fixedSize: 50))
@@ -92,7 +99,6 @@ struct Pomo: View {
                                     RoundedRectangle(cornerRadius: 20)
                                         .foregroundStyle(.red)
                                         .opacity(0.3)
-                                        .animation(.bouncy(duration: 1, extraBounce: 0.1))
                                         .overlay(
                                             Text("Stop")
                                                 .font(.custom("", fixedSize: 50))
@@ -100,7 +106,7 @@ struct Pomo: View {
                                         )
                                         .frame(width:200, height:100)
                                 }  
-                                                            }
+                            }
                             Button {
                                 progressTime = 0 
                                 myTimer?.invalidate()
@@ -108,7 +114,7 @@ struct Pomo: View {
                                 RoundedRectangle(cornerRadius: 20)
                                     .foregroundStyle(.blue)
                                     .opacity(0.3)
-                                    .animation(.bouncy(duration: 1, extraBounce: 0.1))
+                           
                                     .overlay(
                                         Text("Reset")
                                             .font(.custom("", fixedSize: 50))
@@ -128,6 +134,14 @@ struct Pomo: View {
                         
                         Text("\(minutesPomo):\(secondsPomo)")
                             .font(.system(size: 100))
+                        Text("\(breakText ? "Pomo" : "Break") Time : \(breakText ? (pomoTime > 60 ? pomoTime/60 : pomoTime) : (breakTime/60)) \(pomoTime > 60 ? "Minutes" : breakText ?  "Seconds" : "Minutes")")
+                            .font(.system(size: 25))
+                        Text(currentBreaks > 0 ? "Breaks taken : \(currentBreaks)" : "")
+                            .font(.system(size:20))
+           
+                        
+                        Divider()
+                            .frame(width:300)
                         
                         VStack { 
                             HStack {
@@ -137,7 +151,7 @@ struct Pomo: View {
                                     RoundedRectangle(cornerRadius: 20)
                                         .foregroundStyle(.green)
                                         .opacity(0.3)
-                                        .animation(.bouncy(duration: 1, extraBounce: 0.1))
+                          
                                         .overlay(
                                             Text("Start")
                                                 .font(.custom("", fixedSize: 50))
@@ -154,7 +168,7 @@ struct Pomo: View {
                                     RoundedRectangle(cornerRadius: 20)
                                         .foregroundStyle(.red)
                                         .opacity(0.3)
-                                        .animation(.bouncy(duration: 1, extraBounce: 0.1))
+                                 
                                         .overlay(
                                             Text("Stop")
                                                 .font(.custom("", fixedSize: 50))
@@ -164,13 +178,16 @@ struct Pomo: View {
                                 }
                             }
                             Button {
-                                progressTimePomo = pomoTime
                                 myTimerPomo?.invalidate()
+                                progressTimePomo = pomoTime
+                                breaks = 0 
+                                breakText = false 
+                                currentBreaks = 0 
                             } label: {
                                 RoundedRectangle(cornerRadius: 20)
                                     .foregroundStyle(.blue)
                                     .opacity(0.3)
-                                    .animation(.bouncy(duration: 1, extraBounce: 0.1))
+                                
                                     .overlay(
                                         Text("Reset")
                                             .font(.custom("", fixedSize: 50))
@@ -181,6 +198,7 @@ struct Pomo: View {
                         }
                     }
                 }
+                .animation(.snappy(duration: 0.3, extraBounce: 0.3))
             }
         }
         .onAppear {
@@ -198,7 +216,7 @@ struct Pomo: View {
             progressTime = progressTime
             
             
-           
+            
         }
         .onChange(of: pomoTime) {
             myTimerPomo?.invalidate()
