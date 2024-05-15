@@ -47,7 +47,7 @@ struct Homepage: View {
     @AppStorage("breaks") var breaks = 4 
     @AppStorage("pomoOpened") var pomoOpened = false 
     @AppStorage("opened") var opened = false
-    
+    @AppStorage("breakText") var breakText = false
     
     
     var minutes: String {
@@ -77,7 +77,11 @@ struct Homepage: View {
     }
     
     @AppStorage("progressPomo") var progressTimePomo = 0
-  
+    
+    @AppStorage("subjectcolor") var subjectColor : String = "#FFFFFF"
+    @AppStorage("titlecolor") var titleColor : String = "#FFFFFF"
+    @AppStorage("descolor") var descriptionColor : String = "#FFFFFF"
+    
     var body: some View {
         ZStack {
             
@@ -97,7 +101,7 @@ struct Homepage: View {
                             .frame(width: 400)
                         Text(caughtUp ? "You are all caught up!" : "")
                             .font(.title)
-                            .padding(caughtUp ? 30 : 0)
+                          
                         
                         if loadedData == true && caughtUp != true {
                             
@@ -149,10 +153,12 @@ struct Homepage: View {
                                                 HStack {
                                                     
                                                     Text(subjects[index])
+                                                        .foregroundStyle(Color(hex: subjectColor))
                                                     
                                                     Divider()
                                                     
                                                     Text(names[index])
+                                                        .foregroundStyle(Color(hex: titleColor))
                                                     
                                                 }
                                                 
@@ -161,6 +167,7 @@ struct Homepage: View {
                                                 
                                                 VStack {
                                                     Text(infoArray[index])
+                                                        .foregroundStyle(Color(hex: descriptionColor))
                                                     Divider()
                                                         .frame(maxWidth: screenWidth/3)
                                                     
@@ -192,9 +199,37 @@ struct Homepage: View {
                             .frame(width: screenWidth/2, height: 100, alignment: .center)
                         Divider()
                             .frame(width: 400)
-                        List {
-                            Text("\(minutes):\(seconds)")
-                            Text("\(minutesPomo):\(secondsPomo)")
+                        Text(progressTimePomo == pomoTime && progressTime == 0 ? "No Timers Set!" : "")
+                            .font(.title)
+
+                            .animation(.snappy(duration: 0.3, extraBounce: 0.3))
+                        
+                        VStack {
+                            if progressTimePomo != pomoTime || progressTime != 0 {
+                                List { 
+                                    if progressTime != 0 {
+                                        HStack {
+                                            Text("Stop Watch")
+                                            Divider()
+                                                .frame(width:100)
+                                            Text("\(minutes):\(seconds)")
+                                        }
+                                        .font(.system(size: 25))  
+                                    }
+                                    if progressTimePomo != pomoTime {
+                                        HStack {
+                                            Text("\(breakText ? "Break" : "Pomo") Timer")
+                                            Divider()
+                                                .frame(width:100)
+                                            Text("\(minutesPomo):\(secondsPomo)")
+                                        }
+                                        .font(.system(size:25))
+                                    }
+                                }
+                                .animation(.snappy(duration: 0.3, extraBounce: 0.3))
+                            } 
+                            
+                            
                         }
                     }
                 }
