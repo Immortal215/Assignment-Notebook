@@ -6,7 +6,7 @@ struct Settinger: View {
     @State var dueDaters : [String] = ["One Hour", "6 Hours", "One Day", "Two Days"]
     
     @AppStorage("organizedAssignments") var organizedAssignments = "Created By Descending (Recent to Oldest)" 
-    @State var organizationOptions : [String] = ["Created By Descending (Recent to Oldest)", "Created By Ascending (Oldest to Recent)"]
+    @State var organizationOptions : [String] = ["Created By Descending (Recent to Oldest)", "Created By Ascending (Oldest to Recent)", "Due By Descending (Recent to Oldest)", "Due By Ascending (Oldest to Recent)"]
     
     @AppStorage("pomotimer") var pomoTime = 1500
     @State var textPomo = ""
@@ -58,7 +58,7 @@ struct Settinger: View {
                                     ForEach(organizationOptions, id: \.self) { i in
                                         Text(i)
                                     }
-                                }                            
+                                }   
                             }
                             DisclosureGroup("Color Modifications") { 
                                 HStack {
