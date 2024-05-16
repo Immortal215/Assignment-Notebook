@@ -363,7 +363,7 @@ struct Notebook: View {
                 
                 if dates != [] {
                     if organizedAssignments == "Created By Descending (Recent to Oldest)" {
-                        let sortedIndices = dates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
+                        let sortedIndices = dates.indices.sorted(by: { dates[$0] < dates[$1] })
                         
                         subjects = sortedIndices.map { retrieveSubjectsArray[$0] }
                         names = sortedIndices.map { retrieveNames[$0] }
@@ -371,7 +371,23 @@ struct Notebook: View {
                         dates = sortedIndices.map { retrieveDateArray[$0] }
                         dueDates = sortedIndices.map { retrieveDueArray[$0] }
                     } else if organizedAssignments == "Created By Ascending (Oldest to Recent)" {
+                        let sortedIndices = dates.indices.sorted(by: { dates[$0] > dates[$1] })
+                        
+                        subjects = sortedIndices.map { retrieveSubjectsArray[$0] }
+                        names = sortedIndices.map { retrieveNames[$0] }
+                        infoArray = sortedIndices.map { retrieveInfoArray[$0] }
+                        dates = sortedIndices.map { retrieveDateArray[$0] }
+                        dueDates = sortedIndices.map { retrieveDueArray[$0] }
+                    } else if organizedAssignments == "Due By Ascending (Oldest to Recent)" {
                         let sortedIndices = dates.indices.sorted(by: { dueDates[$0] > dueDates[$1] })
+                        
+                        subjects = sortedIndices.map { retrieveSubjectsArray[$0] }
+                        names = sortedIndices.map { retrieveNames[$0] }
+                        infoArray = sortedIndices.map { retrieveInfoArray[$0] }
+                        dates = sortedIndices.map { retrieveDateArray[$0] }
+                        dueDates = sortedIndices.map { retrieveDueArray[$0] }
+                    } else if organizedAssignments == "Due By Descending (Recent to Oldest)" {
+                        let sortedIndices = dates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
                         
                         subjects = sortedIndices.map { retrieveSubjectsArray[$0] }
                         names = sortedIndices.map { retrieveNames[$0] }
@@ -392,4 +408,5 @@ struct Notebook: View {
         }
     }
 }
+
 
