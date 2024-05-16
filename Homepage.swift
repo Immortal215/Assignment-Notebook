@@ -21,7 +21,6 @@ struct Homepage: View {
     
     @State var daterio : [Date] = [Date()]
     
-    @State var val = 0
     @State var description = ""
     @State var name = ""
     @State var subject = ""
@@ -51,13 +50,13 @@ struct Homepage: View {
     
     
     var minutes: String {
-        //MARK: Stretch #3 - Part II
+        
         let time = (progressTime % 3600) / 60
         return time < 10 ? "0\(time)" : "\(time)"
     }
     
     var seconds: String {
-        //MARK: Stretch #3 - Part III
+        
         let time = progressTime % 60
         return time < 10 ? "0\(time)" : "\(time)"
     }
@@ -65,13 +64,13 @@ struct Homepage: View {
     @AppStorage("progressTime") var progressTime = 0
     
     var minutesPomo: String {
-        //MARK: Stretch #3 - Part II
+        
         let time = (progressTimePomo % 3600) / 60
         return time < 10 ? "0\(time)" : "\(time)"
     }
     
     var secondsPomo: String {
-        //MARK: Stretch #3 - Part III
+        
         let time = progressTimePomo % 60
         return time < 10 ? "0\(time)" : "\(time)"
     }
@@ -101,13 +100,15 @@ struct Homepage: View {
                             .frame(width: 400)
                         Text(caughtUp ? "You are all caught up!" : "")
                             .font(.title)
-                          
+                        
                         
                         if loadedData == true && caughtUp != true {
                             
                             List {
-                                // make this order via due date not just the info array
-                                ForEach(0..<val, id: \.self) { index in
+                                
+                                // make the delete work 
+                                
+                                ForEach(0..<min(infoArray.count, 3), id: \.self) { index in
                                     
                                     VStack {
                                         
@@ -117,6 +118,7 @@ struct Homepage: View {
                                                 selectDelete[index].toggle()
                                                 
                                                 if selectDelete[index] == false {
+                                                    
                                                     infoArray.remove(at: index)
                                                     names.remove(at: index)
                                                     subjects.remove(at: index)
@@ -132,6 +134,7 @@ struct Homepage: View {
                                                     if infoArray.isEmpty {
                                                         caughtUp = true
                                                     }
+                                                    
                                                 }
                                                 
                                             } label: {
@@ -201,7 +204,7 @@ struct Homepage: View {
                             .frame(width: 400)
                         Text(progressTimePomo == pomoTime && progressTime == 0 ? "No Timers Set!" : "")
                             .font(.title)
-
+                        
                             .animation(.snappy(duration: 0.3, extraBounce: 0.3))
                         
                         VStack {
@@ -279,7 +282,6 @@ struct Homepage: View {
             error = false 
             loadedData = true 
             
-            val = min(infoArray.count, 3)
             
             if pomoOpened != true {
                 progressTimePomo = pomoTime
