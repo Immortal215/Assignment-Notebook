@@ -87,8 +87,8 @@ struct Homepage: View {
             
             VStack {
                 Text("Home")
-                    .font(Font.custom("SF Compact Rounded", fixedSize: (screenWidth/25)))
-                    .fontWeight(.bold)    
+                    .font(.system(size:75))
+                    .fontWeight(.bold)
                 
                 Divider()
                 HStack {
@@ -197,7 +197,7 @@ struct Homepage: View {
                     }
                     
                     VStack {
-                        Text("Pomo Timer!")
+                        Text("Timers!")
                             .font(Font.custom("SF Compact Rounded", fixedSize: (screenWidth/25)))
                             .frame(width: screenWidth/2, height: 100, alignment: .center)
                         Divider()
