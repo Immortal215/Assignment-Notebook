@@ -98,10 +98,9 @@ struct Notebook: View {
             VStack {
                 
                 Text("Planner")
-                    .font(Font.custom("SF Compact Rounded", fixedSize: (screenWidth/25)))
-                    .frame(width: screenWidth, height: 100, alignment: .center)
+                       .font(.system(size:75))
                     .fontWeight(.bold)
-                
+         
                 Divider()
                 VStack {
                     HStack {
