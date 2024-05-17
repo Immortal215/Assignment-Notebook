@@ -10,20 +10,20 @@ struct Pomo: View {
     @AppStorage("breakText") var breakText = false  
     
     var timer: Timer {
-        //MARK: Stretch #3 - Part I
+       
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {_ in
             progressTime += 1
         }
     }
     
     var minutes: String {
-        //MARK: Stretch #3 - Part II
+    
         let time = (progressTime % 3600) / 60
         return time < 10 ? "0\(time)" : "\(time)"
     }
     
     var seconds: String {
-        //MARK: Stretch #3 - Part III
+    
         let time = progressTime % 60
         return time < 10 ? "0\(time)" : "\(time)"
     }
@@ -32,7 +32,7 @@ struct Pomo: View {
     @State var myTimer:Timer?
     
     var timerPomo: Timer {
-        //MARK: Stretch #3 - Part I
+   
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {_ in
             if progressTimePomo > 0 {
                 progressTimePomo -= 1
@@ -45,13 +45,13 @@ struct Pomo: View {
     }
     
     var minutesPomo: String {
-        //MARK: Stretch #3 - Part II
+  
         let time = (progressTimePomo % 3600) / 60
         return time < 10 ? "0\(time)" : "\(time)"
     }
     
     var secondsPomo: String {
-        //MARK: Stretch #3 - Part III
+     
         let time = progressTimePomo % 60
         return time < 10 ? "0\(time)" : "\(time)"
     }
@@ -79,7 +79,7 @@ struct Pomo: View {
                                 } label: {
                                     RoundedRectangle(cornerRadius: 20)
                                         .foregroundStyle(.green)
-                                        .opacity(0.3)
+                                        .opacity(0.7)
                                         .overlay(
                                             Text("Start")
                                                 .font(.custom("", fixedSize: 50))
@@ -98,7 +98,7 @@ struct Pomo: View {
                                 } label: {
                                     RoundedRectangle(cornerRadius: 20)
                                         .foregroundStyle(.red)
-                                        .opacity(0.3)
+                                        .opacity(0.7)
                                         .overlay(
                                             Text("Stop")
                                                 .font(.custom("", fixedSize: 50))
@@ -113,7 +113,7 @@ struct Pomo: View {
                             } label: {
                                 RoundedRectangle(cornerRadius: 20)
                                     .foregroundStyle(.blue)
-                                    .opacity(0.3)
+                                    .opacity(0.7)
                            
                                     .overlay(
                                         Text("Reset")
@@ -150,7 +150,7 @@ struct Pomo: View {
                                 } label: {
                                     RoundedRectangle(cornerRadius: 20)
                                         .foregroundStyle(.green)
-                                        .opacity(0.3)
+                                        .opacity(0.7)
                           
                                         .overlay(
                                             Text("Start")
@@ -167,7 +167,7 @@ struct Pomo: View {
                                 } label: {
                                     RoundedRectangle(cornerRadius: 20)
                                         .foregroundStyle(.red)
-                                        .opacity(0.3)
+                                        .opacity(0.7)
                                  
                                         .overlay(
                                             Text("Stop")
@@ -186,7 +186,7 @@ struct Pomo: View {
                             } label: {
                                 RoundedRectangle(cornerRadius: 20)
                                     .foregroundStyle(.blue)
-                                    .opacity(0.3)
+                                    .opacity(0.7)
                                 
                                     .overlay(
                                         Text("Reset")
