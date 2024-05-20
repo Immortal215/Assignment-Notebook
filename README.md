@@ -29,4 +29,5 @@
 ### Settings 
 
 > Change organization and color throughout the app
-## Created for Ipad
+
+## Built for Ipad
