@@ -1,5 +1,5 @@
 # Made using SwiftUi
-### An app to re-organize and add strucutre into your life!
+### An app to re-organize and add structure into your life!
 
 ## Features 
 
