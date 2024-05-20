@@ -93,14 +93,14 @@ struct Notebook: View {
             }
             
             // 2.1 for computer 2.75 for ipad
-            .offset(x: (screenWidth/2.5), y: -(screenHeight/2.75))
+            .offset(x: (screenWidth/2.5), y: -(screenHeight/3))
             
             VStack {
                 
                 Text("Planner")
-                       .font(.system(size:75))
+                    .font(.system(size:75))
                     .fontWeight(.bold)
-         
+                
                 Divider()
                 VStack {
                     HStack {
@@ -122,9 +122,9 @@ struct Notebook: View {
                             
                         } label: {
                             VStack{
-                                Image(systemName: "trash.square")
+                                Image(systemName: deleted ? "trash.fill" : "trash")
                                     .resizable()
-                                    .frame(width:loadedData ?  100 : 0,height: loadedData ? 100 : 0, alignment: .center)
+                                    .frame(width:loadedData ?  25 : 0,height: loadedData ? 25 : 0, alignment: .center)
                                     .foregroundStyle(.red)
                                 
                                 Text("Delete All")
@@ -145,10 +145,10 @@ struct Notebook: View {
                             }
                         } label: {
                             VStack {
-                                Image(systemName: error ? "x.square" : "plus.square")
+                                Image(systemName: error ? "x.square" : "plus")
                                     .resizable()
                                     .foregroundStyle(error ? .red : .green)
-                                    .frame(width:loadedData ?  100 : 0,height: loadedData ? 100 : 0, alignment: .center)
+                                    .frame(width:loadedData ?  25 : 0,height: loadedData ? 25 : 0, alignment: .center)
                                 
                                 Text(error ? "Load Data First!" : "Add Assignment")
                                     .foregroundStyle(error ? .red : .green)
@@ -216,8 +216,11 @@ struct Notebook: View {
                             
                         }
                     }
+                    .offset(x:400, y: 35)
                     
-                    Divider()                    
+                         Divider()  
+                        .frame(width: 300)
+                        .offset(x:412.5, y: 35)
                     Text(caughtUp ? "You are all caught up!" : "")
                         .font(.title)
                         .padding(caughtUp ? 30 : 0)
@@ -305,7 +308,7 @@ struct Notebook: View {
                                                         selection: $dueDates[index],
                                                         displayedComponents: [.hourAndMinute, .date]
                                                     ) 
-                                                    .offset(x:-475)
+                                                    .offset(x:-465)
                                                     .onTapGesture {
                                                         UserDefaults.standard.set(dueDates, forKey: "due")
                                                     }
@@ -334,8 +337,10 @@ struct Notebook: View {
                             
                         }
                         .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.8, blendDuration: 1.0)) 
+                        .offset(y:25)
+                        
+                        
                     } 
-                    
                 } 
             }
         }   
@@ -362,7 +367,7 @@ struct Notebook: View {
                 
                 if dates != [] {
                     if organizedAssignments == "Created By Descending (Recent to Oldest)" {
-                        let sortedIndices = dates.indices.sorted(by: { dates[$0] < dates[$1] })
+                        let sortedIndices = dates.indices.sorted(by: { dates[$0] > dates[$1] })
                         
                         subjects = sortedIndices.map { retrieveSubjectsArray[$0] }
                         names = sortedIndices.map { retrieveNames[$0] }
@@ -370,7 +375,7 @@ struct Notebook: View {
                         dates = sortedIndices.map { retrieveDateArray[$0] }
                         dueDates = sortedIndices.map { retrieveDueArray[$0] }
                     } else if organizedAssignments == "Created By Ascending (Oldest to Recent)" {
-                        let sortedIndices = dates.indices.sorted(by: { dates[$0] > dates[$1] })
+                        let sortedIndices = dates.indices.sorted(by: { dates[$0] < dates[$1] })
                         
                         subjects = sortedIndices.map { retrieveSubjectsArray[$0] }
                         names = sortedIndices.map { retrieveNames[$0] }
