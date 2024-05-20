@@ -10,20 +10,22 @@ struct Pomo: View {
     @AppStorage("breakText") var breakText = false  
     
     var timer: Timer {
-       
+        
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {_ in
+            
             progressTime += 1
+            
         }
     }
     
     var minutes: String {
-    
+        
         let time = (progressTime % 3600) / 60
         return time < 10 ? "0\(time)" : "\(time)"
     }
     
     var seconds: String {
-    
+        
         let time = progressTime % 60
         return time < 10 ? "0\(time)" : "\(time)"
     }
@@ -32,7 +34,7 @@ struct Pomo: View {
     @State var myTimer:Timer?
     
     var timerPomo: Timer {
-   
+        
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {_ in
             if progressTimePomo > 0 {
                 progressTimePomo -= 1
@@ -45,13 +47,13 @@ struct Pomo: View {
     }
     
     var minutesPomo: String {
-  
+        
         let time = (progressTimePomo % 3600) / 60
         return time < 10 ? "0\(time)" : "\(time)"
     }
     
     var secondsPomo: String {
-     
+        
         let time = progressTimePomo % 60
         return time < 10 ? "0\(time)" : "\(time)"
     }
@@ -75,6 +77,7 @@ struct Pomo: View {
                         VStack {
                             HStack {
                                 Button {
+                                    timer.invalidate()
                                     myTimer = timer
                                 } label: {
                                     RoundedRectangle(cornerRadius: 20)
@@ -114,7 +117,7 @@ struct Pomo: View {
                                 RoundedRectangle(cornerRadius: 20)
                                     .foregroundStyle(.blue)
                                     .opacity(0.7)
-                           
+                                
                                     .overlay(
                                         Text("Reset")
                                             .font(.custom("", fixedSize: 50))
@@ -138,7 +141,7 @@ struct Pomo: View {
                             .font(.system(size: 25))
                         Text(currentBreaks > 0 ? "Breaks taken : \(currentBreaks)" : "")
                             .font(.system(size:20))
-           
+                        
                         
                         Divider()
                             .frame(width:300)
@@ -146,12 +149,14 @@ struct Pomo: View {
                         VStack { 
                             HStack {
                                 Button {
+                                    timerPomo.invalidate()
                                     myTimerPomo = timerPomo
+                                    
                                 } label: {
                                     RoundedRectangle(cornerRadius: 20)
                                         .foregroundStyle(.green)
                                         .opacity(0.7)
-                          
+                                    
                                         .overlay(
                                             Text("Start")
                                                 .font(.custom("", fixedSize: 50))
@@ -168,7 +173,7 @@ struct Pomo: View {
                                     RoundedRectangle(cornerRadius: 20)
                                         .foregroundStyle(.red)
                                         .opacity(0.7)
-                                 
+                                    
                                         .overlay(
                                             Text("Stop")
                                                 .font(.custom("", fixedSize: 50))
