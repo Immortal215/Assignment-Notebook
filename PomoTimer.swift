@@ -78,7 +78,9 @@ struct Pomo: View {
                             HStack {
                                 Button {
                                     timer.invalidate()
+                                    myTimer?.invalidate()
                                     myTimer = timer
+                                  
                                 } label: {
                                     RoundedRectangle(cornerRadius: 20)
                                         .foregroundStyle(.green)
@@ -150,8 +152,9 @@ struct Pomo: View {
                             HStack {
                                 Button {
                                     timerPomo.invalidate()
+                                    myTimerPomo?.invalidate()
                                     myTimerPomo = timerPomo
-                                    
+ 
                                 } label: {
                                     RoundedRectangle(cornerRadius: 20)
                                         .foregroundStyle(.green)
