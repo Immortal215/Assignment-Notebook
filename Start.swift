@@ -12,7 +12,7 @@ struct Start: View {
                         .resizable()
                         .frame(width: 200, height: 200)
                         .rotationEffect(.degrees(starter ? 0.0 : 15.0))
-                        .animation(.bouncy(duration: 1, extraBounce: 0.3))
+                        .animation(starter ? .easeIn(duration: 0) : .bouncy(duration: 1, extraBounce: 0.3) )
                         
                     Text("The Drawing Board")
                         .font(.custom("", fixedSize: 100))
