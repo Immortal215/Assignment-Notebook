@@ -3,7 +3,7 @@ import SwiftUI
 struct Settinger: View {
     
     @AppStorage("duedatesetter") var dueDateSetter = "One Day" 
-    @State var dueDaters : [String] = ["One Hour", "6 Hours", "One Day", "Two Days"]
+    @State var dueDaters : [String] = ["One Hour", "6 Hours", "One Day", "Two Days", "Five Days"]
     
     @AppStorage("organizedAssignments") var organizedAssignments = "Created By Descending (Recent to Oldest)" 
     @State var organizationOptions : [String] = ["Created By Descending (Recent to Oldest)", "Created By Ascending (Oldest to Recent)", "Due By Descending (Recent to Oldest)", "Due By Ascending (Oldest to Recent)"]
@@ -31,9 +31,11 @@ struct Settinger: View {
             VStack {
                 HStack {
                     VStack {
-                        Text("Notebook")
+                        Text("Planner")
+                            .fontWeight(.semibold)
+                            .font(.title)
                         Divider()
-                            .frame(width:100)
+                            .frame(width:150)
                         List {
                             HStack {
                                 Text("Base Due Date Setting")
@@ -93,9 +95,11 @@ struct Settinger: View {
                     }
                     
                     VStack {
-                        Text("Pomo Timer")
+                        Text("Pomodoro Timer")
+                            .font(.title)
+                            .fontWeight(.semibold)
                         Divider()
-                            .frame(width:100)
+                            .frame(width:150)
                         List {
                             HStack {
                                 Text("Pomodoro Time")
