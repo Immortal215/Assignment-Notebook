@@ -133,8 +133,7 @@ struct Notebook: View {
                             }
                             
                         }
-                        .animation(.snappy(duration: 1, extraBounce: 0.1))
-                        
+                        .animation(.bouncy(duration: 1, extraBounce: 0.1))
                         
                         Button {
                             if loadedData == true {
@@ -193,6 +192,8 @@ struct Notebook: View {
                                         dueDates.append(Date(timeIntervalSinceNow: 21600))
                                     } else if dueDateSetter == "Two Days"  {
                                         dueDates.append(Date(timeIntervalSinceNow: 172800))
+                                    } else if dueDateSetter == "Five Days"  {
+                                        dueDates.append(Date(timeIntervalSinceNow: 432000))
                                     }
                                     
                                     UserDefaults.standard.set(dueDates, forKey: "due")
@@ -285,7 +286,7 @@ struct Notebook: View {
                                                     .foregroundStyle(Color(hex: titleColor))
                                                 
                                             }
-                                            
+                           
                                             
                                             Divider()
                                                 .frame(maxWidth: screenWidth/5)
@@ -367,7 +368,7 @@ struct Notebook: View {
                 
                 if dates != [] {
                     if organizedAssignments == "Created By Descending (Recent to Oldest)" {
-                        let sortedIndices = dates.indices.sorted(by: { dates[$0] > dates[$1] })
+                        var sortedIndices = dates.indices.sorted(by: { dates[$0] > dates[$1] })
                         
                         subjects = sortedIndices.map { retrieveSubjectsArray[$0] }
                         names = sortedIndices.map { retrieveNames[$0] }
@@ -375,7 +376,7 @@ struct Notebook: View {
                         dates = sortedIndices.map { retrieveDateArray[$0] }
                         dueDates = sortedIndices.map { retrieveDueArray[$0] }
                     } else if organizedAssignments == "Created By Ascending (Oldest to Recent)" {
-                        let sortedIndices = dates.indices.sorted(by: { dates[$0] < dates[$1] })
+                        var sortedIndices = dates.indices.sorted(by: { dates[$0] < dates[$1] })
                         
                         subjects = sortedIndices.map { retrieveSubjectsArray[$0] }
                         names = sortedIndices.map { retrieveNames[$0] }
@@ -383,7 +384,7 @@ struct Notebook: View {
                         dates = sortedIndices.map { retrieveDateArray[$0] }
                         dueDates = sortedIndices.map { retrieveDueArray[$0] }
                     } else if organizedAssignments == "Due By Ascending (Oldest to Recent)" {
-                        let sortedIndices = dates.indices.sorted(by: { dueDates[$0] > dueDates[$1] })
+                        var sortedIndices = dates.indices.sorted(by: { dueDates[$0] > dueDates[$1] })
                         
                         subjects = sortedIndices.map { retrieveSubjectsArray[$0] }
                         names = sortedIndices.map { retrieveNames[$0] }
@@ -391,7 +392,7 @@ struct Notebook: View {
                         dates = sortedIndices.map { retrieveDateArray[$0] }
                         dueDates = sortedIndices.map { retrieveDueArray[$0] }
                     } else if organizedAssignments == "Due By Descending (Recent to Oldest)" {
-                        let sortedIndices = dates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
+                        var sortedIndices = dates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
                         
                         subjects = sortedIndices.map { retrieveSubjectsArray[$0] }
                         names = sortedIndices.map { retrieveNames[$0] }
