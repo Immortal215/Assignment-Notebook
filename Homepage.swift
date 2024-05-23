@@ -183,10 +183,9 @@ struct Homepage: View {
                                             
                                         }
                                     }  
-                                    
+                                    .foregroundStyle(dueDates[index] < Date().addingTimeInterval(172800) ? .red : .blue)    
                                 }
                                 
-                                .foregroundStyle(.blue)
                                 .padding(10)
                                 .offset(x:100)
                             }
@@ -221,7 +220,7 @@ struct Homepage: View {
                                     }
                                     if progressTimePomo != pomoTime {
                                         HStack {
-                                            Text("\(breakText ? "Break" : "Pomo") Timer")
+                                            Text("\(breakText ? "Break" : "Pomodoro") Timer")
                                             Divider()
                                                 .frame(width:100)
                                             Text("\(minutesPomo):\(secondsPomo)")
@@ -265,7 +264,7 @@ struct Homepage: View {
                 if dueDates != [] {
                     
                     
-                    let sortedIndices = dueDates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
+                    var sortedIndices = dueDates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
                     
                     // Rearrange all arrays based on sorted indices
                     subjects = sortedIndices.map { retrieveSubjectsArray[$0] }
