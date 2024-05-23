@@ -310,10 +310,9 @@ struct Notebook: View {
                                                         displayedComponents: [.hourAndMinute, .date]
                                                     ) 
                                                     .offset(x:-465)
-                                                    .onTapGesture {
+                                                    .onChange(of: dueDates[index]) {
                                                         UserDefaults.standard.set(dueDates, forKey: "due")
                                                     }
-                                                    
                                                     
                                                     //     Divider()
                                                     Text("Created : \(dates[index])")
