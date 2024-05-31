@@ -80,7 +80,7 @@ struct Pomo: View {
                                     timer.invalidate()
                                     myTimer?.invalidate()
                                     myTimer = timer
-                                  
+                                    
                                 } label: {
                                     RoundedRectangle(cornerRadius: 20)
                                         .foregroundStyle(.green)
@@ -132,29 +132,53 @@ struct Pomo: View {
                     }
                     Divider()
                     VStack {
-                        Text("Pomo Timer")
+                        Text("Pomodoro Timer")
                             .font(.largeTitle)
                             .fontWeight(.bold)
                         Divider()
+                       Spacer() 
+                        ZStack {
+                            // Background Circle
+                            Circle()
+                                .stroke(lineWidth: 20)
+                                .opacity(0.3)
+                                .foregroundColor(.gray)
+                            
+                            // Outer Border Circle
+                            Circle()
+                                .trim(from: 0.0, to: CGFloat(breakText ? Double(progressTimePomo/breakTime) : Double(progressTimePomo/(pomoTime == 0 ? progressTimePomo : pomoTime))))
+                                .stroke(style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
+                                .foregroundColor(breakText ? .green : .teal)
+                                .rotationEffect(Angle(degrees: 270.0))
+                                .animation(.linear(duration: myTimerPomo == timerPomo ? 99999.9 : progressTimePomo == pomoTime ? 0.0 : (breakText ? Double(breakTime) : (progressTimePomo > 1 ? Double(progressTimePomo) : 0.0))), value: progressTimePomo)
+                                .tint(.red)
+                            
+                            VStack {
+                                
+                                Text("\(minutesPomo):\(secondsPomo)")
+                                    .font(.system(size: 100))
+                                Text("\(breakText ? "Pomo" : "Break") Time : \(breakText ? (pomoTime > 60 ? pomoTime/60 : pomoTime) : (breakTime/60)) \(pomoTime > 60 ? "Minutes" : breakText ?  "Seconds" : "Minutes")")
+                                    .font(.system(size: 25))
+                                Text(currentBreaks > 0 ? "Breaks taken : \(currentBreaks)" : "")
+                                    .font(.system(size:20))
+                                
+                                
+                            }
+                        }
+                        .frame(width:325, height: 325)
+                      //  .padding(40)
                         
-                        Text("\(minutesPomo):\(secondsPomo)")
-                            .font(.system(size: 100))
-                        Text("\(breakText ? "Pomo" : "Break") Time : \(breakText ? (pomoTime > 60 ? pomoTime/60 : pomoTime) : (breakTime/60)) \(pomoTime > 60 ? "Minutes" : breakText ?  "Seconds" : "Minutes")")
-                            .font(.system(size: 25))
-                        Text(currentBreaks > 0 ? "Breaks taken : \(currentBreaks)" : "")
-                            .font(.system(size:20))
-                        
-                        
-                        Divider()
-                            .frame(width:300)
-                        
+                 //   Divider()
+                   //         .frame(width:300)
+                        Spacer()
                         VStack { 
                             HStack {
                                 Button {
                                     timerPomo.invalidate()
                                     myTimerPomo?.invalidate()
                                     myTimerPomo = timerPomo
- 
+                                    
+                                    print(pomoTime/progressTimePomo)
                                 } label: {
                                     RoundedRectangle(cornerRadius: 20)
                                         .foregroundStyle(.green)
