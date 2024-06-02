@@ -8,7 +8,7 @@ struct Pomo: View {
     @AppStorage("opened") var opened = false
     @AppStorage("currentBreaks") var currentBreaks = 0 
     @AppStorage("breakText") var breakText = false  
-    
+    @State var currentColor: Color = .pink
     var timer: Timer {
         
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {_ in
@@ -84,7 +84,7 @@ struct Pomo: View {
                                 } label: {
                                     RoundedRectangle(cornerRadius: 20)
                                         .foregroundStyle(.green)
-                                        .opacity(0.7)
+                                        .opacity(0.6)
                                         .overlay(
                                             Text("Start")
                                                 .font(.custom("", fixedSize: 50))
@@ -103,7 +103,7 @@ struct Pomo: View {
                                 } label: {
                                     RoundedRectangle(cornerRadius: 20)
                                         .foregroundStyle(.red)
-                                        .opacity(0.7)
+                                        .opacity(0.6)
                                         .overlay(
                                             Text("Stop")
                                                 .font(.custom("", fixedSize: 50))
@@ -118,7 +118,7 @@ struct Pomo: View {
                             } label: {
                                 RoundedRectangle(cornerRadius: 20)
                                     .foregroundStyle(.blue)
-                                    .opacity(0.7)
+                                    .opacity(0.6)
                                 
                                     .overlay(
                                         Text("Reset")
@@ -136,7 +136,7 @@ struct Pomo: View {
                             .font(.largeTitle)
                             .fontWeight(.bold)
                         Divider()
-                       Spacer() 
+                        Spacer() 
                         ZStack {
                             // Background Circle
                             Circle()
@@ -148,15 +148,20 @@ struct Pomo: View {
                             Circle()
                                 .trim(from: 0.0, to: CGFloat(breakText ? Double(progressTimePomo/breakTime) : Double(progressTimePomo/(pomoTime == 0 ? progressTimePomo : pomoTime))))
                                 .stroke(style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
-                                .foregroundColor(breakText ? .green : .teal)
                                 .rotationEffect(Angle(degrees: 270.0))
-                                .animation(.linear(duration: myTimerPomo == timerPomo ? 99999.9 : progressTimePomo == pomoTime ? 0.0 : (breakText ? Double(breakTime) : (progressTimePomo > 1 ? Double(progressTimePomo) : 0.0))), value: progressTimePomo)
-                                .tint(.red)
+                                .animation(.linear(duration:  (progressTimePomo == pomoTime ? 0.0 : (breakText ? Double(breakTime) : (progressTimePomo > 1 ? Double(progressTimePomo) : 0.0)))), value: progressTimePomo)
+                                .foregroundStyle(currentColor)
+                                .opacity(0.3)
+                                .onChange(of: breakText) { i in
+                                    currentColor = i ? .green : .pink
+                                }
                             
                             VStack {
                                 
                                 Text("\(minutesPomo):\(secondsPomo)")
                                     .font(.system(size: 100))
+                                    .foregroundStyle(currentColor)
+                                    .opacity(0.5)
                                 Text("\(breakText ? "Pomo" : "Break") Time : \(breakText ? (pomoTime > 60 ? pomoTime/60 : pomoTime) : (breakTime/60)) \(pomoTime > 60 ? "Minutes" : breakText ?  "Seconds" : "Minutes")")
                                     .font(.system(size: 25))
                                 Text(currentBreaks > 0 ? "Breaks taken : \(currentBreaks)" : "")
@@ -166,10 +171,10 @@ struct Pomo: View {
                             }
                         }
                         .frame(width:325, height: 325)
-                      //  .padding(40)
+                        //  .padding(40)
                         
-                 //   Divider()
-                   //         .frame(width:300)
+                        //   Divider()
+                        //         .frame(width:300)
                         Spacer()
                         VStack { 
                             HStack {
@@ -182,7 +187,7 @@ struct Pomo: View {
                                 } label: {
                                     RoundedRectangle(cornerRadius: 20)
                                         .foregroundStyle(.green)
-                                        .opacity(0.7)
+                                        .opacity(0.6)
                                     
                                         .overlay(
                                             Text("Start")
@@ -199,7 +204,7 @@ struct Pomo: View {
                                 } label: {
                                     RoundedRectangle(cornerRadius: 20)
                                         .foregroundStyle(.red)
-                                        .opacity(0.7)
+                                        .opacity(0.6)
                                     
                                         .overlay(
                                             Text("Stop")
@@ -218,7 +223,7 @@ struct Pomo: View {
                             } label: {
                                 RoundedRectangle(cornerRadius: 20)
                                     .foregroundStyle(.blue)
-                                    .opacity(0.7)
+                                    .opacity(0.6)
                                 
                                     .overlay(
                                         Text("Reset")
