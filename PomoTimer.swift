@@ -9,6 +9,7 @@ struct Pomo: View {
     @AppStorage("currentBreaks") var currentBreaks = 0 
     @AppStorage("breakText") var breakText = false  
     @State var currentColor: Color = .pink
+  
     var timer: Timer {
         
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {_ in
@@ -137,40 +138,46 @@ struct Pomo: View {
                             .fontWeight(.bold)
                         Divider()
                         Spacer() 
-                        ZStack {
-                            // Background Circle
-                            Circle()
-                                .stroke(lineWidth: 20)
-                                .opacity(0.3)
-                                .foregroundColor(.gray)
-                            
-                            // Outer Border Circle
-                            Circle()
-                                .trim(from: 0.0, to: CGFloat(breakText ? Double(progressTimePomo/breakTime) : Double(progressTimePomo/(pomoTime == 0 ? progressTimePomo : pomoTime))))
-                                .stroke(style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
-                                .rotationEffect(Angle(degrees: 270.0))
-                                .animation(.linear(duration:  (progressTimePomo == pomoTime ? 0.0 : (breakText ? Double(breakTime) : (progressTimePomo > 1 ? Double(progressTimePomo) : 0.0)))), value: progressTimePomo)
-                                .foregroundStyle(currentColor)
-                                .opacity(0.3)
-                                .onChange(of: breakText) { i in
-                                    currentColor = i ? .green : .pink
-                                }
-                            
-                            VStack {
+              
+                            ZStack {
                                 
-                                Text("\(minutesPomo):\(secondsPomo)")
-                                    .font(.system(size: 100))
+                                Circle()
+                                    .stroke(lineWidth: 20)
+                                    .opacity(0.3)
+                                    .foregroundColor(.gray)
+                                
+                                Circle()
+                                    .trim(from: 0.0, to: CGFloat(breakText ? Double(progressTimePomo/breakTime) : Double(progressTimePomo/(pomoTime == 0 ? progressTimePomo : pomoTime))))
+                                    .stroke(style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
+                                    .rotationEffect(Angle(degrees: 270.0))
+                                    .animation(.linear(duration:  (progressTimePomo == pomoTime ? 0.0 : (breakText ? Double(breakTime) : (progressTimePomo > 1 ? Double(progressTimePomo) : 0.0)))), value: progressTimePomo)
                                     .foregroundStyle(currentColor)
-                                    .opacity(0.5)
-                                Text("\(breakText ? "Pomo" : "Break") Time : \(breakText ? (pomoTime > 60 ? pomoTime/60 : pomoTime) : (breakTime/60)) \(pomoTime > 60 ? "Minutes" : breakText ?  "Seconds" : "Minutes")")
-                                    .font(.system(size: 25))
-                                Text(currentBreaks > 0 ? "Breaks taken : \(currentBreaks)" : "")
-                                    .font(.system(size:20))
+                                    .opacity(0.3)
+                                    .onChange(of: breakText) { i in
+                                        currentColor = i ? .green : .pink
+                                    }
                                 
                                 
+                                VStack {
+                                    
+                                    Text("\(minutesPomo):\(secondsPomo)")
+                                        .font(.system(size: 100))
+                                        .foregroundStyle(currentColor)
+                                        .opacity(0.5)
+                                        .padding(-100)
+                                    Divider()
+                                        .frame(width: 200)
+                                    Text("\(breakText ? "Pomo" : "Break") Time : \(breakText ? (pomoTime > 60 ? pomoTime/60 : pomoTime) : (breakTime/60)) \(pomoTime > 60 ? "Minutes" : breakText ?  "Seconds" : "Minutes")")
+                                        .font(.system(size: 25))
+                                    Text(currentBreaks > 0 ? "Breaks taken : \(currentBreaks)" : "")
+                                        .font(.system(size:20))
+                                    
+                                    
+                                }
+                                .offset(y: 50)
                             }
-                        }
-                        .frame(width:325, height: 325)
+                            .frame(width:325, height: 325)
+                        
                         //  .padding(40)
                         
                         //   Divider()
@@ -251,9 +258,8 @@ struct Pomo: View {
                 opened = true 
             }   
             progressTime = progressTime
-            
-            
-            
+      
+      
         }
         .onChange(of: pomoTime) {
             myTimerPomo?.invalidate()
