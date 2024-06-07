@@ -121,16 +121,11 @@ struct Notebook: View {
                             caughtUp = true
                             
                         } label: {
-                            VStack{
-                                Image(systemName: deleted ? "trash.fill" : "trash")
-                                    .resizable()
-                                    .frame(width:loadedData ?  25 : 0,height: loadedData ? 25 : 0, alignment: .center)
-                                    .foregroundStyle(.red)
-                                
-                                Text("Delete All")
-                                    .foregroundStyle(.red)
-                                    .frame(width:  loadedData ? 150 : 0)
-                            }
+                            Image(systemName: deleted ? "trash.fill" : "trash")
+                                .resizable()
+                                .frame(width:loadedData ?  25 : 0,height: loadedData ? 25 : 0, alignment: .center)
+                                .foregroundStyle(.red)
+                                .frame(width:  loadedData ? 150 : 0)
                             
                         }
                         .animation(.bouncy(duration: 1, extraBounce: 0.1))
@@ -143,17 +138,12 @@ struct Notebook: View {
                                 error = true 
                             }
                         } label: {
-                            VStack {
-                                Image(systemName: error ? "x.square" : "plus")
-                                    .resizable()
-                                    .foregroundStyle(error ? .red : .green)
-                                    .frame(width:loadedData ?  25 : 0,height: loadedData ? 25 : 0, alignment: .center)
-                                
-                                Text(error ? "Load Data First!" : "Add Assignment")
-                                    .foregroundStyle(error ? .red : .green)
-                                    .frame(width:  loadedData ? 150 : 0)
-                                
-                            }
+                            
+                            Image(systemName: error ? "x.square" : "plus")
+                                .resizable()
+                                .foregroundStyle(error ? .red : .green)
+                                .frame(width:loadedData ?  25 : 0,height: loadedData ? 25 : 0, alignment: .center)
+                                .frame(width:  loadedData ? 150 : 0)
                         }
                         .animation(.snappy(duration: 1, extraBounce: 0.1))
                         .alert("Make Your Assignment!", isPresented: $showAlert) {
@@ -219,7 +209,7 @@ struct Notebook: View {
                     }
                     .offset(x:400, y: 35)
                     
-                         Divider()  
+                    Divider()  
                         .frame(width: 300)
                         .offset(x:412.5, y: 35)
                     Text(caughtUp ? "You are all caught up!" : "")
@@ -255,7 +245,6 @@ struct Notebook: View {
                                                     caughtUp = true
                                                 }
                                             }
-                                            
                                         } label: {
                                             Text("")
                                                 .overlay(
@@ -263,12 +252,12 @@ struct Notebook: View {
                                                         .resizable()
                                                         .frame(width: deleted ? 0 : 75, height: deleted ? 0 : 75, alignment: .center)
                                                         .foregroundStyle(selectDelete[index] ? .red : .blue)
-                                                        .offset(x:-50)      
+                                                    
                                                     
                                                 )
-                                                .frame(width:0,height:0,alignment: .center)   
+                                            
                                         }
-                                        .offset(x:100)          
+                                        .offset(x:50)          
                                         
                                         Divider()
                                             .offset(x:100)
@@ -276,24 +265,29 @@ struct Notebook: View {
                                         VStack {
                                             HStack {
                                                 
-                                                Text(subjects[index])
+                                                TextField("\(subjects[index])", text: $subjects[index])
+                                                    .textFieldStyle(.automatic)
+                                                    .fixedSize()
                                                     .foregroundStyle(Color(hex: subjectColor))
-                                                
                                                 
                                                 Divider()
                                                 
-                                                Text(names[index])
+                                                TextField("\(names[index])", text: $names[index])
+                                                    .textFieldStyle(.automatic)
+                                                    .fixedSize()
                                                     .foregroundStyle(Color(hex: titleColor))
                                                 
                                             }
-                           
+                                            
                                             
                                             Divider()
                                                 .frame(maxWidth: screenWidth/5)
                                             
                                             
                                             VStack {
-                                                Text(infoArray[index])
+                                                TextField("\(infoArray[index])", text: $infoArray[index])
+                                                    .textFieldStyle(.automatic)
+                                                    .fixedSize()
                                                     .foregroundStyle(Color(hex: descriptionColor))
                                                 
                                                 Divider()
@@ -309,7 +303,7 @@ struct Notebook: View {
                                                         selection: $dueDates[index],
                                                         displayedComponents: [.hourAndMinute, .date]
                                                     ) 
-                                                    .offset(x:-465)
+                                                    .offset(x:-485)
                                                     .onChange(of: dueDates[index]) {
                                                         UserDefaults.standard.set(dueDates, forKey: "due")
                                                     }
