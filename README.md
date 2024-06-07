@@ -19,7 +19,7 @@
 
 ### Assignment Notebook 
 
-> Add assignment titles, descriptions, subjects and change the due date if neccessary. 
+> Add assignment titles, descriptions, subjects and change the due date if neccessary. (Editable afterwards as well) 
 
 > Delete assignments individually or delete them all at once. 
 
