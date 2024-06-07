@@ -10,7 +10,7 @@ struct Pomo: View {
     @AppStorage("currentBreaks") var currentBreaks = 0 
     @AppStorage("breakText") var breakText = false  
     @State var currentColor: Color = .pink
-    @AppStorage("cornerRadius") var cornerRadius : CGFloat = 300
+    @AppStorage("cornerRadius") var cornerRadius = 300
     
     var timer: Timer {
         
@@ -147,18 +147,18 @@ struct Pomo: View {
                         Spacer() 
                         Button {
                             if myTimerPomo?.isValid != true {
-                                cornerRadius = CGFloat.random(in: 1...162.5)
+                                cornerRadius = Int.random(in: 1...162)
                             }
                         }  label : {   
                             
                             ZStack {
                                 
-                                RoundedRectangle(cornerRadius: cornerRadius)
+                                RoundedRectangle(cornerRadius: CGFloat(cornerRadius))
                                     .stroke(lineWidth: 20)
                                     .opacity(0.3)
                                     .foregroundColor(.gray)
                                 
-                                RoundedRectangle(cornerRadius: cornerRadius)
+                                RoundedRectangle(cornerRadius: CGFloat(cornerRadius))
                                     .trim(from: 0.0, to: CGFloat(breakText ? Double(progressTimePomo/breakTime) : Double(progressTimePomo/(pomoTime == 0 ? progressTimePomo : pomoTime))))
                                     .stroke(style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
                                     .rotationEffect(Angle(degrees: 270.0))
@@ -315,5 +315,4 @@ func scheduleTimeBasedNotification(breaker : Bool) {
         }
     }
 }
-
 
