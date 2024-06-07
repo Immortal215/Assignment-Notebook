@@ -80,6 +80,8 @@ struct Homepage: View {
     @AppStorage("subjectcolor") var subjectColor : String = "#FFFFFF"
     @AppStorage("titlecolor") var titleColor : String = "#FFFFFF"
     @AppStorage("descolor") var descriptionColor : String = "#FFFFFF"
+    @State var currentColor: Color = .pink
+       @AppStorage("cornerRadius") var cornerRadius = 300
     
     var body: some View {
         ZStack {
@@ -106,7 +108,6 @@ struct Homepage: View {
                             
                             List {
                                 
-                                // make the delete work 
                                 
                                 ForEach(0..<min(infoArray.count, 3), id: \.self) { index in
                                     
@@ -183,14 +184,13 @@ struct Homepage: View {
                                             
                                         }
                                     }  
-                                    .foregroundStyle(dueDates[index] < Date().addingTimeInterval(172800) ? .red : .blue)    
+                                    .foregroundStyle(dueDates[index] < Date().addingTimeInterval(86400) ? (dueDates[index] < Date().addingTimeInterval(3600) ? .red : .orange)  : .blue)    
                                 }
                                 
                                 .padding(10)
                                 .offset(x:100)
                             }
-                            .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.8, blendDuration: 1.0)) 
-                            
+                            .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.8, blendDuration: 1.0))
                             
                         }
                     }
@@ -224,11 +224,37 @@ struct Homepage: View {
                                             Divider()
                                                 .frame(width:100)
                                             Text("\(minutesPomo):\(secondsPomo)")
+                                            Spacer()
+                                            
+                                        
+                                            ZStack { 
+                                                 
+                                                RoundedRectangle(cornerRadius: CGFloat(cornerRadius/6))
+                                                        .stroke(lineWidth: 10)
+                                                        .opacity(0.3)
+                                                        .foregroundColor(.gray)
+                                                        .animation(.linear(duration: 1))
+                                                    
+                                                RoundedRectangle(cornerRadius: CGFloat(cornerRadius/6))
+                                                    .trim(from: 0.0, to: CGFloat(breakText ? Double(progressTimePomo)/Double(breakTime) : Double(progressTimePomo)/Double(pomoTime)))
+                                                    .stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round, lineJoin: .round))
+                                                    .rotationEffect(Angle(degrees: -90.0))
+                                                    .animation(.linear(duration: 1))
+                                                    .foregroundStyle(currentColor)
+                                                    .opacity(0.3)
+                                                    .onChange(of: breakText) { 
+                                                        currentColor = breakText ? .green : .pink
+                                                    }
+                                                
+                                                
+                                            }
+                                            .frame(width:50, height:50)
+                                           
                                         }
                                         .font(.system(size:25))
                                     }
                                 }
-                                .animation(.snappy(duration: 0.3, extraBounce: 0.3))
+                               .animation(.snappy(duration: 0.3, extraBounce: 0.3))
                             } 
                             
                             
@@ -282,24 +308,21 @@ struct Homepage: View {
             loadedData = true 
             
             
-            if pomoOpened != true {
+            if pomoOpened == false {
                 progressTimePomo = pomoTime
                 pomoOpened = true 
-            }   
+            } 
+            
             progressTimePomo = progressTimePomo
             
-            if opened != true {
+            if opened == false {
                 progressTime = 0 
                 opened = true 
             }   
             progressTime = progressTime
             
-            
-            
-            
-            
-            
-            
+        
+             currentColor = breakText ? .green : .pink
             
         }
     }
