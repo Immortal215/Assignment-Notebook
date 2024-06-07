@@ -10,13 +10,14 @@ struct Pomo: View {
     @AppStorage("currentBreaks") var currentBreaks = 0 
     @AppStorage("breakText") var breakText = false  
     @State var currentColor: Color = .pink
-  
+    @AppStorage("cornerRadius") var cornerRadius : CGFloat = 300
+    
     var timer: Timer {
         
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {_ in
             
             progressTime += 1
-         
+            
             
         }
     }
@@ -144,15 +145,20 @@ struct Pomo: View {
                             .fontWeight(.bold)
                         Divider()
                         Spacer() 
-              
+                        Button {
+                            if myTimerPomo?.isValid != true {
+                                cornerRadius = CGFloat.random(in: 1...162.5)
+                            }
+                        }  label : {   
+                            
                             ZStack {
                                 
-                                Circle()
+                                RoundedRectangle(cornerRadius: cornerRadius)
                                     .stroke(lineWidth: 20)
                                     .opacity(0.3)
                                     .foregroundColor(.gray)
                                 
-                                Circle()
+                                RoundedRectangle(cornerRadius: cornerRadius)
                                     .trim(from: 0.0, to: CGFloat(breakText ? Double(progressTimePomo/breakTime) : Double(progressTimePomo/(pomoTime == 0 ? progressTimePomo : pomoTime))))
                                     .stroke(style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
                                     .rotationEffect(Angle(degrees: 270.0))
@@ -175,19 +181,17 @@ struct Pomo: View {
                                         .frame(width: 200)
                                     Text("\(breakText ? "Pomo" : "Break") Time : \(breakText ? (pomoTime > 60 ? pomoTime/60 : pomoTime) : (breakTime/60)) \(pomoTime > 60 ? "Minutes" : breakText ?  "Seconds" : "Minutes")")
                                         .font(.system(size: 25))
+                                        .foregroundStyle(.white)
                                     Text(currentBreaks > 0 ? "Breaks taken : \(currentBreaks)" : "")
                                         .font(.system(size:20))
+                                        .foregroundStyle(.white)
                                     
                                     
                                 }
                                 .offset(y: 50)
                             }
                             .frame(width:325, height: 325)
-                        
-                        //  .padding(40)
-                        
-                        //   Divider()
-                        //         .frame(width:300)
+                        }
                         Spacer()
                         VStack { 
                             HStack {
@@ -196,7 +200,7 @@ struct Pomo: View {
                                     myTimerPomo?.invalidate()
                                     myTimerPomo = timerPomo
                                     
-     
+                                    
                                 } label: {
                                     RoundedRectangle(cornerRadius: 20)
                                         .foregroundStyle(.green)
@@ -265,7 +269,7 @@ struct Pomo: View {
                 opened = true 
             }   
             progressTime = progressTime
-      
+            
         }
         
         .onChange(of: pomoTime) {
@@ -280,23 +284,23 @@ struct Pomo: View {
 
 func scheduleTimeBasedNotification(breaker : Bool) {
     
-    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in
+    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
         if granted {
             
             print("Permission granted")
-       
+            
             let content = UNMutableNotificationContent()
             content.title = "\(breaker ? "Break" : "Pomo") Time!"
             content.body = "\(breaker ? "Pomo" : "Break") Completed!"
             content.sound = UNNotificationSound.defaultCritical
             
-       
+            
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
             
-       
+            
             let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
             
-       
+            
             UNUserNotificationCenter.current().add(request) { error in
                 if let error = error {
                     print("Error adding notification: \(error.localizedDescription)")
@@ -311,3 +315,5 @@ func scheduleTimeBasedNotification(breaker : Bool) {
         }
     }
 }
+
+
