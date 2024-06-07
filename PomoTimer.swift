@@ -1,4 +1,5 @@
 import SwiftUI
+import UserNotifications 
 
 struct Pomo: View {
     @AppStorage("pomotimer") var pomoTime = 1500
@@ -15,7 +16,7 @@ struct Pomo: View {
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {_ in
             
             progressTime += 1
-            print(minutes)
+         
             
         }
     }
@@ -195,7 +196,7 @@ struct Pomo: View {
                                     myTimerPomo?.invalidate()
                                     myTimerPomo = timerPomo
                                     
-                                    print(pomoTime/progressTimePomo)
+     
                                 } label: {
                                     RoundedRectangle(cornerRadius: 20)
                                         .foregroundStyle(.green)
@@ -249,6 +250,7 @@ struct Pomo: View {
                 }
                 .animation(.snappy(duration: 0.3, extraBounce: 0.3))
             }
+            
         }
         .onAppear {
             if pomoOpened == false {
@@ -264,10 +266,48 @@ struct Pomo: View {
             }   
             progressTime = progressTime
       
-      
         }
+        
         .onChange(of: pomoTime) {
             myTimerPomo?.invalidate()
+        }
+        .onChange(of: breakText) {
+            scheduleTimeBasedNotification(breaker: breakText)
+        }
+        
+    }
+}
+
+func scheduleTimeBasedNotification(breaker : Bool) {
+    
+    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in
+        if granted {
+            
+            print("Permission granted")
+       
+            let content = UNMutableNotificationContent()
+            content.title = "\(breaker ? "Break" : "Pomo") Time!"
+            content.body = "\(breaker ? "Pomo" : "Break") Completed!"
+            content.sound = UNNotificationSound.defaultCritical
+            
+       
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+            
+       
+            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+            
+       
+            UNUserNotificationCenter.current().add(request) { error in
+                if let error = error {
+                    print("Error adding notification: \(error.localizedDescription)")
+                } else {
+                    print("Notification scheduled")
+                }
+            }
+        } else if let error = error {
+            print("Authorization error: \(error.localizedDescription)")
+        } else {
+            print("Permission not granted")
         }
     }
 }
