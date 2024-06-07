@@ -146,29 +146,31 @@ struct Pomo: View {
                         Divider()
                         Spacer() 
                         Button {
-                            if myTimerPomo?.isValid != true {
-                                cornerRadius = Int.random(in: 1...162)
-                            }
+                            timerPomo.invalidate()
+                            myTimerPomo?.invalidate()
+                            myTimerPomo = timerPomo
+                            cornerRadius = Int.random(in: 1...162)
+                            
                         }  label : {   
                             
                             ZStack {
                                 
                                 RoundedRectangle(cornerRadius: CGFloat(cornerRadius))
-                                    .stroke(lineWidth: 20)
+                                    .stroke(lineWidth: 25)
                                     .opacity(0.3)
                                     .foregroundColor(.gray)
+                                    .animation(.linear(duration: 1))
                                 
                                 RoundedRectangle(cornerRadius: CGFloat(cornerRadius))
-                                    .trim(from: 0.0, to: CGFloat(breakText ? Double(progressTimePomo/breakTime) : Double(progressTimePomo/(pomoTime == 0 ? progressTimePomo : pomoTime))))
-                                    .stroke(style: StrokeStyle(lineWidth: 20, lineCap: .round, lineJoin: .round))
-                                    .rotationEffect(Angle(degrees: 270.0))
-                                    .animation(.linear(duration:  (progressTimePomo == pomoTime ? 0.0 : (breakText ? Double(breakTime) : (progressTimePomo > 1 ? Double(progressTimePomo) : 0.0)))), value: progressTimePomo)
+                                    .trim(from: 0.0, to: CGFloat(breakText ? Double(progressTimePomo)/Double(breakTime) : Double(progressTimePomo)/Double(pomoTime)))
+                                    .stroke(style: StrokeStyle(lineWidth: 25, lineCap: .round, lineJoin: .round))
+                                    .rotationEffect(Angle(degrees: -90.0))
+                                    .animation(.linear(duration: 1))
                                     .foregroundStyle(currentColor)
                                     .opacity(0.3)
                                     .onChange(of: breakText) { i in
                                         currentColor = i ? .green : .pink
                                     }
-                                
                                 
                                 VStack {
                                     
@@ -191,6 +193,7 @@ struct Pomo: View {
                                 .offset(y: 50)
                             }
                             .frame(width:325, height: 325)
+                            
                         }
                         Spacer()
                         VStack { 
@@ -237,6 +240,7 @@ struct Pomo: View {
                                 breaks = 0 
                                 breakText = false 
                                 currentBreaks = 0 
+                                cornerRadius = 300
                             } label: {
                                 RoundedRectangle(cornerRadius: 20)
                                     .foregroundStyle(.blue)
@@ -269,7 +273,7 @@ struct Pomo: View {
                 opened = true 
             }   
             progressTime = progressTime
-            
+            currentColor = breakText ? .green : .pink
         }
         
         .onChange(of: pomoTime) {
