@@ -16,6 +16,8 @@
 
 > Pomodoro timer used to effectively study and take 5 minute breaks every 25 minutes
 
+> Will send notifications to you, alerting you of what is neeed to do
+
 
 ### Assignment Notebook 
 
