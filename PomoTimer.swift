@@ -15,12 +15,16 @@ struct Pomo: View {
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {_ in
             
             progressTime += 1
+            print(minutes)
             
         }
     }
+    var hours: String {
+        let time = (progressTime % 3600) / 3600
+        return time < 10 ? "0\(time)" : "\(time)"
+    }
     
     var minutes: String {
-        
         let time = (progressTime % 3600) / 60
         return time < 10 ? "0\(time)" : "\(time)"
     }
@@ -72,7 +76,8 @@ struct Pomo: View {
                             .font(.largeTitle)
                             .fontWeight(.bold)
                         Divider()
-                        Text("\(minutes):\(seconds)")
+                        
+                        Text("\(hours != "0" ? hours : ""):\(minutes):\(seconds)")
                             .font(.system(size: 100))
                         
                         VStack {
