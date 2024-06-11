@@ -3,23 +3,29 @@ import SwiftUI
 struct Homepage: View {
     @State var screenWidth = UIScreen.main.bounds.width
     @State var screenHeight = UIScreen.main.bounds.height
+    @AppStorage("currentTab") var currentTab = "Basic List"
     
-    @State var retrieveSubjectsArray = UserDefaults.standard.array(forKey: "subjects") as! [String]? ?? [String()]
-    @State var subjects : [String] = [String()]
+    @State var retrieveBigDic: [String: [String: [String]]] = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? ["Basic List": ["broken": ["broken"]]]
+    @State var bigDic: [String: [String: [String]]] = ["Basic List": ["subjects": [String()], "names": [String()], "description": [String()], "date": [String()]]]
     
-    @State var retrieveNames = UserDefaults.standard.array(forKey: "names") as! [String]? ?? [String()]
-    @State var names : [String] = [String()]
+    @State var retrieveDueDic: [String: [Date]] = UserDefaults.standard.dictionary(forKey: "DueDicKey") as? [String: [Date]] ?? ["Basic List": [Date()]]
+    @State var dueDic: [String: [Date]] = ["Basic List": []]
     
-    @State var retrieveInfoArray = UserDefaults.standard.array(forKey: "description") as! [String]? ?? [String()]
-    @State var infoArray : [String] = [String()]
+    @State var retrieveSubjectsArray: [String] = UserDefaults.standard.array(forKey: "subjects") as? [String] ?? [String()]
+    @State var subjects: [String] = []
     
-    @State var retrieveDateArray = UserDefaults.standard.array(forKey: "date") as! [String]? ?? []
-    @State var dates : [String] = []
+    @State var names: [String] = []
     
-    @State var retrieveDueArray = UserDefaults.standard.array(forKey: "due") as! [Date]? ?? []
-    @State var dueDates : [Date] = []
+    @State var retrieveInfoArray: [String] = UserDefaults.standard.array(forKey: "description") as? [String] ?? [String()]
+    @State var infoArray: [String] = []
     
-    @State var daterio : [Date] = [Date()]
+    @State var retrieveDateArray: [String] = UserDefaults.standard.array(forKey: "date") as? [String] ?? []
+    @State var dates: [String] = []
+    
+    @State var retrieveDueArray: [Date] = UserDefaults.standard.array(forKey: "due") as? [Date] ?? []
+    @State var dueDates: [Date] = []
+    
+    @State var daterio: [Date] = [Date()]
     
     @State var description = ""
     @State var name = ""
@@ -31,11 +37,11 @@ struct Homepage: View {
     @State var loadedData = false
     @State var caughtUp = false
     @State var deleted = false
-    @State var error = false 
+    @State var error = false
     @State var boxesFilled = false
-    @State var settings = false 
-    @State var selectDelete : [Bool] = []
-    @State var assignmentAnimation = false 
+    @State var settings = false
+    @State var selectDelete: [Bool] = []
+    @State var assignmentAnimation = false
     
     @State var dateFormatter = DateFormatter()
     
@@ -43,8 +49,8 @@ struct Homepage: View {
     // time stuff
     @AppStorage("pomotimer") var pomoTime = 1500
     @AppStorage("breakTime") var breakTime = 300
-    @AppStorage("breaks") var breaks = 4 
-    @AppStorage("pomoOpened") var pomoOpened = false 
+    @AppStorage("breaks") var breaks = 4
+    @AppStorage("pomoOpened") var pomoOpened = false
     @AppStorage("opened") var opened = false
     @AppStorage("breakText") var breakText = false
     
@@ -77,11 +83,11 @@ struct Homepage: View {
     
     @AppStorage("progressPomo") var progressTimePomo = 0
     
-    @AppStorage("subjectcolor") var subjectColor : String = "#FFFFFF"
-    @AppStorage("titlecolor") var titleColor : String = "#FFFFFF"
-    @AppStorage("descolor") var descriptionColor : String = "#FFFFFF"
+    @AppStorage("subjectcolor") var subjectColor: String = "#FFFFFF"
+    @AppStorage("titlecolor") var titleColor: String = "#FFFFFF"
+    @AppStorage("descolor") var descriptionColor: String = "#FFFFFF"
     @State var currentColor: Color = .pink
-       @AppStorage("cornerRadius") var cornerRadius = 300
+    @AppStorage("cornerRadius") var cornerRadius = 300
     
     var body: some View {
         ZStack {
@@ -145,7 +151,7 @@ struct Homepage: View {
                                                             .resizable()
                                                             .frame(width: deleted ? 0 : 75, height: deleted ? 0 : 75, alignment: .center)
                                                             .foregroundStyle(selectDelete[index] ? .red : .blue)
-                                                            .offset(x:-50)      
+                                                            .offset(x:-50)
                                                         
                                                     )
                                                 .frame(width:0,height:0,alignment: .center)                 }
@@ -179,13 +185,14 @@ struct Homepage: View {
                                                     Text("Due : \(dueDates[index].formatted()) ")
                                                     
                                                     
-                                                } 
+                                                }
                                             }
                                             
                                         }
-                                    }  
-                                    .foregroundStyle(dueDates[index] < Date().addingTimeInterval(86400) ? (dueDates[index] < Date().addingTimeInterval(3600) ? .red : .orange)  : .blue)    
+                                    }
+                                    .foregroundStyle(dueDates[index] < Date().addingTimeInterval(86400) ? (dueDates[index] < Date().addingTimeInterval(3600) ? .red : .orange) : .blue)
                                 }
+                                
                                 
                                 .padding(10)
                                 .offset(x:100)
@@ -208,7 +215,7 @@ struct Homepage: View {
                         
                         VStack {
                             if progressTimePomo != pomoTime || progressTime != 0 {
-                                List { 
+                                List {
                                     if progressTime != 0 {
                                         HStack {
                                             Text("Stop Watch")
@@ -216,7 +223,7 @@ struct Homepage: View {
                                                 .frame(width:100)
                                             Text("\(minutes):\(seconds)")
                                         }
-                                        .font(.system(size: 25))  
+                                        .font(.system(size: 25))
                                     }
                                     if progressTimePomo != pomoTime {
                                         HStack {
@@ -226,15 +233,15 @@ struct Homepage: View {
                                             Text("\(minutesPomo):\(secondsPomo)")
                                             Spacer()
                                             
-                                        
-                                            ZStack { 
-                                                 
+                                            
+                                            ZStack {
+                                                
                                                 RoundedRectangle(cornerRadius: CGFloat(cornerRadius/6))
-                                                        .stroke(lineWidth: 10)
-                                                        .opacity(0.3)
-                                                        .foregroundColor(.gray)
-                                                        .animation(.linear(duration: 1))
-                                                    
+                                                    .stroke(lineWidth: 10)
+                                                    .opacity(0.3)
+                                                    .foregroundColor(.gray)
+                                                    .animation(.linear(duration: 1))
+                                                
                                                 RoundedRectangle(cornerRadius: CGFloat(cornerRadius/6))
                                                     .trim(from: 0.0, to: CGFloat(breakText ? Double(progressTimePomo)/Double(breakTime) : Double(progressTimePomo)/Double(pomoTime)))
                                                     .stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round, lineJoin: .round))
@@ -242,20 +249,20 @@ struct Homepage: View {
                                                     .animation(.linear(duration: 1))
                                                     .foregroundStyle(currentColor)
                                                     .opacity(0.3)
-                                                    .onChange(of: breakText) { 
-                                                        currentColor = breakText ? .green : .pink
+                                                    .onChange(of: breakText) {
+                                                        currentColor = $0 ? .green : .pink
                                                     }
                                                 
                                                 
                                             }
                                             .frame(width:50, height:50)
-                                           
+                                            
                                         }
                                         .font(.system(size:25))
                                     }
                                 }
-                               .animation(.snappy(duration: 0.3, extraBounce: 0.3))
-                            } 
+                                .animation(.snappy(duration: 0.3, extraBounce: 0.3))
+                            }
                             
                             
                         }
@@ -264,20 +271,25 @@ struct Homepage: View {
                 
                 
             }
-            .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.8, blendDuration: 1.0)) 
+            .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.8, blendDuration: 1.0))
             
         }
         .onAppear {
-            retrieveSubjectsArray = UserDefaults.standard.array(forKey: "subjects") as! [String]? ?? []
-            retrieveNames = UserDefaults.standard.array(forKey: "names") as! [String]? ?? []
-            retrieveDateArray = UserDefaults.standard.array(forKey: "date") as! [String]? ?? []
-            retrieveInfoArray = UserDefaults.standard.array(forKey: "description") as! [String]? ?? []
-            retrieveDueArray = UserDefaults.standard.array(forKey: "due") as! [Date]? ?? []
             
-            names = retrieveNames 
-            infoArray = retrieveInfoArray 
-            subjects = retrieveSubjectsArray 
-            dates = retrieveDateArray 
+            retrieveBigDic = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? [:]
+            
+            bigDic = retrieveBigDic
+            
+            names = bigDic[currentTab]?["names"] ?? []
+            
+            retrieveSubjectsArray = UserDefaults.standard.array(forKey: "subjects") as? [String] ?? []
+            retrieveDateArray = UserDefaults.standard.array(forKey: "date") as? [String] ?? []
+            retrieveInfoArray = UserDefaults.standard.array(forKey: "description") as? [String] ?? []
+            retrieveDueArray = UserDefaults.standard.array(forKey: "due") as? [Date] ?? []
+            
+            infoArray = retrieveInfoArray
+            subjects = retrieveSubjectsArray
+            dates = retrieveDateArray
             dueDates = retrieveDueArray
             selectDelete = []
             selectDelete = Array(repeating: false, count: infoArray.count)
@@ -286,55 +298,45 @@ struct Homepage: View {
             
             if infoArray != [] {
                 caughtUp = false
-                
-                if dueDates != [] {
-                    
-                    
-                    var sortedIndices = dueDates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
-                    
-                    // Rearrange all arrays based on sorted indices
-                    subjects = sortedIndices.map { retrieveSubjectsArray[$0] }
-                    names = sortedIndices.map { retrieveNames[$0] }
-                    infoArray = sortedIndices.map { retrieveInfoArray[$0] }
-                    dates = sortedIndices.map { retrieveDateArray[$0] }
-                    dueDates = sortedIndices.map { retrieveDueArray[$0] }
-                }
+              
+//                if dueDates != [] {
+//                  
+//                    
+//                    var sortedIndices = dueDates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
+//                    
+//                    // Rearrange all arrays based on sorted indices
+//                    subjects = sortedIndices.map { retrieveSubjectsArray[$0] }
+//                    names = sortedIndices.map { retrieveNames[$0] }
+//                    infoArray = sortedIndices.map { retrieveInfoArray[$0] }
+//                    dates = sortedIndices.map { retrieveDateArray[$0] }
+//                    dueDates = sortedIndices.map { retrieveDueArray[$0] }
+//                }
                 
             } else {
                 caughtUp = true
                 
             }
-            error = false 
-            loadedData = true 
+          
+            error = false
+            loadedData = true
             
-            
+  
             if pomoOpened == false {
                 progressTimePomo = pomoTime
-                pomoOpened = true 
-            } 
+                pomoOpened = true
+            }
             
             progressTimePomo = progressTimePomo
             
             if opened == false {
-                progressTime = 0 
-                opened = true 
-            }   
+                progressTime = 0
+                opened = true
+            }
             progressTime = progressTime
             
-        
-             currentColor = breakText ? .green : .pink
             
+            currentColor = breakText ? .green : .pink
+           
         }
     }
-    
 }
-
-
-
-
-
-
-
-
-
-
