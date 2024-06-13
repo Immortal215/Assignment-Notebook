@@ -11,12 +11,12 @@ struct Homepage: View {
     @State var retrieveDueDic: [String: [Date]] = UserDefaults.standard.dictionary(forKey: "DueDicKey") as? [String: [Date]] ?? ["Basic List": [Date()]]
     @State var dueDic: [String: [Date]] = ["Basic List": []]
     
-    @State var retrieveSubjectsArray: [String] = UserDefaults.standard.array(forKey: "subjects") as? [String] ?? [String()]
+    @State var retrieveSubjectsArray: [String] = UserDefaults.standard.array(forKey: "subjects") as? [String] ?? []
     @State var subjects: [String] = []
     
     @State var names: [String] = []
     
-    @State var retrieveInfoArray: [String] = UserDefaults.standard.array(forKey: "description") as? [String] ?? [String()]
+    @State var retrieveInfoArray: [String] = UserDefaults.standard.array(forKey: "description") as? [String] ?? []
     @State var infoArray: [String] = []
     
     @State var retrieveDateArray: [String] = UserDefaults.standard.array(forKey: "date") as? [String] ?? []
@@ -132,9 +132,9 @@ struct Homepage: View {
                                                     dates.remove(at: index)
                                                     dueDates.remove(at: index)
                                                     
-                                                    UserDefaults.standard.set(names, forKey: "names")
+                                                   // UserDefaults.standard.set(names, forKey: "names")
                                                     UserDefaults.standard.set(infoArray, forKey: "description")
-                                                    UserDefaults.standard.set(subjects, forKey: "subjects")
+                                                    //UserDefaults.standard.set(subjects, forKey: "subjects")
                                                     UserDefaults.standard.set(dates, forKey: "date")
                                                     UserDefaults.standard.set(dueDates, forKey: "due")
                                                     
@@ -190,7 +190,7 @@ struct Homepage: View {
                                             
                                         }
                                     }
-                                    .foregroundStyle(dueDates[index] < Date().addingTimeInterval(86400) ? (dueDates[index] < Date().addingTimeInterval(3600) ? .red : .orange) : .blue)
+                                    .foregroundStyle(dueDates[index] < Date().addingTimeInterval(86400) ? (dueDates[index] < Date().addingTimeInterval(3600) ? .red : .orange) : .green)
                                 }
                                 
                                 
@@ -278,17 +278,18 @@ struct Homepage: View {
             
             retrieveBigDic = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? [:]
             
-            bigDic = retrieveBigDic
+            bigDic = (retrieveBigDic[currentTab]?["subjects"]! != nil ? retrieveBigDic : ["Basic List" : ["names": [""], "subjects" : [""]]] )
+
+            names = bigDic[currentTab]!["names"]!
+            subjects = bigDic[currentTab]!["subjects"]!
             
-            names = bigDic[currentTab]?["names"] ?? []
-            
-            retrieveSubjectsArray = UserDefaults.standard.array(forKey: "subjects") as? [String] ?? []
+      //      retrieveSubjectsArray = UserDefaults.standard.array(forKey: "subjects") as? [String] ?? []
             retrieveDateArray = UserDefaults.standard.array(forKey: "date") as? [String] ?? []
             retrieveInfoArray = UserDefaults.standard.array(forKey: "description") as? [String] ?? []
             retrieveDueArray = UserDefaults.standard.array(forKey: "due") as? [Date] ?? []
             
             infoArray = retrieveInfoArray
-            subjects = retrieveSubjectsArray
+          //  subjects = retrieveSubjectsArray
             dates = retrieveDateArray
             dueDates = retrieveDueArray
             selectDelete = []
@@ -298,19 +299,19 @@ struct Homepage: View {
             
             if infoArray != [] {
                 caughtUp = false
-              
-//                if dueDates != [] {
-//                  
-//                    
-//                    var sortedIndices = dueDates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
-//                    
-//                    // Rearrange all arrays based on sorted indices
-//                    subjects = sortedIndices.map { retrieveSubjectsArray[$0] }
-//                    names = sortedIndices.map { retrieveNames[$0] }
-//                    infoArray = sortedIndices.map { retrieveInfoArray[$0] }
-//                    dates = sortedIndices.map { retrieveDateArray[$0] }
-//                    dueDates = sortedIndices.map { retrieveDueArray[$0] }
-//                }
+                
+                if dueDates != [] {
+                  
+                    
+                    var sortedIndices = dueDates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
+                    
+                    // Rearrange all arrays based on sorted indices
+                    subjects = sortedIndices.map { bigDic[currentTab]!["subjects"]![$0] }
+                    names = sortedIndices.map { bigDic[currentTab]!["names"]![$0] }
+                    infoArray = sortedIndices.map { retrieveInfoArray[$0] }
+                    dates = sortedIndices.map { retrieveDateArray[$0] }
+                    dueDates = sortedIndices.map { retrieveDueArray[$0] }
+                }
                 
             } else {
                 caughtUp = true
