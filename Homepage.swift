@@ -3,13 +3,14 @@ import SwiftUI
 struct Homepage: View {
     @State var screenWidth = UIScreen.main.bounds.width
     @State var screenHeight = UIScreen.main.bounds.height
+    
     @AppStorage("currentTab") var currentTab = "Basic List"
     
-    @State var retrieveBigDic: [String: [String: [String]]] = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? ["Basic List": ["broken": ["broken"]]]
+    @State var retrieveBigDic: [String: [String: [String]]] = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? ["Basic List": ["subjects": [String()], "names": [String()], "description": [String()], "date": [String()]]]
     @State var bigDic: [String: [String: [String]]] = ["Basic List": ["subjects": [String()], "names": [String()], "description": [String()], "date": [String()]]]
     
     @State var retrieveDueDic: [String: [Date]] = UserDefaults.standard.dictionary(forKey: "DueDicKey") as? [String: [Date]] ?? ["Basic List": [Date()]]
-    @State var dueDic: [String: [Date]] = ["Basic List": []]
+    @State var dueDic: [String: [Date]] = ["Basic List": [Date()]]
     
     @State var retrieveSubjectsArray: [String] = UserDefaults.standard.array(forKey: "subjects") as? [String] ?? []
     @State var subjects: [String] = []
@@ -104,14 +105,26 @@ struct Homepage: View {
                         Text("Most Urgent!")
                             .font(Font.custom("SF Compact Rounded", fixedSize: (screenWidth/25)))
                             .frame(width: screenWidth/2, height: 100, alignment: .center)
+                        
+                        Picker("",selection: $currentTab) {
+                            ForEach(Array(bigDic.keys), id: \.self) { i in
+                                if i.hasSuffix(" List") {
+                                    Text(i).tag(i)
+                                }
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        .fixedSize()
+                        
                         Divider()
                             .frame(width: 400)
-                        Text(caughtUp ? "You are all caught up!" : "")
+                        Text(currentTab == "+erder" ? "Edit Lists Below!" : caughtUp ? "You are all caught up!" : "")
                             .font(.title)
+                            .padding(caughtUp ? 30 : 0)
+
                         
-                        
-                        if loadedData == true && caughtUp != true {
-                            
+                        if loadedData && bigDic[currentTab]?["description"]?.isEmpty != true {
+
                             List {
                                 
                                 
@@ -132,11 +145,16 @@ struct Homepage: View {
                                                     dates.remove(at: index)
                                                     dueDates.remove(at: index)
                                                     
-                                                   // UserDefaults.standard.set(names, forKey: "names")
-                                                    UserDefaults.standard.set(infoArray, forKey: "description")
-                                                    //UserDefaults.standard.set(subjects, forKey: "subjects")
-                                                    UserDefaults.standard.set(dates, forKey: "date")
-                                                    UserDefaults.standard.set(dueDates, forKey: "due")
+                                                    bigDic[currentTab]!["names"]! = names
+                                                    bigDic[currentTab]!["subjects"]! = subjects
+                                                    bigDic[currentTab]!["description"]! = infoArray
+                                                    bigDic[currentTab]!["name"]! = names
+                                                    dueDic[currentTab]! = dueDates
+
+                                                    
+                                                    UserDefaults.standard.set(bigDic, forKey: "DicKey")
+                                                    UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
+
                                                     
                                                     if infoArray.isEmpty {
                                                         caughtUp = true
@@ -183,7 +201,6 @@ struct Homepage: View {
                                                     
                                                     
                                                     Text("Due : \(dueDates[index].formatted()) ")
-                                                    
                                                     
                                                 }
                                             }
@@ -276,42 +293,41 @@ struct Homepage: View {
         }
         .onAppear {
             
-            retrieveBigDic = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? [:]
+            currentTab = "Basic List"
             
-            bigDic = (retrieveBigDic[currentTab]?["subjects"]! != nil ? retrieveBigDic : ["Basic List" : ["names": [""], "subjects" : [""]]] )
+            retrieveBigDic = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? [:]
+            retrieveDueDic = UserDefaults.standard.dictionary(forKey: "DueDicKey") as? [String : [Date]] ?? [:]
+            
+            bigDic = (retrieveBigDic[currentTab]?["subjects"] != nil ? retrieveBigDic : bigDic )
+            dueDic = (retrieveDueDic[currentTab] != nil ? retrieveDueDic : dueDic)
 
+            
             names = bigDic[currentTab]!["names"]!
             subjects = bigDic[currentTab]!["subjects"]!
+            infoArray = bigDic[currentTab]!["description"]!
+            dates = bigDic[currentTab]!["date"]!
+            dueDates = dueDic[currentTab]!
             
-      //      retrieveSubjectsArray = UserDefaults.standard.array(forKey: "subjects") as? [String] ?? []
-            retrieveDateArray = UserDefaults.standard.array(forKey: "date") as? [String] ?? []
-            retrieveInfoArray = UserDefaults.standard.array(forKey: "description") as? [String] ?? []
-            retrieveDueArray = UserDefaults.standard.array(forKey: "due") as? [Date] ?? []
-            
-            infoArray = retrieveInfoArray
-          //  subjects = retrieveSubjectsArray
-            dates = retrieveDateArray
-            dueDates = retrieveDueArray
             selectDelete = []
             selectDelete = Array(repeating: false, count: infoArray.count)
             dateFormatter.dateFormat = "M/d/yyyy, h:mm a"
             
             
-            if infoArray != [] {
+            if bigDic[currentTab]?["description"] != [] {
                 caughtUp = false
                 
-                if dueDates != [] {
-                  
-                    
-                    var sortedIndices = dueDates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
-                    
-                    // Rearrange all arrays based on sorted indices
-                    subjects = sortedIndices.map { bigDic[currentTab]!["subjects"]![$0] }
-                    names = sortedIndices.map { bigDic[currentTab]!["names"]![$0] }
-                    infoArray = sortedIndices.map { retrieveInfoArray[$0] }
-                    dates = sortedIndices.map { retrieveDateArray[$0] }
-                    dueDates = sortedIndices.map { retrieveDueArray[$0] }
-                }
+//                if dueDates != [] {
+//                  
+//                    
+//                    var sortedIndices = dueDates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
+//                    
+//                    // Rearrange all arrays based on sorted indices
+//                    subjects = sortedIndices.map { bigDic[currentTab]!["subjects"]![$0] }
+//                    names = sortedIndices.map { bigDic[currentTab]!["names"]![$0] }
+//                    infoArray = sortedIndices.map { bigDic[currentTab]!["description"]![$0] }
+//                    dates = sortedIndices.map { bigDic[currentTab]!["date"]![$0] }
+//                    dueDates = sortedIndices.map { retrieveDueArray[$0] }
+//                }
                 
             } else {
                 caughtUp = true
@@ -338,6 +354,51 @@ struct Homepage: View {
             
             currentColor = breakText ? .green : .pink
            
+        }
+        
+        .onChange(of: currentTab) {
+            
+            if currentTab != "+erder" {
+                retrieveBigDic = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? [:]
+                retrieveDueDic = UserDefaults.standard.dictionary(forKey: "DueDicKey") as? [String : [Date]] ?? [:]
+                
+                bigDic = (retrieveBigDic[currentTab]?["subjects"] != nil ? retrieveBigDic : bigDic )
+                dueDic = (retrieveDueDic[currentTab] != nil ? retrieveDueDic : dueDic)
+                
+                
+                names = bigDic[currentTab]!["names"]!
+                subjects = bigDic[currentTab]!["subjects"]!
+                infoArray = bigDic[currentTab]!["description"]!
+                dates = bigDic[currentTab]!["date"]!
+                dueDates = dueDic[currentTab]!
+                
+                
+                selectDelete = []
+                selectDelete = Array(repeating: false, count: infoArray.count)
+                dateFormatter.dateFormat = "M/d/yyyy, h:mm a"
+                
+                
+                if infoArray != [] {
+                    caughtUp = false
+                    
+                    //                if dueDates != [] {
+                    //
+                    //
+                    //                    var sortedIndices = dueDates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
+                    //
+                    //                    // Rearrange all arrays based on sorted indices
+                    //                    subjects = sortedIndices.map { bigDic[currentTab]!["subjects"]![$0] }
+                    //                    names = sortedIndices.map { bigDic[currentTab]!["names"]![$0] }
+                    //                    infoArray = sortedIndices.map { bigDic[currentTab]!["description"]![$0] }
+                    //                    dates = sortedIndices.map { bigDic[currentTab]!["date"]![$0] }
+                    //                    dueDates = sortedIndices.map { retrieveDueArray[$0] }
+                    //                }
+                    
+                } else {
+                    caughtUp = true
+                    
+                }
+            }
         }
     }
 }
