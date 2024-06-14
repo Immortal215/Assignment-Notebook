@@ -6,25 +6,25 @@ struct Notebook: View {
     
     @AppStorage("currentTab") var currentTab = "Basic List"
     
-    @State var retrieveBigDic: [String: [String: [String]]] = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? ["Basic List": ["broken": ["broken"]]]
+    @State var retrieveBigDic: [String: [String: [String]]] = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? ["Basic List": ["subjects": [String()], "names": [String()], "description": [String()], "date": [String()]]]
     @State var bigDic: [String: [String: [String]]] = ["Basic List": ["subjects": [String()], "names": [String()], "description": [String()], "date": [String()]]]
     
     @State var retrieveDueDic: [String: [Date]] = UserDefaults.standard.dictionary(forKey: "DueDicKey") as? [String: [Date]] ?? ["Basic List": [Date()]]
     @State var dueDic: [String: [Date]] = ["Basic List": []]
     
-    @State var retrieveSubjectsArray: [String] = UserDefaults.standard.array(forKey: "subjects") as? [String] ?? []
     @State var subjects: [String] = []
     
     @State var names: [String] = []
     
-    @State var retrieveInfoArray: [String] = UserDefaults.standard.array(forKey: "description") as? [String] ?? []
     @State var infoArray: [String] = []
     
-    @State var retrieveDateArray: [String] = UserDefaults.standard.array(forKey: "date") as? [String] ?? []
     @State var dates: [String] = []
     
     @State var retrieveDueArray: [Date] = UserDefaults.standard.array(forKey: "due") as? [Date] ?? []
     @State var dueDates: [Date] = []
+    
+    @State var createTab = ""
+    @State var deleteTabs = ""
     
     @AppStorage("duedatesetter") var dueDateSetter = "One Day"
     @AppStorage("organizedAssignments") var organizedAssignments = "Created By Descending (Recent to Oldest)"
@@ -37,7 +37,6 @@ struct Notebook: View {
     @State var name = ""
     @State var subject = ""
     @State var date = ""
-    @State var daterio: [Date] = [Date()]
     
     @State var showAlert = false
     @State var showDelete = false
@@ -55,18 +54,16 @@ struct Notebook: View {
     var body: some View {
         ZStack {
             Button {
-            //    retrieveSubjectsArray = UserDefaults.standard.array(forKey: "subjects") as? [String] ?? []
                 retrieveBigDic = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? [:]
-                retrieveDateArray = UserDefaults.standard.array(forKey: "date") as? [String] ?? []
-                retrieveDueArray = UserDefaults.standard.array(forKey: "due") as? [Date] ?? []
-                retrieveInfoArray = UserDefaults.standard.array(forKey: "description") as? [String] ?? []
+                retrieveDueDic = UserDefaults.standard.dictionary(forKey: "DueDicKey") as? [String : [Date]] ?? [:]
                 
                 if loadedData == false {
-                       names = bigDic[currentTab]!["names"]!
-                    infoArray = retrieveInfoArray
+                    names = bigDic[currentTab]!["names"]!
+                    infoArray = bigDic[currentTab]!["description"]!
                     subjects = bigDic[currentTab]!["subjects"]!
-                    dates = retrieveDateArray
-                    dueDates = retrieveDueArray
+                    dates = bigDic[currentTab]!["date"]!
+                    dueDates = dueDic[currentTab]!
+                    
                     selectDelete = []
                     for _ in 0..<infoArray.count {
                         selectDelete.append(false)
@@ -103,132 +100,138 @@ struct Notebook: View {
                 
                 VStack {
                     HStack {
-                        Button {
-                            infoArray = []
-                            dates = []
-                            dueDates = []
-                           // subjects = []
-                            bigDic = [:]
-                          //  UserDefaults.standard.set(subjects, forKey: "subjects")
-                            UserDefaults.standard.set(dueDates, forKey: "due")
-                            UserDefaults.standard.set(dates, forKey: "date")
-                            UserDefaults.standard.set(infoArray, forKey: "description")
-                            UserDefaults.standard.set(bigDic, forKey: "DicKey")
-                            deleted = true
-                            caughtUp = true
-                        } label: {
-                            Image(systemName: deleted ? "trash.fill" : "trash")
-                                .resizable()
-                                .frame(width: loadedData ? 25 : 0, height: loadedData ? 25 : 0, alignment: .center)
-                                .foregroundStyle(.red)
-                                .frame(width: loadedData ? 150 : 0)
-                        }
-                        .animation(.bouncy(duration: 1, extraBounce: 0.1))
-                        
-                        Button {
-                            if loadedData == true {
-                                showAlert.toggle()
-                            } else {
-                                error = true
+                        if currentTab != "+erder" {
+                            Button {
+                                infoArray = []
+                                dates = []
+                                dueDates = []
+                                subjects = []
+                                names = []
+                                
+                                bigDic[currentTab] = [
+                                    "subjects": [],
+                                    "names": [],
+                                    "description": [],
+                                    "date": []
+                                ]
+                                
+                                dueDic[currentTab] = []
+                                
+                                UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
+                                UserDefaults.standard.set(bigDic, forKey: "DicKey")
+                                
+                                deleted = true
+                                caughtUp = true
+                            } label: {
+                                Image(systemName: deleted ? "trash.fill" : "trash")
+                                    .resizable()
+                                    .frame(width: loadedData ? 25 : 0, height: loadedData ? 25 : 0, alignment: .center)
+                                    .foregroundStyle(.red)
+                                    .frame(width: loadedData ? 150 : 0)
                             }
-                        } label: {
-                            Image(systemName: error ? "x.square" : "plus")
-                                .resizable()
-                                .foregroundStyle(error ? .red : .green)
-                                .frame(width: loadedData ? 25 : 0, height: loadedData ? 25 : 0, alignment: .center)
-                                .frame(width: loadedData ? 150 : 0)
-                        }
-                        .animation(.snappy(duration: 1, extraBounce: 0.1))
-                        .alert("Make Your Assignment!", isPresented: $showAlert) {
-                            VStack {
-                                TextField("Title", text: $name)
-                                    .foregroundStyle(Color(hex: titleColor == "#FFFFFF" ? "#000000" : titleColor))
-                                Divider()
-                                
-                                TextField("Description", text: $description)
-                                    .foregroundStyle(Color(hex: descriptionColor == "#FFFFFF" ? "#000000" : descriptionColor))
-                                Divider()
-                                
-                                TextField("Subject", text: $subject)
-                                    .foregroundStyle(Color(hex: subjectColor == "#FFFFFF" ? "#000000" : subjectColor))
-                              
-                                
-                                Button("Create Assignment") {
-                                    print(name)
-
-                                    if subject != "" && name != "" && description != "" {
-                                        var tabDict = bigDic[currentTab]
-                                        var namesArray = tabDict!["names"]!
-                                        var subjectsArray = tabDict!["subjects"]!
-
-                                                if namesArray == [] || namesArray == [""] {
-                                                    
-                                                    namesArray = []
-                                                    namesArray.append(name)
-                                                    tabDict?["names"] = namesArray
-                                                    bigDic[currentTab] = tabDict
-                                                    names = namesArray
-                                                    
-                                                    subjectsArray = []
-                                                    subjectsArray.append(subject)
-                                                    tabDict?["subjects"] = subjectsArray
-                                                    bigDic[currentTab] = tabDict
-                                                    subjects = subjectsArray
-                                                    
-                                                } else {
-                                                    
-                                                    namesArray.append(name)
-                                                    tabDict!["names"] = namesArray
-                                                    bigDic[currentTab] = tabDict
-                                                    names = namesArray
-                                                    
-                                                    subjectsArray.append(subject)
-                                                    tabDict!["subjects"] = subjectsArray
-                                                    bigDic[currentTab] = tabDict
-                                                    subjects = subjectsArray
-
-                                                }
+                            .animation(.bouncy(duration: 1, extraBounce: 0.1))
+                            
+                            Button {
+                                if loadedData == true {
+                                    showAlert.toggle()
+                                } else {
+                                    error = true
+                                }
+                            } label: {
+                                Image(systemName: error ? "x.square" : "plus")
+                                    .resizable()
+                                    .foregroundStyle(error ? .red : .green)
+                                    .frame(width: loadedData ? 25 : 0, height: loadedData ? 25 : 0, alignment: .center)
+                                    .frame(width: loadedData ? 150 : 0)
+                            }
+                            .animation(.snappy(duration: 1, extraBounce: 0.1))
+                            .alert("Make Your Assignment!", isPresented: $showAlert) {
+                                VStack {
+                                    TextField("Title", text: $name)
+                                        .foregroundStyle(Color(hex: titleColor == "#000000" ? "#FFFFFF" : titleColor))
+                                    Divider()
+                                    
+                                    TextField("Description", text: $description)
+                                        .foregroundStyle(Color(hex: descriptionColor == "#000000" ? "#FFFFFF" : descriptionColor))
+                                    Divider()
+                                    
+                                    TextField("Subject", text: $subject)
+                                        .foregroundStyle(Color(hex: subjectColor == "#000000" ? "#FFFFFF" : subjectColor))
+                                    
+                                    
+                                    Button("Create Assignment") {
+                                        print(name)
+                                        
+                                        if subject != "" && name != "" && description != "" {
+                                            var tabDict = bigDic[currentTab]
+                                            var namesArray = tabDict!["names"]!
+                                            var subjectsArray = tabDict!["subjects"]!
+                                            var infosArray = tabDict!["description"]!
+                                            var datesArray = tabDict!["date"]!
                                             
-                                        
-                                        
-                                        
-                                        UserDefaults.standard.set(bigDic, forKey: "DicKey")
-                                        
-                                        infoArray.append(description)
-                                        UserDefaults.standard.set(infoArray, forKey: "description")
-                                        
-                                       // subjects.append(subject)
-                                      //  UserDefaults.standard.set(subjects, forKey: "subjects")
-                                        
-                                        dates.append(Date.now.formatted())
-                                        UserDefaults.standard.set(dates, forKey: "date")
-                                        
-                                        if dueDateSetter == "One Day" {
-                                            dueDates.append(Date(timeIntervalSinceNow: 86400))
-                                        } else if dueDateSetter == "One Hour" {
-                                            dueDates.append(Date(timeIntervalSinceNow: 3600))
-                                        } else if dueDateSetter == "6 Hours" {
-                                            dueDates.append(Date(timeIntervalSinceNow: 21600))
-                                        } else if dueDateSetter == "Two Days" {
-                                            dueDates.append(Date(timeIntervalSinceNow: 172800))
-                                        } else if dueDateSetter == "Five Days" {
-                                            dueDates.append(Date(timeIntervalSinceNow: 432000))
+                                            
+                                            if namesArray == [] || namesArray == [""] {
+                                                
+                                                namesArray = []
+                                                
+                                                subjectsArray = []
+                                                
+                                                infosArray = []
+                                                
+                                                datesArray = []
+                                                
+                                            }
+                                            
+                                            namesArray.append(name)
+                                            tabDict!["names"] = namesArray
+                                            bigDic[currentTab] = tabDict
+                                            names = namesArray
+                                            
+                                            subjectsArray.append(subject)
+                                            tabDict!["subjects"] = subjectsArray
+                                            bigDic[currentTab] = tabDict
+                                            subjects = subjectsArray
+                                            
+                                            infosArray.append(description)
+                                            tabDict!["description"] = infosArray
+                                            bigDic[currentTab] = tabDict
+                                            infoArray = infosArray
+                                            
+                                            datesArray.append(Date.now.formatted())
+                                            tabDict!["date"] = datesArray
+                                            bigDic[currentTab] = tabDict
+                                            dates = datesArray
+                                            
+                                            UserDefaults.standard.set(bigDic, forKey: "DicKey")
+                                            
+                                            if dueDateSetter == "One Day" {
+                                                dueDates.append(Date(timeIntervalSinceNow: 86400))
+                                            } else if dueDateSetter == "One Hour" {
+                                                dueDates.append(Date(timeIntervalSinceNow: 3600))
+                                            } else if dueDateSetter == "6 Hours" {
+                                                dueDates.append(Date(timeIntervalSinceNow: 21600))
+                                            } else if dueDateSetter == "Two Days" {
+                                                dueDates.append(Date(timeIntervalSinceNow: 172800))
+                                            } else if dueDateSetter == "Five Days" {
+                                                dueDates.append(Date(timeIntervalSinceNow: 432000))
+                                            }
+                                            
+                                            dueDic[currentTab] = dueDates
+                                            
+                                            UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
+                                            
+                                            selectDelete.append(false)
+                                            
+                                            caughtUp = false
+                                            deleted = false
+                                            assignmentAnimation = true
+                                        } else {
+                                            boxesFilled = true
                                         }
-                                        
-                                        UserDefaults.standard.set(dueDates, forKey: "due")
-                                        
-                                        selectDelete.append(false)
-                                        
-                                        caughtUp = false
-                                        deleted = false
-                                        assignmentAnimation = true
-                                        print(names)
-                                    } else {
-                                        boxesFilled = true
                                     }
                                 }
+                                
                             }
-
                         }
                     }
                     .alert("DID NOT ENTER SUFFICIENT DATA", isPresented: $boxesFilled) {
@@ -236,17 +239,34 @@ struct Notebook: View {
                     }
                     .offset(x: 400, y: 35)
                     
+                    
+                    
+                    Picker("",selection: $currentTab) {
+                        ForEach(Array(bigDic.keys), id: \.self) { i in
+                            if i.hasSuffix(" List") {
+                                Text(i).tag(i)
+                            }
+                        }
+                        
+                        
+                        Text("Edit Lists").tag("+erder")
+                    }
+                    .pickerStyle(.segmented)
+                    .fixedSize()
+                    
                     Divider()
                         .frame(width: 300)
                         .offset(x: 412.5, y: 35)
                     
-                    Text(caughtUp ? "You are all caught up!" : "")
+                    Text(currentTab == "+erder" ? "Edit Lists Below!" : caughtUp ? "You are all caught up!" : "")
                         .font(.title)
                         .padding(caughtUp ? 30 : 0)
                     
-                    if loadedData {
+                    
+                    if loadedData && currentTab != "+erder" && bigDic[currentTab]?["description"]?.isEmpty != true {
+                        
                         List {
-                            ForEach(infoArray.indices, id: \.self) { index in
+                            ForEach(bigDic[currentTab]!["description"]!.indices, id: \.self) { index in
                                 VStack {
                                     HStack {
                                         Button {
@@ -259,11 +279,16 @@ struct Notebook: View {
                                                 dates.remove(at: index)
                                                 dueDates.remove(at: index)
                                                 
+                                                bigDic[currentTab]!["names"]! = names
+                                                bigDic[currentTab]!["subjects"]! = subjects
+                                                bigDic[currentTab]!["description"]! = infoArray
+                                                bigDic[currentTab]!["date"]! = dates
+                                                dueDic[currentTab]! = dueDates
+                                                
+                                                
                                                 UserDefaults.standard.set(bigDic, forKey: "DicKey")
-                                                UserDefaults.standard.set(infoArray, forKey: "description")
-                                                UserDefaults.standard.set(subjects, forKey: "subjects")
-                                                UserDefaults.standard.set(dates, forKey: "date")
-                                                UserDefaults.standard.set(dueDates, forKey: "due")
+                                                UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
+
                                                 
                                                 if infoArray.isEmpty {
                                                     caughtUp = true
@@ -337,29 +362,81 @@ struct Notebook: View {
                         }
                         .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.8, blendDuration: 1.0))
                         .offset(y: 25)
+                    } else if currentTab == "+erder" {
+                        HStack {
+                            VStack {
+                                Image(systemName: "plus")
+                                    .frame(width: 50, height: 25)
+                                    .background(.brown, in: RoundedRectangle(cornerRadius: 10))
+
+                                Divider()
+                                
+                                TextField("New List Name", text: $createTab)
+                                    .textFieldStyle(.roundedBorder)
+                                
+                                Button {
+                                    bigDic["\(createTab) List"] = [
+                                        "subjects": [],
+                                        "names": [],
+                                        "description": [],
+                                        "date": []
+                                    ]
+                                    
+                                    dueDic["\(createTab) List"] = []
+                                    
+                                    UserDefaults.standard.set(bigDic, forKey: "DicKey")
+                                    UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
+                                } label: {
+                                    Text("Submit Name")
+                                }
+                            }
+                            
+                            Divider()
+                            VStack {
+                                Image(systemName: "minus")
+                                    .frame(width: 50, height: 25)
+                                    .background(.brown, in: RoundedRectangle(cornerRadius: 10))
+                                
+                                Divider()
+                                
+                                TextField("Delete List Name (Will Change Later)", text: $deleteTabs)
+                                    .textFieldStyle(.roundedBorder)
+                                
+                                Button {
+                                    bigDic.removeValue(forKey: deleteTabs)
+                                    dueDic.removeValue(forKey: deleteTabs)
+                                    
+                                    UserDefaults.standard.set(bigDic, forKey: "DicKey")
+                                    UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
+                                } label: {
+                                    Text("Delete List")
+                                }
+                            }
+                        }
+                        .fixedSize()
+
                     }
                 }
             }
         }
         .onAppear {
             
-            retrieveBigDic = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? ["Basic List" : ["names" : ["Error"]]]
-        
-            bigDic = (retrieveBigDic[currentTab]?["subjects"]! != nil ? retrieveBigDic : ["Basic List" : ["names": [""], "subjects" : [""]]] )
+            currentTab = "Basic List"
+            
+            retrieveBigDic = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? [:]
+            
+            bigDic = (retrieveBigDic[currentTab]?["subjects"] != nil ? retrieveBigDic : bigDic )
+            retrieveDueDic = UserDefaults.standard.dictionary(forKey: "DueDicKey") as? [String : [Date]] ?? [:]
+            
+            dueDic = (retrieveDueDic[currentTab] != nil ? retrieveDueDic : dueDic)
+            
             
             names = bigDic[currentTab]!["names"]!
             subjects = bigDic[currentTab]!["subjects"]!
-
+            infoArray = bigDic[currentTab]!["description"]!
+            dates = bigDic[currentTab]!["date"]!
+            dueDates = dueDic[currentTab]!
             
-          //  retrieveSubjectsArray = UserDefaults.standard.array(forKey: "subjects") as? [String] ?? []
-            retrieveDateArray = UserDefaults.standard.array(forKey: "date") as? [String] ?? []
-            retrieveInfoArray = UserDefaults.standard.array(forKey: "description") as? [String] ?? []
-            retrieveDueArray = UserDefaults.standard.array(forKey: "due") as? [Date] ?? []
-            
-            infoArray = retrieveInfoArray
-        //    subjects = retrieveSubjectsArray
-            dates = retrieveDateArray
-            dueDates = retrieveDueArray
             
             selectDelete = []
             for _ in 0..<infoArray.count {
@@ -374,6 +451,39 @@ struct Notebook: View {
             }
             error = false
             loadedData = true
+        }
+        .onDisappear {
+            currentTab = "Basic List"
+        }
+        .onChange(of: currentTab) {
+            if currentTab != "+erder" {
+                retrieveBigDic = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? [:]
+                retrieveDueDic = UserDefaults.standard.dictionary(forKey: "DueDicKey") as? [String : [Date]] ?? [:]
+                
+                bigDic = (retrieveBigDic[currentTab]?["subjects"] != nil ? retrieveBigDic : bigDic )
+                dueDic = (retrieveDueDic[currentTab] != nil ? retrieveDueDic : dueDic)
+                
+                
+                names = bigDic[currentTab]!["names"]!
+                subjects = bigDic[currentTab]!["subjects"]!
+                infoArray = bigDic[currentTab]!["description"]!
+                dates = bigDic[currentTab]!["date"]!
+                dueDates = dueDic[currentTab]!
+                
+                selectDelete = []
+                for _ in 0..<infoArray.count {
+                    selectDelete.append(false)
+                }
+                dateFormatter.dateFormat = "M/d/yyyy, h:mm a"
+                
+                if infoArray.isEmpty {
+                    caughtUp = true
+                } else {
+                    caughtUp = false
+                }
+                error = false
+                loadedData = true
+            }
         }
     }
 }
