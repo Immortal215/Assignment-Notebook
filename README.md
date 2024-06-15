@@ -32,4 +32,4 @@
 
 > Change organization and color throughout the app
 
-## Built for Ipad
+## Built and optimized for Ipad Gen 10
