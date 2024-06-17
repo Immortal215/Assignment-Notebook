@@ -25,6 +25,8 @@ struct Notebook: View {
     
     @State var createTab = ""
     @State var deleteTabs = ""
+    @State var deleteWarning = false
+    @State var addWarning = false
     
     @AppStorage("duedatesetter") var dueDateSetter = "One Day"
     @AppStorage("organizedAssignments") var organizedAssignments = "Created By Descending (Recent to Oldest)"
@@ -285,10 +287,9 @@ struct Notebook: View {
                                                 bigDic[currentTab]!["date"]! = dates
                                                 dueDic[currentTab]! = dueDates
                                                 
-                                                
                                                 UserDefaults.standard.set(bigDic, forKey: "DicKey")
                                                 UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
-
+                                                
                                                 
                                                 if infoArray.isEmpty {
                                                     caughtUp = true
@@ -346,7 +347,8 @@ struct Notebook: View {
                                                     )
                                                     .offset(x: -485)
                                                     .onChange(of: dueDates[index]) { _ in
-                                                        UserDefaults.standard.set(dueDates, forKey: "due")
+                                                        dueDic[currentTab]! = dueDates
+                                                        UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
                                                     }
                                                     
                                                     
@@ -365,34 +367,6 @@ struct Notebook: View {
                     } else if currentTab == "+erder" {
                         HStack {
                             VStack {
-                                Image(systemName: "plus")
-                                    .frame(width: 50, height: 25)
-                                    .background(.brown, in: RoundedRectangle(cornerRadius: 10))
-
-                                Divider()
-                                
-                                TextField("New List Name", text: $createTab)
-                                    .textFieldStyle(.roundedBorder)
-                                
-                                Button {
-                                    bigDic["\(createTab) List"] = [
-                                        "subjects": [],
-                                        "names": [],
-                                        "description": [],
-                                        "date": []
-                                    ]
-                                    
-                                    dueDic["\(createTab) List"] = []
-                                    
-                                    UserDefaults.standard.set(bigDic, forKey: "DicKey")
-                                    UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
-                                } label: {
-                                    Text("Submit Name")
-                                }
-                            }
-                            
-                            Divider()
-                            VStack {
                                 Image(systemName: "minus")
                                     .frame(width: 50, height: 25)
                                     .background(.brown, in: RoundedRectangle(cornerRadius: 10))
@@ -403,18 +377,66 @@ struct Notebook: View {
                                     .textFieldStyle(.roundedBorder)
                                 
                                 Button {
-                                    bigDic.removeValue(forKey: deleteTabs)
-                                    dueDic.removeValue(forKey: deleteTabs)
+                                    if deleteTabs != "Basic List" {
+                                        bigDic.removeValue(forKey: deleteTabs)
+                                        dueDic.removeValue(forKey: deleteTabs)
+                                        
+                                        UserDefaults.standard.set(bigDic, forKey: "DicKey")
+                                        UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
+                                    } else {
+                                        deleteWarning = true
+                                    }
                                     
-                                    UserDefaults.standard.set(bigDic, forKey: "DicKey")
-                                    UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
                                 } label: {
                                     Text("Delete List")
                                 }
+                                
                             }
+                            .alert("CAN NOT DELETE STARTER LIST", isPresented: $deleteWarning) {
+                                Button("Ok"){}
+                            }
+                            
+                            Divider()
+                            
+                            VStack {
+                                Image(systemName: "plus")
+                                    .frame(width: 50, height: 25)
+                                    .background(.brown, in: RoundedRectangle(cornerRadius: 10))
+                                
+                                Divider()
+                                
+                                TextField("New List Name", text: $createTab)
+                                    .textFieldStyle(.roundedBorder)
+                                
+                                Button {
+                                    if bigDic.keys.contains(createTab) {
+                                        addWarning = true
+                                    } else {
+                                        
+                                        bigDic["\(createTab) List"] = [
+                                            "subjects": [],
+                                            "names": [],
+                                            "description": [],
+                                            "date": []
+                                        ]
+
+                                        dueDic["\(createTab) List"] = []
+
+                                        UserDefaults.standard.set(bigDic, forKey: "DicKey")
+                                        UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
+                                    }
+                                } label: {
+                                    Text("Submit Name")
+                                }
+                            }
+                            .alert("Already An Existing Name!", isPresented: $addWarning) {
+                                Button("Ok"){}
+                            }
+ 
+                            
                         }
                         .fixedSize()
-
+                        
                     }
                 }
             }
