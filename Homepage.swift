@@ -316,18 +316,17 @@ struct Homepage: View {
             if bigDic[currentTab]?["description"] != [] {
                 caughtUp = false
                 
-//                if dueDates != [] {
-//                  
-//                    
-//                    var sortedIndices = dueDates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
-//                    
-//                    // Rearrange all arrays based on sorted indices
-//                    subjects = sortedIndices.map { bigDic[currentTab]!["subjects"]![$0] }
-//                    names = sortedIndices.map { bigDic[currentTab]!["names"]![$0] }
-//                    infoArray = sortedIndices.map { bigDic[currentTab]!["description"]![$0] }
-//                    dates = sortedIndices.map { bigDic[currentTab]!["date"]![$0] }
-//                    dueDates = sortedIndices.map { retrieveDueArray[$0] }
-//                }
+                if dueDates != [] {
+                    
+                    var sortedIndices = dueDates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
+                    
+                    // Rearrange all arrays based on sorted indices
+                    subjects = sortedIndices.map { bigDic[currentTab]!["subjects"]![$0] }
+                    names = sortedIndices.map { bigDic[currentTab]!["names"]![$0] }
+                    infoArray = sortedIndices.map { bigDic[currentTab]!["description"]![$0] }
+                    dates = sortedIndices.map { bigDic[currentTab]!["date"]![$0] }
+                    dueDates = sortedIndices.map { dueDic[currentTab]![$0] }
+                }
                 
             } else {
                 caughtUp = true
