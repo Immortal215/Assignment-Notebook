@@ -1,322 +1,244 @@
 import SwiftUI
-import UserNotifications 
 
-struct Pomo: View {
+struct Settinger: View {
+    
+    @AppStorage("duedatesetter") var dueDateSetter = "One Day"
+    @State var dueDaters : [String] = ["One Hour", "6 Hours", "One Day", "Two Days", "Five Days"]
+    
+    @AppStorage("organizedAssignments") var organizedAssignments = "Created By Descending (Recent to Oldest)"
+    @State var organizationOptions : [String] = ["Created By Descending (Recent to Oldest)", "Created By Ascending (Oldest to Recent)", "Due By Descending (Recent to Oldest)", "Due By Ascending (Oldest to Recent)"]
+    
     @AppStorage("pomotimer") var pomoTime = 1500
+    @State var textPomo = ""
+    @State var timerOptions : [String] = ["Custom", "900", "1200", "1500", "1800"]
+    
     @AppStorage("breakTime") var breakTime = 300
-    @AppStorage("breaks") var breaks = 4 
-    @AppStorage("pomoOpened") var pomoOpened = false 
+    @State var textBreak = ""
+    @State var timerOptionsBreak : [String] = ["Custom", "180", "300", "360"]
+    
+    @AppStorage("pomoOpened") var pomoOpened = false
     @AppStorage("opened") var opened = false
-    @AppStorage("currentBreaks") var currentBreaks = 0 
-    @AppStorage("breakText") var breakText = false  
-    @State var currentColor: Color = .pink
-    @AppStorage("cornerRadius") var cornerRadius = 300
     
-    var timer: Timer {
-        
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {_ in
-            
-            progressTime += 1
-            
-            
-        }
-    }
-    var hours: String {
-        let time = (progressTime % 3600) / 3600
-        return time < 10 ? "0\(time)" : "\(time)"
-    }
     
-    var minutes: String {
-        let time = (progressTime % 3600) / 60
-        return time < 10 ? "0\(time)" : "\(time)"
-    }
+    @AppStorage("subjectcolor") var subjectColor : String = "#FFFFFF"
+    @State var hexSubjectColor : Color = Color.white
     
-    var seconds: String {
-        
-        let time = progressTime % 60
-        return time < 10 ? "0\(time)" : "\(time)"
-    }
+    @AppStorage("titlecolor") var titleColor : String = "#FFFFFF"
+    @State var hexTitleColor : Color = Color.white
     
-    @AppStorage("progressTime") var progressTime = 0
-    @State var myTimer:Timer?
-    
-    var timerPomo: Timer {
-        
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {_ in
-            if progressTimePomo > 0 {
-                progressTimePomo -= 1
-            } else {
-                progressTimePomo = breakTime
-                currentBreaks += 1
-                breakText = true
-            }
-        }
-    }
-    
-    var minutesPomo: String {
-        
-        let time = (progressTimePomo % 3600) / 60
-        return time < 10 ? "0\(time)" : "\(time)"
-    }
-    
-    var secondsPomo: String {
-        
-        let time = progressTimePomo % 60
-        return time < 10 ? "0\(time)" : "\(time)"
-    }
-    
-    @AppStorage("progressPomo") var progressTimePomo = 0
-    @State var myTimerPomo:Timer?
+    @AppStorage("descolor") var descriptionColor : String = "#FFFFFF"
+    @State var hexDescriptionColor : Color = Color.white
     
     
     var body: some View {
         ZStack {
-            NavigationStack {
+            VStack {
                 HStack {
                     VStack {
-                        Text("Stop Watch")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
+                        Text("Planner")
+                            .fontWeight(.semibold)
+                            .font(.title)
                         Divider()
-                        
-                        Text("\(hours != "0" ? hours : ""):\(minutes):\(seconds)")
-                            .font(.system(size: 100))
-                        
-                        VStack {
+                            .frame(width:150)
+                        List {
                             HStack {
-                                Button {
-                                    timer.invalidate()
-                                    myTimer?.invalidate()
-                                    myTimer = timer
+                                Text("Base Due Date Setting")
+                                
+                                Picker("",selection: $dueDateSetter) {
+                                    ForEach(dueDaters, id: \.self) { i in
+                                        Text(i)
+                                    }
+                                }
+                                .frame(alignment: .trailing)
+                                
+                            }
+                            
+                            
+                            HStack {
+                                Text("Assignment Organization Order")
+                                
+                                
+                                Picker("" , selection: $organizedAssignments) {
+                                    ForEach(organizationOptions, id: \.self) { i in
+                                        Text(i)
+                                    }
+                                }
+                            }
+                            DisclosureGroup("Color Modifications") {
+                                HStack {
                                     
-                                } label: {
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .foregroundStyle(.green)
-                                        .opacity(0.6)
-                                        .overlay(
-                                            Text("Start")
-                                                .font(.custom("", fixedSize: 50))
-                                                .foregroundStyle(.white)
-                                                .animation(.bouncy(duration: 1, extraBounce: 0.1))
-                                        )
-                                        .frame(width:200, height:100)
+                                    ColorPicker("Subject", selection: $hexSubjectColor)
+                                        .onChange(of: hexSubjectColor) { newValue in
+                                            subjectColor = newValue.toHexString()
+                                        }
                                     
                                     
                                 }
-                                
-                                
-                                
-                                Button {
-                                    myTimer?.invalidate()
-                                } label: {
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .foregroundStyle(.red)
-                                        .opacity(0.6)
-                                        .overlay(
-                                            Text("Stop")
-                                                .font(.custom("", fixedSize: 50))
-                                                .foregroundStyle(.white)
-                                        )
-                                        .frame(width:200, height:100)
-                                }  
-                            }
-                            Button {
-                                progressTime = 0 
-                                myTimer?.invalidate()
-                            } label: {
-                                RoundedRectangle(cornerRadius: 20)
-                                    .foregroundStyle(.blue)
-                                    .opacity(0.6)
-                                
-                                    .overlay(
-                                        Text("Reset")
-                                            .font(.custom("", fixedSize: 50))
-                                            .foregroundStyle(.white)
-                                    )
-                                    .frame(width:200, height:100)
-                                
+                                HStack {
+                                    
+                                    ColorPicker("Title", selection: $hexTitleColor)
+                                        .onChange(of: hexTitleColor) { i in
+                                            titleColor = i.toHexString()
+                                        }
+                                    
+                                    
+                                }
+                                HStack {
+                                    
+                                    ColorPicker("Description", selection: $hexDescriptionColor)
+                                        .onChange(of: hexDescriptionColor) { newValue in
+                                            descriptionColor = newValue.toHexString()
+                                        }
+                                    
+                                    
+                                    
+                                }
                             }
                         }
                     }
-                    Divider()
+                    
                     VStack {
                         Text("Pomodoro Timer")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
+                            .font(.title)
+                            .fontWeight(.semibold)
                         Divider()
-                        Spacer() 
-                        Button {
-                            timerPomo.invalidate()
-                            myTimerPomo?.invalidate()
-                            myTimerPomo = timerPomo
-                            cornerRadius = Int.random(in: 1...162)
-                            
-                        }  label : {   
-                            
-                            ZStack {
-                                
-                                RoundedRectangle(cornerRadius: CGFloat(cornerRadius))
-                                    .stroke(lineWidth: 25)
-                                    .opacity(0.3)
-                                    .foregroundColor(.gray)
-                                    .animation(.linear(duration: 1))
-                                
-                                RoundedRectangle(cornerRadius: CGFloat(cornerRadius))
-                                    .trim(from: 0.0, to: CGFloat(breakText ? Double(progressTimePomo)/Double(breakTime) : Double(progressTimePomo)/Double(pomoTime)))
-                                    .stroke(style: StrokeStyle(lineWidth: 25, lineCap: .round, lineJoin: .round))
-                                    .rotationEffect(Angle(degrees: -90.0))
-                                    .animation(.linear(duration: 1))
-                                    .foregroundStyle(currentColor)
-                                    .opacity(0.3)
-                                    .onChange(of: breakText) { i in
-                                        currentColor = i ? .green : .pink
-                                    }
-                                
-                                VStack {
-                                    
-                                    Text("\(minutesPomo):\(secondsPomo)")
-                                        .font(.system(size: 100))
-                                        .foregroundStyle(currentColor)
-                                        .opacity(0.5)
-                                        .padding(-100)
-                                    Divider()
-                                        .frame(width: 200)
-                                    Text("\(breakText ? "Pomo" : "Break") Time : \(breakText ? (pomoTime > 60 ? pomoTime/60 : pomoTime) : (breakTime/60)) \(pomoTime > 60 ? "Minutes" : breakText ?  "Seconds" : "Minutes")")
-                                        .font(.system(size: 25))
-                                        .foregroundStyle(.white)
-                                    Text(currentBreaks > 0 ? "Breaks taken : \(currentBreaks)" : "")
-                                        .font(.system(size:20))
-                                        .foregroundStyle(.white)
-                                    
-                                    
-                                }
-                                .offset(y: 50)
-                            }
-                            .frame(width:325, height: 325)
-                            
-                        }
-                        Spacer()
-                        VStack { 
+                            .frame(width:150)
+                        
+                        List {
+                            //pomodoro time
                             HStack {
-                                Button {
-                                    timerPomo.invalidate()
-                                    myTimerPomo?.invalidate()
-                                    myTimerPomo = timerPomo
-                                    
-                                    
-                                } label: {
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .foregroundStyle(.green)
-                                        .opacity(0.6)
-                                    
-                                        .overlay(
-                                            Text("Start")
-                                                .font(.custom("", fixedSize: 50))
-                                                .foregroundStyle(.white)
-                                                .animation(.bouncy(duration: 1, extraBounce: 0.1))
-                                        )
-                                        .frame(width:200, height:100)
+                                Text("Pomodoro Time")
+                                
+                                Picker("",selection: $pomoTime) {
+                                    if timerOptions.contains(String(pomoTime)) {
+                                        ForEach(timerOptions, id: \.self) { i in
+                                            if i != "Custom" {
+                                                if i != "1500" {
+                                                    Text("\((Int(i)! / 60)) Minutes").tag((Int(i) ?? (pomoTime / 60) * 60))
+                                                } else {
+                                                    Text("25 Minutes (Default)").tag((Int(i) ?? (pomoTime / 60) * 60))
+                                                }
+                                            }
+                                        }
+                                        
+                                    } else {
+                                        if pomoTime > 60 {
+                                            Text("Custom \(pomoTime / 60) Minutes").tag(pomoTime / 60)
+                                        } else {
+                                            Text("Custom \(pomoTime) Seconds").tag(pomoTime / 60)
+                                        }
+                                        Text("15 Minutes").tag(900)
+                                        Text("20 Minutes").tag(1200)
+                                        Text("25 Minutes (Default)").tag(1500)
+                                        Text("30 Minutes").tag(1800)
+                                        
+                                        
+                                    }
                                     
                                 }
                                 
-                                Button {
-                                    myTimerPomo?.invalidate()
-                                } label: {
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .foregroundStyle(.red)
-                                        .opacity(0.6)
-                                    
-                                        .overlay(
-                                            Text("Stop")
-                                                .font(.custom("", fixedSize: 50))
-                                                .foregroundStyle(.white)
-                                        )
-                                        .frame(width:200, height:100)
-                                }
+                                TextField("Custom (Seconds)", text: $textPomo)
+                                    .textFieldStyle(.roundedBorder)
+                                    .onChange(of: textPomo) {
+                                        pomoTime = (Int(textPomo) ?? 0 * 60)
+                                    }
                             }
-                            Button {
-                                myTimerPomo?.invalidate()
-                                progressTimePomo = pomoTime
-                                breaks = 0 
-                                breakText = false 
-                                currentBreaks = 0 
-                                cornerRadius = 300
-                            } label: {
-                                RoundedRectangle(cornerRadius: 20)
-                                    .foregroundStyle(.blue)
-                                    .opacity(0.6)
+                            
+                            // break time
+                            HStack {
+                                Text("Break Time")
                                 
-                                    .overlay(
-                                        Text("Reset")
-                                            .font(.custom("", fixedSize: 50))
-                                            .foregroundStyle(.white)
-                                    )
-                                    .frame(width:200, height:100)
+                                Picker("",selection: $breakTime) {
+                                    if timerOptionsBreak.contains(String(breakTime)) {
+                                        ForEach(timerOptionsBreak, id: \.self) { i in
+                                            if i != "Custom" {
+                                                if i != "300" {
+                                                    Text("\((Int(i)! / 60)) Minutes").tag((Int(i) ?? (breakTime / 60) * 60))
+                                                } else {
+                                                    Text("5 Minutes (Default)").tag((Int(i) ?? (breakTime / 60) * 60))
+                                                }
+                                            }
+                                        }
+                                        
+                                    } else {
+                                        if breakTime > 60 {
+                                            Text("Custom \(breakTime / 60) Minutes").tag(breakTime / 60)
+                                        } else {
+                                            Text("Custom \(breakTime) Seconds").tag(breakTime / 60)
+                                        }
+                                        
+                                        Text("3 Minutes").tag(180)
+                                        Text("5 Minutes (Default)").tag(300)
+                                        Text("6 Minutes").tag(360)
+                                        
+                                        
+                                    }
+                                    
+                                }
+                                
+                                TextField("Custom (Seconds)", text: $textBreak)
+                                    .textFieldStyle(.roundedBorder)
+                                    .onChange(of: textBreak) {
+                                        breakTime = (Int(textBreak) ?? 0 * 60)
+                                    }
                             }
                         }
                     }
+                    
+                    
+                    
                 }
-                .animation(.snappy(duration: 0.3, extraBounce: 0.3))
             }
-            
         }
         .onAppear {
-            if pomoOpened == false {
-                progressTimePomo = pomoTime
-                pomoOpened = true 
-            } 
-            
-            progressTimePomo = progressTimePomo
-            
-            if opened == false {
-                progressTime = 0 
-                opened = true 
-            }   
-            progressTime = progressTime
-            currentColor = breakText ? .green : .pink
+            hexSubjectColor = Color(hex: subjectColor)
+            hexTitleColor = Color(hex: titleColor)
+            hexDescriptionColor = Color(hex: descriptionColor)
         }
-        
         .onChange(of: pomoTime) {
-            myTimerPomo?.invalidate()
-        }
-        .onChange(of: breakText) {
-            scheduleTimeBasedNotification(breaker: breakText)
-        }
-        
-    }
-}
-
-func scheduleTimeBasedNotification(breaker : Bool) {
-    
-    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-        if granted {
+            pomoOpened = false
             
-            print("Permission granted")
-            
-            let content = UNMutableNotificationContent()
-            content.title = "\(breaker ? "Break" : "Pomo") Time!"
-            content.body = "\(breaker ? "Pomo" : "Break") Completed!"
-            content.sound = UNNotificationSound.defaultCritical
-            
-            
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-            
-            
-            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-            
-            
-            UNUserNotificationCenter.current().add(request) { error in
-                if let error = error {
-                    print("Error adding notification: \(error.localizedDescription)")
-                } else {
-                    print("Notification scheduled")
-                }
+            if timerOptions.contains(String(pomoTime)) == true {
+                textPomo = ""
             }
-        } else if let error = error {
-            print("Authorization error: \(error.localizedDescription)")
-        } else {
-            print("Permission not granted")
+            
+            
+        }
+        .onChange(of: breakTime) {
+            pomoOpened = false
+            
+            if timerOptionsBreak.contains(String(breakTime)) == true {
+                textBreak = ""
+            }
+            
+            
         }
     }
 }
 
+// color extension
+extension Color {
+    init(hex: String) {
+        let scanner = Scanner(string: hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted))
+        var color: UInt64 = 0
+        
+        scanner.scanHexInt64(&color)
+        
+        let mask = 0x000000FF
+        let red = Double(Int(color >> 16) & mask) / 255.0
+        let green = Double(Int(color >> 8) & mask) / 255.0
+        let blue = Double(Int(color) & mask) / 255.0
+        
+        self.init(red: red, green: green, blue: blue)
+    }
+    
+    func toHexString() -> String {
+        guard let components = UIColor(self).cgColor.components else { return "#FFFFFF" }
+        
+        let r = Int(components[0] * 255.0)
+        let g = Int(components[1] * 255.0)
+        let b = Int(components[2] * 255.0)
+        
+        return String(format: "#%02X%02X%02X", r, g, b)
+    }
+}
