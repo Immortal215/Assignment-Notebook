@@ -55,6 +55,8 @@ struct Notebook: View {
     
     var body: some View {
         ZStack {
+            
+            // useless
             Button {
                 retrieveBigDic = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? [:]
                 retrieveDueDic = UserDefaults.standard.dictionary(forKey: "DueDicKey") as? [String : [Date]] ?? [:]
@@ -101,6 +103,8 @@ struct Notebook: View {
                 Divider()
                 
                 VStack {
+                    
+                    // both buttons
                     HStack {
                         if currentTab != "+erder" {
                             Button {
@@ -147,6 +151,7 @@ struct Notebook: View {
                                     .frame(width: loadedData ? 150 : 0)
                             }
                             .animation(.snappy(duration: 1, extraBounce: 0.1))
+                            // make assignment
                             .alert("Make Your Assignment!", isPresented: $showAlert) {
                                 VStack {
                                     TextField("Title", text: $name)
@@ -269,6 +274,8 @@ struct Notebook: View {
                         
                         List {
                             ForEach(bigDic[currentTab]!["description"]!.indices, id: \.self) { index in
+                                
+                                // each assignment
                                 VStack {
                                     HStack {
                                         Button {
@@ -344,6 +351,7 @@ struct Notebook: View {
                                                         "",
                                                         selection: $dueDates[index],
                                                         displayedComponents: [.hourAndMinute, .date]
+                                                        
                                                     )
                                                     .offset(x: -485)
                                                     .onChange(of: dueDates[index]) { _ in
@@ -364,6 +372,8 @@ struct Notebook: View {
                         }
                         .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.8, blendDuration: 1.0))
                         .offset(y: 25)
+                        
+                        // the editing tab
                     } else if currentTab == "+erder" {
                         HStack {
                             VStack {
@@ -373,8 +383,14 @@ struct Notebook: View {
                                 
                                 Divider()
                                 
-                                TextField("Delete List Name (Will Change Later)", text: $deleteTabs)
-                                    .textFieldStyle(.roundedBorder)
+                                Picker("Delete",selection: $deleteTabs) {
+                                    ForEach(Array(bigDic.keys), id: \.self) { i in
+                                        if i.hasSuffix(" List") {
+                                            Text(i).tag(i)
+                                        }
+                                    }
+                                }
+                                
                                 
                                 Button {
                                     if deleteTabs != "Basic List" {
@@ -419,9 +435,9 @@ struct Notebook: View {
                                             "description": [],
                                             "date": []
                                         ]
-
+                                        
                                         dueDic["\(createTab) List"] = []
-
+                                        
                                         UserDefaults.standard.set(bigDic, forKey: "DicKey")
                                         UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
                                     }
@@ -432,7 +448,7 @@ struct Notebook: View {
                             .alert("Already An Existing Name!", isPresented: $addWarning) {
                                 Button("Ok"){}
                             }
- 
+                            
                             
                         }
                         .fixedSize()
@@ -474,9 +490,7 @@ struct Notebook: View {
             error = false
             loadedData = true
         }
-        .onDisappear {
-            currentTab = "Basic List"
-        }
+        
         .onChange(of: currentTab) {
             if currentTab != "+erder" {
                 retrieveBigDic = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? [:]
