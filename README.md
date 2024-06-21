@@ -30,6 +30,6 @@
 
 ### Settings 
 
-> Change organization and color throughout the app
+> Change organization, timing, color throughout the app
 
 ## Built and optimized for Ipad Gen 10
