@@ -2,17 +2,21 @@ import SwiftUI
 
 struct Settinger: View {
     
-    @AppStorage("duedatesetter") var dueDateSetter = "One Day" 
+    @AppStorage("duedatesetter") var dueDateSetter = "One Day"
     @State var dueDaters : [String] = ["One Hour", "6 Hours", "One Day", "Two Days", "Five Days"]
     
-    @AppStorage("organizedAssignments") var organizedAssignments = "Created By Descending (Recent to Oldest)" 
+    @AppStorage("organizedAssignments") var organizedAssignments = "Created By Descending (Recent to Oldest)"
     @State var organizationOptions : [String] = ["Created By Descending (Recent to Oldest)", "Created By Ascending (Oldest to Recent)", "Due By Descending (Recent to Oldest)", "Due By Ascending (Oldest to Recent)"]
     
     @AppStorage("pomotimer") var pomoTime = 1500
     @State var textPomo = ""
     @State var timerOptions : [String] = ["Custom", "900", "1200", "1500", "1800"]
     
-    @AppStorage("pomoOpened") var pomoOpened = false 
+    @AppStorage("breakTime") var breakTime = 300
+    @State var textBreak = ""
+    @State var timerOptionsBreak : [String] = ["Custom", "180", "300", "360"]
+    
+    @AppStorage("pomoOpened") var pomoOpened = false
     @AppStorage("opened") var opened = false
     
     
@@ -40,32 +44,30 @@ struct Settinger: View {
                             HStack {
                                 Text("Base Due Date Setting")
                                 
-                                Divider()
-                                Picker("",selection: $dueDateSetter) { 
+                                Picker("",selection: $dueDateSetter) {
                                     ForEach(dueDaters, id: \.self) { i in
                                         Text(i)
                                     }
-                                } 
+                                }
                                 .frame(alignment: .trailing)
                                 
                             }
                             
-                    
+                            
                             HStack {
                                 Text("Assignment Organization Order")
                                 
-                                Divider()
                                 
-                                Picker("" , selection: $organizedAssignments) { 
+                                Picker("" , selection: $organizedAssignments) {
                                     ForEach(organizationOptions, id: \.self) { i in
                                         Text(i)
                                     }
-                                }   
+                                }
                             }
-                            DisclosureGroup("Color Modifications") { 
+                            DisclosureGroup("Color Modifications") {
                                 HStack {
                                     
-                                    ColorPicker("Subject : ", selection: $hexSubjectColor)
+                                    ColorPicker("Subject", selection: $hexSubjectColor)
                                         .onChange(of: hexSubjectColor) { newValue in
                                             subjectColor = newValue.toHexString()
                                         }
@@ -74,7 +76,7 @@ struct Settinger: View {
                                 }
                                 HStack {
                                     
-                                    ColorPicker("Title : ", selection: $hexTitleColor)
+                                    ColorPicker("Title", selection: $hexTitleColor)
                                         .onChange(of: hexTitleColor) { i in
                                             titleColor = i.toHexString()
                                         }
@@ -83,10 +85,11 @@ struct Settinger: View {
                                 }
                                 HStack {
                                     
-                                    ColorPicker("Description : ", selection: $hexDescriptionColor)
+                                    ColorPicker("Description", selection: $hexDescriptionColor)
                                         .onChange(of: hexDescriptionColor) { newValue in
                                             descriptionColor = newValue.toHexString()
                                         }
+                                    
                                     
                                     
                                 }
@@ -100,25 +103,26 @@ struct Settinger: View {
                             .fontWeight(.semibold)
                         Divider()
                             .frame(width:150)
+                        
                         List {
+                            //pomodoro time
                             HStack {
                                 Text("Pomodoro Time")
                                 
-                                Divider()
-                                Picker("",selection: $pomoTime) { 
+                                Picker("",selection: $pomoTime) {
                                     if timerOptions.contains(String(pomoTime)) {
                                         ForEach(timerOptions, id: \.self) { i in
                                             if i != "Custom" {
                                                 if i != "1500" {
                                                     Text("\((Int(i)! / 60)) Minutes").tag((Int(i) ?? (pomoTime / 60) * 60))
-                                                } else { 
+                                                } else {
                                                     Text("25 Minutes (Default)").tag((Int(i) ?? (pomoTime / 60) * 60))
                                                 }
                                             }
                                         }
                                         
-                                    } else { 
-                                        if pomoTime > 60 {
+                                    } else {
+                                        if pomoTime >= 60 {
                                             Text("Custom \(pomoTime / 60) Minutes").tag(pomoTime / 60)
                                         } else {
                                             Text("Custom \(pomoTime) Seconds").tag(pomoTime / 60)
@@ -131,40 +135,88 @@ struct Settinger: View {
                                         
                                     }
                                     
-                                } 
-                                Divider()
+                                }
+                                
                                 TextField("Custom (Seconds)", text: $textPomo)
                                     .textFieldStyle(.roundedBorder)
                                     .onChange(of: textPomo) {
                                         pomoTime = (Int(textPomo) ?? 0 * 60)
                                     }
-                                
                             }
                             
-                        }   
+                            // break time
+                            HStack {
+                                Text("Break Time")
+                                
+                                Picker("",selection: $breakTime) {
+                                    if timerOptionsBreak.contains(String(breakTime)) {
+                                        ForEach(timerOptionsBreak, id: \.self) { i in
+                                            if i != "Custom" {
+                                                if i != "300" {
+                                                    Text("\((Int(i)! / 60)) Minutes").tag((Int(i) ?? (breakTime / 60) * 60))
+                                                } else {
+                                                    Text("5 Minutes (Default)").tag((Int(i) ?? (breakTime / 60) * 60))
+                                                }
+                                            }
+                                        }
+                                        
+                                    } else {
+                                        if breakTime >= 60 {
+                                            Text("Custom \(breakTime / 60) Minutes").tag(breakTime / 60)
+                                        } else {
+                                            Text("Custom \(breakTime) Seconds").tag(breakTime / 60)
+                                        }
+                                        
+                                        Text("3 Minutes").tag(180)
+                                        Text("5 Minutes (Default)").tag(300)
+                                        Text("6 Minutes").tag(360)
+                                        
+                                        
+                                    }
+                                    
+                                }
+                                
+                                TextField("Custom (Seconds)", text: $textBreak)
+                                    .textFieldStyle(.roundedBorder)
+                                    .onChange(of: textBreak) {
+                                        breakTime = (Int(textBreak) ?? 0 * 60)
+                                    }
+                            }
+                        }
                     }
                     
                     
                     
                 }
             }
-        }  
+        }
         .onAppear {
             hexSubjectColor = Color(hex: subjectColor)
             hexTitleColor = Color(hex: titleColor)
             hexDescriptionColor = Color(hex: descriptionColor)
         }
         .onChange(of: pomoTime) {
-            pomoOpened = false 
+            pomoOpened = false
             
             if timerOptions.contains(String(pomoTime)) == true {
                 textPomo = ""
             }
             
+            
+        }
+        .onChange(of: breakTime) {
+            pomoOpened = false
+            
+            if timerOptionsBreak.contains(String(breakTime)) == true {
+                textBreak = ""
+            }
+     
+            
         }
     }
 }
 
+// color extension
 extension Color {
     init(hex: String) {
         let scanner = Scanner(string: hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted))
