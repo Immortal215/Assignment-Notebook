@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct Homepage: View {
+
     @State var screenWidth = UIScreen.main.bounds.width
     @State var screenHeight = UIScreen.main.bounds.height
     
@@ -44,7 +45,6 @@ struct Homepage: View {
     @State var selectDelete: [Bool] = []
     @State var assignmentAnimation = false
     
-    @State var dateFormatter = DateFormatter()
     
     
     // time stuff
@@ -55,6 +55,10 @@ struct Homepage: View {
     @AppStorage("opened") var opened = false
     @AppStorage("breakText") var breakText = false
     
+    var hours: String {
+        let time = (progressTime % 3600) / 3600
+        return time < 10 ? "0\(time)" : "\(time)"
+    }
     
     var minutes: String {
         
@@ -123,7 +127,7 @@ struct Homepage: View {
                             .padding(caughtUp ? 30 : 0)
 
                         
-                        if loadedData && bigDic[currentTab]?["description"]?.isEmpty != true {
+                        if loadedData && bigDic[currentTab]?["description"]?.isEmpty != true && caughtUp == false {
 
                             List {
                                 
@@ -148,9 +152,8 @@ struct Homepage: View {
                                                     bigDic[currentTab]!["names"]! = names
                                                     bigDic[currentTab]!["subjects"]! = subjects
                                                     bigDic[currentTab]!["description"]! = infoArray
-                                                    bigDic[currentTab]!["name"]! = names
+                                                    bigDic[currentTab]!["date"]! = dates
                                                     dueDic[currentTab]! = dueDates
-
                                                     
                                                     UserDefaults.standard.set(bigDic, forKey: "DicKey")
                                                     UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
@@ -238,7 +241,7 @@ struct Homepage: View {
                                             Text("Stop Watch")
                                             Divider()
                                                 .frame(width:100)
-                                            Text("\(minutes):\(seconds)")
+                                            Text("\(hours):\(minutes):\(seconds)")
                                         }
                                         .font(.system(size: 25))
                                     }
@@ -310,11 +313,10 @@ struct Homepage: View {
             
             selectDelete = []
             selectDelete = Array(repeating: false, count: infoArray.count)
-            dateFormatter.dateFormat = "M/d/yyyy, h:mm a"
+            DateFormatter().dateFormat = "M/d/yyyy, h:mm a"
             
             
             if bigDic[currentTab]?["description"] != [] {
-                caughtUp = false
                 
                 if dueDates != [] {
                     
@@ -326,7 +328,9 @@ struct Homepage: View {
                     infoArray = sortedIndices.map { bigDic[currentTab]!["description"]![$0] }
                     dates = sortedIndices.map { bigDic[currentTab]!["date"]![$0] }
                     dueDates = sortedIndices.map { dueDic[currentTab]![$0] }
+                    selectDelete = sortedIndices.map { selectDelete[$0]}
                 }
+                caughtUp = false
                 
             } else {
                 caughtUp = true
@@ -374,30 +378,38 @@ struct Homepage: View {
                 
                 selectDelete = []
                 selectDelete = Array(repeating: false, count: infoArray.count)
-                dateFormatter.dateFormat = "M/d/yyyy, h:mm a"
+                DateFormatter().dateFormat = "M/d/yyyy, h:mm a"
                 
                 
                 if infoArray != [] {
                     caughtUp = false
                     
-                    //                if dueDates != [] {
-                    //
-                    //
-                    //                    var sortedIndices = dueDates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
-                    //
-                    //                    // Rearrange all arrays based on sorted indices
-                    //                    subjects = sortedIndices.map { bigDic[currentTab]!["subjects"]![$0] }
-                    //                    names = sortedIndices.map { bigDic[currentTab]!["names"]![$0] }
-                    //                    infoArray = sortedIndices.map { bigDic[currentTab]!["description"]![$0] }
-                    //                    dates = sortedIndices.map { bigDic[currentTab]!["date"]![$0] }
-                    //                    dueDates = sortedIndices.map { retrieveDueArray[$0] }
-                    //                }
+                    if dueDates != [] {
+                        
+                        var sortedIndices = dueDates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
+                        
+                        // Rearrange all arrays based on sorted indices
+                        subjects = sortedIndices.map { bigDic[currentTab]!["subjects"]![$0] }
+                        names = sortedIndices.map { bigDic[currentTab]!["names"]![$0] }
+                        infoArray = sortedIndices.map { bigDic[currentTab]!["description"]![$0] }
+                        dates = sortedIndices.map { bigDic[currentTab]!["date"]![$0] }
+                        dueDates = sortedIndices.map { dueDic[currentTab]![$0] }
+                        selectDelete = sortedIndices.map { selectDelete[$0]}
+                    }
                     
                 } else {
                     caughtUp = true
                     
                 }
             }
+        }
+    }
+}
+
+extension UserDefaults {
+    static func resetDefaults() {
+        if let bundleID = Bundle.main.bundleIdentifier {
+            UserDefaults.standard.removePersistentDomain(forName: bundleID)
         }
     }
 }
