@@ -50,9 +50,7 @@ struct Notebook: View {
     @State var settings = false
     @State var selectDelete: [Bool] = []
     @State var assignmentAnimation = false
-    
-    @State var dateFormatter = DateFormatter()
-    
+        
     var body: some View {
         ZStack {
             
@@ -72,7 +70,7 @@ struct Notebook: View {
                     for _ in 0..<infoArray.count {
                         selectDelete.append(false)
                     }
-                    dateFormatter.dateFormat = "M/d/yyyy, h:mm a"
+                    DateFormatter().dateFormat = "M/d/yyyy, h:mm a"
                 }
                 
                 if infoArray != [] {
@@ -270,7 +268,7 @@ struct Notebook: View {
                         .padding(caughtUp ? 30 : 0)
                     
                     
-                    if loadedData && currentTab != "+erder" && bigDic[currentTab]?["description"]?.isEmpty != true {
+                    if loadedData && currentTab != "+erder" && bigDic[currentTab]?["description"]?.isEmpty != true && caughtUp == false {
                         
                         List {
                             ForEach(bigDic[currentTab]!["description"]!.indices, id: \.self) { index in
@@ -278,40 +276,41 @@ struct Notebook: View {
                                 // each assignment
                                 VStack {
                                     HStack {
-                                        Button {
-                                            selectDelete[index].toggle()
-                                            
-                                            if selectDelete[index] == false {
-                                                infoArray.remove(at: index)
-                                                names.remove(at: index)
-                                                subjects.remove(at: index)
-                                                dates.remove(at: index)
-                                                dueDates.remove(at: index)
+                                            Button {
+                                                selectDelete[index].toggle()
                                                 
-                                                bigDic[currentTab]!["names"]! = names
-                                                bigDic[currentTab]!["subjects"]! = subjects
-                                                bigDic[currentTab]!["description"]! = infoArray
-                                                bigDic[currentTab]!["date"]! = dates
-                                                dueDic[currentTab]! = dueDates
-                                                
-                                                UserDefaults.standard.set(bigDic, forKey: "DicKey")
-                                                UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
-                                                
-                                                
-                                                if infoArray.isEmpty {
-                                                    caughtUp = true
+                                                if selectDelete[index] == false {
+                                                    infoArray.remove(at: index)
+                                                    names.remove(at: index)
+                                                    subjects.remove(at: index)
+                                                    dates.remove(at: index)
+                                                    dueDates.remove(at: index)
+                                  
+                                                    bigDic[currentTab]!["names"]! = names
+                                                    bigDic[currentTab]!["subjects"]! = subjects
+                                                    bigDic[currentTab]!["description"]! = infoArray
+                                                    bigDic[currentTab]!["date"]! = dates
+                                                    dueDic[currentTab]! = dueDates
+                                                    
+                                                    UserDefaults.standard.set(bigDic, forKey: "DicKey")
+                                                    UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
+                                                    
+                                                    
+                                                    if infoArray.isEmpty {
+                                                        caughtUp = true
+                                                    }
                                                 }
+                                            } label: {
+                                                Text("")
+                                                    .overlay(
+                                                        Image(systemName: selectDelete[index] ? "trash.square" : "checkmark.square")
+                                                            .resizable()
+                                                            .frame(width: deleted ? 0 : 75, height: deleted ? 0 : 75, alignment: .center)
+                                                            .foregroundStyle(selectDelete[index] ? .red : .blue)
+                                                    )
                                             }
-                                        } label: {
-                                            Text("")
-                                                .overlay(
-                                                    Image(systemName: selectDelete[index] ? "trash.square" : "checkmark.square")
-                                                        .resizable()
-                                                        .frame(width: deleted ? 0 : 75, height: deleted ? 0 : 75, alignment: .center)
-                                                        .foregroundStyle(selectDelete[index] ? .red : .blue)
-                                                )
-                                        }
-                                        .offset(x: 50)
+                                            .offset(x: 50)
+                                        
                                         
                                         Divider()
                                             .offset(x: 100)
@@ -480,7 +479,7 @@ struct Notebook: View {
             for _ in 0..<infoArray.count {
                 selectDelete.append(false)
             }
-            dateFormatter.dateFormat = "M/d/yyyy, h:mm a"
+            DateFormatter().dateFormat = "M/d/yyyy, h:mm a"
             
             if infoArray.isEmpty {
                 caughtUp = true
@@ -510,7 +509,7 @@ struct Notebook: View {
                 for _ in 0..<infoArray.count {
                     selectDelete.append(false)
                 }
-                dateFormatter.dateFormat = "M/d/yyyy, h:mm a"
+                DateFormatter().dateFormat = "M/d/yyyy, h:mm a"
                 
                 if infoArray.isEmpty {
                     caughtUp = true
