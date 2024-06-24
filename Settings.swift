@@ -46,7 +46,7 @@ struct Settinger: View {
                                 
                                 Picker("",selection: $dueDateSetter) {
                                     ForEach(dueDaters, id: \.self) { i in
-                                        Text(i)
+                                        Text(i).tag(i)
                                     }
                                 }
                                 .frame(alignment: .trailing)
@@ -60,16 +60,17 @@ struct Settinger: View {
                                 
                                 Picker("" , selection: $organizedAssignments) {
                                     ForEach(organizationOptions, id: \.self) { i in
-                                        Text(i)
+                                        Text(i).tag(i)
                                     }
                                 }
                             }
-                            DisclosureGroup("Color Modifications") {
+                            
+                            DisclosureGroup("Planner Color Modifications") {
                                 HStack {
                                     
                                     ColorPicker("Subject", selection: $hexSubjectColor)
-                                        .onChange(of: hexSubjectColor) { newValue in
-                                            subjectColor = newValue.toHexString()
+                                        .onChange(of: hexSubjectColor) {
+                                            subjectColor = hexSubjectColor.toHexString()
                                         }
                                     
                                     
@@ -77,8 +78,8 @@ struct Settinger: View {
                                 HStack {
                                     
                                     ColorPicker("Title", selection: $hexTitleColor)
-                                        .onChange(of: hexTitleColor) { i in
-                                            titleColor = i.toHexString()
+                                        .onChange(of: hexTitleColor) {
+                                            titleColor = hexTitleColor.toHexString()
                                         }
                                     
                                     
@@ -86,12 +87,9 @@ struct Settinger: View {
                                 HStack {
                                     
                                     ColorPicker("Description", selection: $hexDescriptionColor)
-                                        .onChange(of: hexDescriptionColor) { newValue in
-                                            descriptionColor = newValue.toHexString()
+                                        .onChange(of: hexDescriptionColor) {
+                                            descriptionColor = hexDescriptionColor.toHexString()
                                         }
-                                    
-                                    
-                                    
                                 }
                             }
                         }
@@ -194,24 +192,6 @@ struct Settinger: View {
             hexSubjectColor = Color(hex: subjectColor)
             hexTitleColor = Color(hex: titleColor)
             hexDescriptionColor = Color(hex: descriptionColor)
-        }
-        .onChange(of: pomoTime) {
-            pomoOpened = false
-            
-            if timerOptions.contains(String(pomoTime)) == true {
-                textPomo = ""
-            }
-            
-            
-        }
-        .onChange(of: breakTime) {
-            pomoOpened = false
-            
-            if timerOptionsBreak.contains(String(breakTime)) == true {
-                textBreak = ""
-            }
-     
-            
         }
     }
 }
