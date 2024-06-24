@@ -1,14 +1,14 @@
 import SwiftUI
-import UserNotifications 
+import UserNotifications
 
 struct Pomo: View {
     @AppStorage("pomotimer") var pomoTime = 1500
     @AppStorage("breakTime") var breakTime = 300
     @AppStorage("breaks") var breaks = 4
-    @AppStorage("pomoOpened") var pomoOpened = false 
+    @AppStorage("pomoOpened") var pomoOpened = false
     @AppStorage("opened") var opened = false
-    @AppStorage("currentBreaks") var currentBreaks = 0 
-    @AppStorage("breakText") var breakText = false  
+    @AppStorage("currentBreaks") var currentBreaks = 0
+    @AppStorage("breakText") var breakText = false
     @State var currentColor: Color = .pink
     @AppStorage("cornerRadius") var cornerRadius = 300
     
@@ -72,7 +72,8 @@ struct Pomo: View {
     
     @AppStorage("progressPomo") var progressTimePomo = 0
     @State var myTimerPomo:Timer?
-    
+    @State var pomoClicked = false
+    @State var textPomo = ""
     
     var body: some View {
         ZStack {
@@ -123,10 +124,10 @@ struct Pomo: View {
                                                 .foregroundStyle(.white)
                                         )
                                         .frame(width:200, height:100)
-                                }  
+                                }
                             }
                             Button {
-                                progressTime = 0 
+                                progressTime = 0
                                 myTimer?.invalidate()
                             } label: {
                                 RoundedRectangle(cornerRadius: 20)
@@ -149,14 +150,15 @@ struct Pomo: View {
                             .font(.largeTitle)
                             .fontWeight(.bold)
                         Divider()
-                        Spacer() 
+                        Spacer()
                         Button {
                             timerPomo.invalidate()
                             myTimerPomo?.invalidate()
-                            myTimerPomo = timerPomo
                             cornerRadius = Int.random(in: 1...162)
+                            pomoClicked = true
+                            textPomo = String(pomoTime/60)
                             
-                        }  label : {   
+                        }  label : {
                             
                             ZStack {
                                 
@@ -178,7 +180,6 @@ struct Pomo: View {
                                     }
                                 
                                 VStack {
-                                    
                                     Text("\(minutesPomo):\(secondsPomo)")
                                         .font(.system(size: 100))
                                         .foregroundStyle(currentColor)
@@ -197,9 +198,18 @@ struct Pomo: View {
                             }
                             .frame(width:325, height: 325)
                             
+                        } 
+                        .alert("Change Pomo Time!", isPresented: $pomoClicked) {
+                                TextField("Custom (Minutes)", text: $textPomo)
+                                    .onChange(of: textPomo) {
+                                        pomoTime = (Int(textPomo) ?? 0) * 60
+                                        progressTimePomo = pomoTime
+
+                                    }
                         }
+            
                         Spacer()
-                        VStack { 
+                        VStack {
                             HStack {
                                 Button {
                                     timerPomo.invalidate()
@@ -240,9 +250,9 @@ struct Pomo: View {
                             Button {
                                 myTimerPomo?.invalidate()
                                 progressTimePomo = pomoTime
-                                breaks = 0 
-                                breakText = false 
-                                currentBreaks = 0 
+                                breaks = 0
+                                breakText = false
+                                currentBreaks = 0
                                 cornerRadius = 300
                             } label: {
                                 RoundedRectangle(cornerRadius: 20)
@@ -266,15 +276,15 @@ struct Pomo: View {
         .onAppear {
             if pomoOpened == false {
                 progressTimePomo = pomoTime
-                pomoOpened = true 
-            } 
+                pomoOpened = true
+            }
             
             progressTimePomo = progressTimePomo
             
             if opened == false {
-                progressTime = 0 
-                opened = true 
-            }   
+                progressTime = 0
+                opened = true
+            }
             progressTime = progressTime
             currentColor = breakText ? .green : .pink
         }
