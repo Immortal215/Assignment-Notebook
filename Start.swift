@@ -12,6 +12,7 @@ struct Start: View {
                         .resizable()
                         .frame(width: 200, height: 200)
                         .rotationEffect(.degrees(starter ? 0.0 : 15.0))
+                     //   .scaleEffect(starter ? 2.0 : 1.0)
                         .animation(starter ? .easeIn(duration: 0) : .bouncy(duration: 1, extraBounce: 0.3) )
                         
                     Text("The Drawing Board")
@@ -46,7 +47,8 @@ struct Start: View {
             }
             .frame(width: starter ? 0 : 500, height: starter ? 0 : 100, alignment: .center)
             .padding(starter ? 0 : 20)
-            
+        
+
         }
     }
 }
