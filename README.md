@@ -9,10 +9,9 @@
 
 ### Home Screen
 
-* Shows the most urgent assignments! (3 most urgent) 
+* Shows the most urgent assignments in the list chosen! (3 most urgent) 
 
 * Shows your current stopwatch and Pomo for easy viewing
-
 
 ### Pomo Timer
 
@@ -23,11 +22,13 @@
 > Will send notifications to you, alerting you when a pomo or break is completed
 
 
-### Assignment Notebook 
+### Planner 
 
 * Add assignment titles, descriptions, subjects and change the due date if neccessary. (Editable afterwards as well) 
 
-* Delete assignments individually or delete them all at once. 
+* Delete assignments individually or delete them all at once.
+
+* *New* MULTIPLE LISTS! You can create seperate planners for different things and edit them.
 
 > Data saves on the device.
 
