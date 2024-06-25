@@ -29,7 +29,7 @@
 * Delete assignments individually or delete them all at once.
   
 
-* $${\color{red} New }$$ MULTIPLE LISTS! You can create seperate planners for different things and edit them.
+* *New* MULTIPLE LISTS! You can create seperate planners for different things and edit them.
 
 
 
