@@ -27,8 +27,11 @@
 * Add assignment titles, descriptions, subjects and change the due date if neccessary. (Editable afterwards as well) 
 
 * Delete assignments individually or delete them all at once.
+  
 
-* $${\color{red} *New* }$$ MULTIPLE LISTS! You can create seperate planners for different things and edit them.
+* *New* MULTIPLE LISTS! You can create seperate planners for different things and edit them.
+
+$${\color{red}Welcome \space \color{lightblue}To \space \color{orange}Stackoverflow}$$
 
 > Data saves on the device.
 
