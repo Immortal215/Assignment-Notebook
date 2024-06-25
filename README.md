@@ -28,7 +28,7 @@
 
 * Delete assignments individually or delete them all at once.
 
-* *New* MULTIPLE LISTS! You can create seperate planners for different things and edit them.
+* $${\color{red} *New* }$$ MULTIPLE LISTS! You can create seperate planners for different things and edit them.
 
 > Data saves on the device.
 
