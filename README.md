@@ -3,7 +3,7 @@
 
 ## Installation 
 
-### Use a Playgrounds or Xcode folder to run
+* Use a Playgrounds or Xcode folder to run 
 
 ## Features 
 
