@@ -1,6 +1,10 @@
 # Made using SwiftUi
 ### An app to re-organize and add structure into your life by keeping you focused and on task!
 
+## Installation 
+
+### Use a Playgrounds or Xcode folder to run
+
 ## Features 
 
 ### Home Screen
