@@ -16,7 +16,7 @@
 
 > Pomodoro timer used to effectively study and take 5 (or other) minute breaks every 25 (or other) minutes
 
-> Will send notifications to you, alerting you of what is neeed to do
+> Will send notifications to you, alerting you when a pomo or break is completed
 
 
 ### Assignment Notebook 
