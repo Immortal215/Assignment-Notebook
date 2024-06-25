@@ -32,4 +32,4 @@
 
 > Change organization, timing, color throughout the app
 
-## Built and optimized for Ipad Gen 10
+## Built and optimized for iPad Gen 10
