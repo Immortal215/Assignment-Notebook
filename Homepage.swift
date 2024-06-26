@@ -168,14 +168,27 @@ struct Homepage: View {
                                             } label: {
                                                 Text("")
                                                     .overlay(
-                                                        Image(systemName: selectDelete[index] ? "trash.square" : "checkmark.square")
+                                                        Image(systemName: selectDelete[index] ? "checkmark.circle.fill" : "checkmark")
                                                             .resizable()
                                                             .frame(width: deleted ? 0 : 75, height: deleted ? 0 : 75, alignment: .center)
+                                                            .scaleEffect(selectDelete[index] ? 1.0 : 0.5)
                                                             .foregroundStyle(selectDelete[index] ? .red : .blue)
-                                                            .offset(x:-50)
-                                                        
+                                                            .animation(.snappy(extraBounce: 0.3))
                                                     )
-                                                .frame(width:0,height:0,alignment: .center)                 }
+                                            }
+                                            .offset(x:-50)
+                                            .onChange(of: names[index]) {
+                                                selectDelete[index] = false
+                                            }
+                                            .onChange(of: subjects[index]) {
+                                                selectDelete[index] = false
+                                            }
+                                            .onChange(of: infoArray[index]) {
+                                                selectDelete[index] = false
+                                            }
+                                            .onChange(of: dueDates[index]) {
+                                                selectDelete[index] = false
+                                            }
                                             
                                             
                                             Divider()
@@ -385,23 +398,27 @@ struct Homepage: View {
                     caughtUp = false
                     
                     if dueDates != [] {
-                        
-                        var sortedIndices = dueDates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
-                        
-                        // Rearrange all arrays based on sorted indices
-                        subjects = sortedIndices.map { bigDic[currentTab]!["subjects"]![$0] }
-                        names = sortedIndices.map { bigDic[currentTab]!["names"]![$0] }
-                        infoArray = sortedIndices.map { bigDic[currentTab]!["description"]![$0] }
-                        dates = sortedIndices.map { bigDic[currentTab]!["date"]![$0] }
-                        dueDates = sortedIndices.map { dueDic[currentTab]![$0] }
-                        selectDelete = sortedIndices.map { selectDelete[$0]}
-                    }
+                            var sortedIndices = dueDates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
+                            
+                            
+                            // Rearrange all arrays based on sorted indices
+                            subjects = sortedIndices.map { bigDic[currentTab]!["subjects"]![$0] }
+                            names = sortedIndices.map { bigDic[currentTab]!["names"]![$0] }
+                            infoArray = sortedIndices.map { bigDic[currentTab]!["description"]![$0] }
+                            dates = sortedIndices.map { bigDic[currentTab]!["date"]![$0] }
+                            dueDates = sortedIndices.map { dueDic[currentTab]![$0] }
+                            selectDelete = sortedIndices.map { selectDelete[$0]}
+                        }
+                    
                     
                 } else {
                     caughtUp = true
                     
                 }
             }
+        }
+        .onChange(of: breakText) {
+            scheduleTimeBasedNotification(breaker: breakText)
         }
     }
 }
