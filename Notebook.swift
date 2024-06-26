@@ -304,14 +304,27 @@ struct Notebook: View {
                                             } label: {
                                                 Text("")
                                                     .overlay(
-                                                        Image(systemName: selectDelete[index] ? "trash.square" : "checkmark.square")
+                                                        Image(systemName: selectDelete[index] ? "checkmark.circle.fill" : "checkmark")
                                                             .resizable()
                                                             .frame(width: deleted ? 0 : 75, height: deleted ? 0 : 75, alignment: .center)
+                                                            .scaleEffect(selectDelete[index] ? 1.0 : 0.5)
                                                             .foregroundStyle(selectDelete[index] ? .red : .blue)
+                                                            .animation(.snappy(extraBounce: 0.3))
                                                     )
                                             }
                                             .offset(x: 50)
-                                        
+                                            .onChange(of: names[index]) {
+                                                selectDelete[index] = false
+                                            }
+                                            .onChange(of: subjects[index]) {
+                                                selectDelete[index] = false
+                                            }
+                                            .onChange(of: infoArray[index]) {
+                                                selectDelete[index] = false
+                                            }
+                                            .onChange(of: dueDates[index]) {
+                                                selectDelete[index] = false
+                                            }
                                         
                                         Divider()
                                             .offset(x: 100)
@@ -469,12 +482,6 @@ struct Notebook: View {
                     }
                 }
             }
-        }
-        .onChange(of: bigDic) {
-            selectDelete = Array(repeating: false, count: infoArray.count)
-        }
-        .onChange(of: dueDic) {
-            selectDelete = Array(repeating: false, count: infoArray.count)
         }
         .onAppear {
             
