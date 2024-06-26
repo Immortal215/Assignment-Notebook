@@ -30,7 +30,7 @@ func resetDefaults() {
 
 * __Shows your current stopwatch and Pomo for easy viewing__
 
-### Pomo Timer
+### [Pomo Timer](PomoTimer.swift)
 <hr>
 
 * **Stopwatch to measure how long you are working and studying**
@@ -41,7 +41,7 @@ func resetDefaults() {
 *Will send notifications to you, alerting you when a pomo or break is completed*
 
 
-### Planner 
+### [Planner](Notebook.swift)
 <hr>
 
 * __Add assignment titles, descriptions, subjects and change the due date if neccessary. (Editable afterwards as well)__
@@ -53,7 +53,7 @@ func resetDefaults() {
 > [!NOTE]
 _Data saves on the device._
 
-### Settings 
+### [Settings](Settings.swift)
 <hr>
 
 * __Change organization, timing, and color throughout the app__
