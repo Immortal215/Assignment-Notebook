@@ -316,7 +316,7 @@ func scheduleTimeBasedNotification(breaker : Bool) {
             content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "myalarm.mp3"))
          //   content.sound = UNNotificationSound.defaultCritical
             
-            
+        
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
             
             
