@@ -322,6 +322,10 @@ struct Notebook: View {
                                                     .textFieldStyle(.automatic)
                                                     .fixedSize()
                                                     .foregroundStyle(Color(hex: subjectColor))
+                                                    .onChange(of: infoArray) {
+                                                        bigDic[currentTab]!["subjects"] = subjects
+                                                        UserDefaults.standard.set(bigDic, forKey: "DicKey")
+                                                    }
                                                 
                                                 Divider()
                                                 
@@ -329,6 +333,10 @@ struct Notebook: View {
                                                     .textFieldStyle(.automatic)
                                                     .fixedSize()
                                                     .foregroundStyle(Color(hex: titleColor))
+                                                    .onChange(of: names) {
+                                                        bigDic[currentTab]!["names"] = names
+                                                        UserDefaults.standard.set(bigDic, forKey: "DicKey")
+                                                    }
                                             }
                                             
                                             Divider()
@@ -339,6 +347,10 @@ struct Notebook: View {
                                                     .textFieldStyle(.automatic)
                                                     .fixedSize()
                                                     .foregroundStyle(Color(hex: descriptionColor))
+                                                    .onChange(of: infoArray) {
+                                                        bigDic[currentTab]!["description"] = infoArray
+                                                        UserDefaults.standard.set(bigDic, forKey: "DicKey")
+                                                    }
                                                 
                                                 Divider()
                                                     .offset(x: 100)
@@ -355,7 +367,7 @@ struct Notebook: View {
                                                         
                                                     )
                                                     .offset(x: -485)
-                                                    .onChange(of: dueDates[index]) { _ in
+                                                    .onChange(of: dueDates) {
                                                         dueDic[currentTab]! = dueDates
                                                         UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
                                                     }
@@ -458,16 +470,10 @@ struct Notebook: View {
                 }
             }
         }
-        .onChange(of: dueDates) {
+        .onChange(of: bigDic) {
             selectDelete = Array(repeating: false, count: infoArray.count)
         }
-        .onChange(of: names) {
-            selectDelete = Array(repeating: false, count: infoArray.count)
-        }
-        .onChange(of: subjects) {
-            selectDelete = Array(repeating: false, count: infoArray.count)
-        }
-        .onChange(of: infoArray) {
+        .onChange(of: dueDic) {
             selectDelete = Array(repeating: false, count: infoArray.count)
         }
         .onAppear {
