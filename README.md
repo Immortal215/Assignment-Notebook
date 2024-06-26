@@ -1,9 +1,22 @@
+
 # Made using SwiftUi
 ### An app to re-organize and add structure into your life by keeping you focused and on task!
 
 ## Installation 
 
- Use a Playgrounds or Xcode folder to run 
+> [!IMPORTANT]
+Use a Playgrounds or Xcode folder to run on home device
+
+*In case any code breaks for any reason, (it won't) use this function in .onAppear*
+```Swift
+func resetDefaults() {
+    let defaults = UserDefaults.standard
+    let dictionary = defaults.dictionaryRepresentation()
+    dictionary.keys.forEach { key in
+        defaults.removeObject(forKey: key)
+    }
+}
+```
 
 ## Features 
 
@@ -19,7 +32,8 @@
 
 * Pomodoro timer used to effectively study and take 5 (or other) minute breaks every 25 (or other) minutes
 
-> Will send notifications to you, alerting you when a pomo or break is completed
+> [!NOTE]
+Will send notifications to you, alerting you when a pomo or break is completed
 
 
 ### Planner 
@@ -27,14 +41,11 @@
 * Add assignment titles, descriptions, subjects and change the due date if neccessary. (Editable afterwards as well) 
 
 * Delete assignments individually or delete them all at once.
-  
 
-* *New* MULTIPLE LISTS! You can create seperate planners for different things and edit them.
+* MULTIPLE LISTS! You can create separate planners for different things and edit them.
 
-
-
-> Data saves on the device.
-
+> [!NOTE]
+Data saves on the device.
 
 ### Settings 
 
