@@ -38,7 +38,7 @@ func resetDefaults() {
 * __Pomodoro timer used to effectively study and take 5 (or other) minute breaks every 25 (or other) minutes__
 
 > [!NOTE]
-*Will send notifications to you, alerting you when a pomo or break is completed*
+*Will send notifications/alarms to you, alerting you when a pomo or break is completed*
 
 
 ### [Planner](Notebook.swift)
