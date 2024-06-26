@@ -23,7 +23,7 @@ func resetDefaults() {
 
 ## Features 
 
-### Home Screen
+### [Home Screen](homepage.swift)
 <hr>
 
 * __Shows the most urgent assignments in the list chosen! (3 most urgent)__
