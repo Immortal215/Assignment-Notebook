@@ -140,6 +140,7 @@ struct Notebook: View {
                                     showAlert.toggle()
                                 } else {
                                     error = true
+
                                 }
                             } label: {
                                 Image(systemName: error ? "x.square" : "plus")
@@ -341,6 +342,7 @@ struct Notebook: View {
                                                 
                                                 Divider()
                                                     .offset(x: 100)
+                                                    
                                                 
                                                 HStack {
                                                     Text("Due: ")
@@ -455,6 +457,18 @@ struct Notebook: View {
                     }
                 }
             }
+        }
+        .onChange(of: dueDates) {
+            selectDelete = Array(repeating: false, count: infoArray.count)
+        }
+        .onChange(of: names) {
+            selectDelete = Array(repeating: false, count: infoArray.count)
+        }
+        .onChange(of: subjects) {
+            selectDelete = Array(repeating: false, count: infoArray.count)
+        }
+        .onChange(of: infoArray) {
+            selectDelete = Array(repeating: false, count: infoArray.count)
         }
         .onAppear {
             
