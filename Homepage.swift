@@ -137,64 +137,50 @@ struct Homepage: View {
                                     VStack {
                                         
                                         HStack {
-                                            Button {
+                                            Text("")
+                                                .overlay(
+                                                    Image(systemName: selectDelete[index] ? "checkmark.circle.fill" : "checkmark")
+                                                        .resizable()
+                                                        .frame(width: deleted ? 0 : 75, height: deleted ? 0 : 75, alignment: .center)
+                                                        .scaleEffect(selectDelete[index] ? 1.0 : 0.5)
+                                                        .foregroundStyle(selectDelete[index] ? .red : .blue)
+                                                        .animation(.snappy(extraBounce: 0.4))
+                                                    
+                                                )
+                                        
+                                        // only works on mac
+                                        .onHover { Bool in
+                                            selectDelete[index].toggle()
+                                        }
+                                        .offset(x: -50)
+                                        .onTapGesture {
+                                            selectDelete[index].toggle()
+                                            
+                                            if selectDelete[index] == false {
+                                                infoArray.remove(at: index)
+                                                names.remove(at: index)
+                                                subjects.remove(at: index)
+                                                dates.remove(at: index)
+                                                dueDates.remove(at: index)
                                                 
-                                                selectDelete[index].toggle()
+                                                bigDic[currentTab]!["names"]! = names
+                                                bigDic[currentTab]!["subjects"]! = subjects
+                                                bigDic[currentTab]!["description"]! = infoArray
+                                                bigDic[currentTab]!["date"]! = dates
+                                                dueDic[currentTab]! = dueDates
                                                 
-                                                if selectDelete[index] == false {
-                                                    
-                                                    infoArray.remove(at: index)
-                                                    names.remove(at: index)
-                                                    subjects.remove(at: index)
-                                                    dates.remove(at: index)
-                                                    dueDates.remove(at: index)
-                                                    
-                                                    bigDic[currentTab]!["names"]! = names
-                                                    bigDic[currentTab]!["subjects"]! = subjects
-                                                    bigDic[currentTab]!["description"]! = infoArray
-                                                    bigDic[currentTab]!["date"]! = dates
-                                                    dueDic[currentTab]! = dueDates
-                                                    
-                                                    UserDefaults.standard.set(bigDic, forKey: "DicKey")
-                                                    UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
-
-                                                    
-                                                    if infoArray.isEmpty {
-                                                        caughtUp = true
-                                                    }
-                                                    
+                                                UserDefaults.standard.set(bigDic, forKey: "DicKey")
+                                                UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
+                                                
+                                                selectDelete.remove(at: index)
+                                                
+                                                if infoArray.isEmpty {
+                                                    selectDelete = []
+                                                    caughtUp = true
                                                 }
-                                                
-                                            } label: {
-                                                Text("")
-                                                    .overlay(
-                                                        Image(systemName: selectDelete[index] ? "checkmark.circle.fill" : "checkmark")
-                                                            .resizable()
-                                                            .frame(width: deleted ? 0 : 75, height: deleted ? 0 : 75, alignment: .center)
-                                                            .scaleEffect(selectDelete[index] ? 1.0 : 0.5)
-                                                            .foregroundStyle(selectDelete[index] ? .red : .blue)
-                                                            .animation(.snappy(extraBounce: 0.3))
-                                                    )
                                             }
+                                        }
                                             
-                                            // only works on mac
-                                            .onHover { Bool in
-                                                selectDelete[index].toggle()
-                                            }
-                                            
-                                            .offset(x:-50)
-                                            .onChange(of: names[index]) {
-                                                selectDelete[index] = false
-                                            }
-                                            .onChange(of: subjects[index]) {
-                                                selectDelete[index] = false
-                                            }
-                                            .onChange(of: infoArray[index]) {
-                                                selectDelete[index] = false
-                                            }
-                                            .onChange(of: dueDates[index]) {
-                                                selectDelete[index] = false
-                                            }
                                             
                                             
                                             Divider()
@@ -401,7 +387,7 @@ struct Homepage: View {
                 
                 
                 if infoArray != [] {
-                    caughtUp = false
+                    caughtUp = false s
                     
                     if dueDates != [] {
                             var sortedIndices = dueDates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
@@ -436,3 +422,4 @@ extension UserDefaults {
         }
     }
 }
+ 
