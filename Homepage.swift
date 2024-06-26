@@ -176,6 +176,12 @@ struct Homepage: View {
                                                             .animation(.snappy(extraBounce: 0.3))
                                                     )
                                             }
+                                            
+                                            // only works on mac
+                                            .onHover { Bool in
+                                                selectDelete[index].toggle()
+                                            }
+                                            
                                             .offset(x:-50)
                                             .onChange(of: names[index]) {
                                                 selectDelete[index] = false
