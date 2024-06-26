@@ -2,6 +2,8 @@
 # Made using SwiftUi
 ### An app to re-organize and add structure into your life by keeping you focused and on task!
 
+> [!Warning]
+> Built and optimized for primarily iPad Gen 10
 ## Installation 
 
 > [!IMPORTANT]
@@ -51,4 +53,4 @@ Data saves on the device.
 
 * Change organization, timing, and color throughout the app
 
-## Built and optimized for iPad Gen 10
+
