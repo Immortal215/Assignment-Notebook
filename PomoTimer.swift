@@ -291,6 +291,7 @@ struct Pomo: View {
         
         .onChange(of: pomoTime) {
             myTimerPomo?.invalidate()
+            progressTimePomo = pomoTime
         }
         .onChange(of: breakTime) {
             myTimerPomo?.invalidate()
@@ -312,7 +313,8 @@ func scheduleTimeBasedNotification(breaker : Bool) {
             let content = UNMutableNotificationContent()
             content.title = "\(breaker ? "Break" : "Pomo") Time!"
             content.body = "\(breaker ? "Pomo" : "Break") Completed!"
-            content.sound = UNNotificationSound.defaultCritical
+            content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "myalarm.mp3"))
+         //   content.sound = UNNotificationSound.defaultCritical
             
             
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
