@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct Homepage: View {
-
+    
     @State var screenWidth = UIScreen.main.bounds.width
     @State var screenHeight = UIScreen.main.bounds.height
     
@@ -125,10 +125,10 @@ struct Homepage: View {
                         Text(currentTab == "+erder" ? "Edit Lists Below!" : caughtUp ? "You are all caught up!" : "")
                             .font(.title)
                             .padding(caughtUp ? 30 : 0)
-
+                        
                         
                         if loadedData && bigDic[currentTab]?["description"]?.isEmpty != true && caughtUp == false {
-
+                            
                             List {
                                 
                                 
@@ -137,6 +137,7 @@ struct Homepage: View {
                                     VStack {
                                         
                                         HStack {
+                                            
                                             Text("")
                                                 .overlay(
                                                     Image(systemName: selectDelete[index] ? "checkmark.circle.fill" : "checkmark")
@@ -147,39 +148,41 @@ struct Homepage: View {
                                                         .animation(.snappy(extraBounce: 0.4))
                                                     
                                                 )
-                                        
-                                        // only works on mac
-                                        .onHover { Bool in
-                                            selectDelete[index].toggle()
-                                        }
-                                        .offset(x: -50)
-                                        .onTapGesture {
-                                            selectDelete[index].toggle()
                                             
-                                            if selectDelete[index] == false {
-                                                infoArray.remove(at: index)
-                                                names.remove(at: index)
-                                                subjects.remove(at: index)
-                                                dates.remove(at: index)
-                                                dueDates.remove(at: index)
-                                                
-                                                bigDic[currentTab]!["names"]! = names
-                                                bigDic[currentTab]!["subjects"]! = subjects
-                                                bigDic[currentTab]!["description"]! = infoArray
-                                                bigDic[currentTab]!["date"]! = dates
-                                                dueDic[currentTab]! = dueDates
-                                                
-                                                UserDefaults.standard.set(bigDic, forKey: "DicKey")
-                                                UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
-                                                
-                                                selectDelete.remove(at: index)
-                                                
-                                                if infoArray.isEmpty {
-                                                    selectDelete = []
-                                                    caughtUp = true
+                                            // only works on mac
+                                                .onHover { _ in
+                                                    if infoArray.isEmpty != true {
+                                                        selectDelete[index].toggle()
+                                                    }
                                                 }
-                                            }
-                                        }
+                                                .offset(x: -50)
+                                                .onTapGesture {
+                                                    selectDelete[index].toggle()
+                                                    
+                                                    if selectDelete[index] == false {
+                                                        selectDelete.remove(at: index)
+                                                        infoArray.remove(at: index)
+                                                        names.remove(at: index)
+                                                        subjects.remove(at: index)
+                                                        dates.remove(at: index)
+                                                        dueDates.remove(at: index)
+                                                        
+                                                        bigDic[currentTab]!["names"]! = names
+                                                        bigDic[currentTab]!["subjects"]! = subjects
+                                                        bigDic[currentTab]!["description"]! = infoArray
+                                                        bigDic[currentTab]!["date"]! = dates
+                                                        dueDic[currentTab]! = dueDates
+                                                        
+                                                        UserDefaults.standard.set(bigDic, forKey: "DicKey")
+                                                        UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
+                                                        
+                                                        
+                                                        if infoArray.isEmpty {
+                                                            selectDelete = []
+                                                            caughtUp = true
+                                                        }
+                                                    }
+                                                }
                                             
                                             
                                             
@@ -300,7 +303,6 @@ struct Homepage: View {
             
         }
         .onAppear {
-            
             currentTab = "Basic List"
             
             retrieveBigDic = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? [:]
@@ -308,7 +310,7 @@ struct Homepage: View {
             
             bigDic = (retrieveBigDic[currentTab]?["subjects"] != nil ? retrieveBigDic : bigDic )
             dueDic = (retrieveDueDic[currentTab] != nil ? retrieveDueDic : dueDic)
-
+            
             
             names = bigDic[currentTab]!["names"]!
             subjects = bigDic[currentTab]!["subjects"]!
@@ -341,11 +343,11 @@ struct Homepage: View {
                 caughtUp = true
                 
             }
-          
+            
             error = false
             loadedData = true
             
-  
+            
             if pomoOpened == false {
                 progressTimePomo = pomoTime
                 pomoOpened = true
@@ -361,11 +363,10 @@ struct Homepage: View {
             
             
             currentColor = breakText ? .green : .pink
-           
+            
         }
         
         .onChange(of: currentTab) {
-            
             if currentTab != "+erder" {
                 retrieveBigDic = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? [:]
                 retrieveDueDic = UserDefaults.standard.dictionary(forKey: "DueDicKey") as? [String : [Date]] ?? [:]
@@ -381,26 +382,25 @@ struct Homepage: View {
                 dueDates = dueDic[currentTab]!
                 
                 
-                selectDelete = []
                 selectDelete = Array(repeating: false, count: infoArray.count)
                 DateFormatter().dateFormat = "M/d/yyyy, h:mm a"
                 
                 
                 if infoArray != [] {
-                    caughtUp = false s
+                    caughtUp = false
                     
                     if dueDates != [] {
-                            var sortedIndices = dueDates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
-                            
-                            
-                            // Rearrange all arrays based on sorted indices
-                            subjects = sortedIndices.map { bigDic[currentTab]!["subjects"]![$0] }
-                            names = sortedIndices.map { bigDic[currentTab]!["names"]![$0] }
-                            infoArray = sortedIndices.map { bigDic[currentTab]!["description"]![$0] }
-                            dates = sortedIndices.map { bigDic[currentTab]!["date"]![$0] }
-                            dueDates = sortedIndices.map { dueDic[currentTab]![$0] }
-                            selectDelete = sortedIndices.map { selectDelete[$0]}
-                        }
+                        var sortedIndices = dueDates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
+                        
+                        
+                        // Rearrange all arrays based on sorted indices
+                        subjects = sortedIndices.map { bigDic[currentTab]!["subjects"]![$0] }
+                        names = sortedIndices.map { bigDic[currentTab]!["names"]![$0] }
+                        infoArray = sortedIndices.map { bigDic[currentTab]!["description"]![$0] }
+                        dates = sortedIndices.map { bigDic[currentTab]!["date"]![$0] }
+                        dueDates = sortedIndices.map { dueDic[currentTab]![$0] }
+                        selectDelete = sortedIndices.map { selectDelete[$0]}
+                    }
                     
                     
                 } else {
@@ -422,4 +422,11 @@ extension UserDefaults {
         }
     }
 }
- 
+
+func resetDefaults() {
+    let defaults = UserDefaults.standard
+    let dictionary = defaults.dictionaryRepresentation()
+    dictionary.keys.forEach { key in
+        defaults.removeObject(forKey: key)
+    }
+}
