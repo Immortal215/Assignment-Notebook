@@ -55,43 +55,43 @@ struct Notebook: View {
         ZStack {
             
             // useless
-            Button {
-                retrieveBigDic = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? [:]
-                retrieveDueDic = UserDefaults.standard.dictionary(forKey: "DueDicKey") as? [String : [Date]] ?? [:]
-                
-                if loadedData == false {
-                    names = bigDic[currentTab]!["names"]!
-                    infoArray = bigDic[currentTab]!["description"]!
-                    subjects = bigDic[currentTab]!["subjects"]!
-                    dates = bigDic[currentTab]!["date"]!
-                    dueDates = dueDic[currentTab]!
-                    
-                    selectDelete = []
-                    for _ in 0..<infoArray.count {
-                        selectDelete.append(false)
-                    }
-                    DateFormatter().dateFormat = "M/d/yyyy, h:mm a"
-                }
-                
-                if infoArray != [] {
-                    caughtUp = false
-                } else {
-                    caughtUp = true
-                }
-                error = false
-                loadedData = true
-            } label: {
-                VStack {
-                    Image(systemName: loadedData ? "checkmark.icloud.fill" : "exclamationmark.icloud.fill")
-                        .resizable()
-                        .frame(width: 50, height: 37.5, alignment: .center)
-                        .foregroundStyle(loadedData ? .green : .red)
-                    
-                    Text(loadedData ? "Data Loaded" : "Need to load data")
-                        .foregroundStyle(loadedData ? .green : .red)
-                }
-            }
-            .offset(x: (screenWidth/2.5), y: -(screenHeight/3))
+//            Button {
+//                retrieveBigDic = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? [:]
+//                retrieveDueDic = UserDefaults.standard.dictionary(forKey: "DueDicKey") as? [String : [Date]] ?? [:]
+//                
+//                if loadedData == false {
+//                    names = bigDic[currentTab]!["names"]!
+//                    infoArray = bigDic[currentTab]!["description"]!
+//                    subjects = bigDic[currentTab]!["subjects"]!
+//                    dates = bigDic[currentTab]!["date"]!
+//                    dueDates = dueDic[currentTab]!
+//                    
+//                    selectDelete = []
+//                    for _ in 0..<infoArray.count {
+//                        selectDelete.append(false)
+//                    }
+//                    DateFormatter().dateFormat = "M/d/yyyy, h:mm a"
+//                }
+//                
+//                if infoArray != [] {
+//                    caughtUp = false
+//                } else {
+//                    caughtUp = true
+//                }
+//                error = false
+//                loadedData = true
+//            } label: {
+//                VStack {
+//                    Image(systemName: loadedData ? "checkmark.icloud.fill" : "exclamationmark.icloud.fill")
+//                        .resizable()
+//                        .frame(width: 50, height: 37.5, alignment: .center)
+//                        .foregroundStyle(loadedData ? .green : .red)
+//                    
+//                    Text(loadedData ? "Data Loaded" : "Need to load data")
+//                        .foregroundStyle(loadedData ? .green : .red)
+//                }
+//            }
+//            .offset(x: (screenWidth/2.5), y: -(screenHeight/3))
             
             VStack {
                 Text("Planner")
@@ -261,7 +261,7 @@ struct Notebook: View {
                     .fixedSize()
                     
                     Divider()
-                        .frame(width: 300)
+                        .frame(width: currentTab == "+erder" ? 0 : 300)
                         .offset(x: 412.5, y: 35)
                     
                     Text(currentTab == "+erder" ? "Edit Lists Below!" : caughtUp ? "You are all caught up!" : "")
@@ -427,6 +427,7 @@ struct Notebook: View {
                                         }
                                     }
                                 }
+                                .pickerStyle(.automatic)
                                 
                                 
                                 Button {
