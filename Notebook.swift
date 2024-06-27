@@ -271,141 +271,157 @@ struct Notebook: View {
                     
                     if loadedData && currentTab != "+erder" && bigDic[currentTab]?["description"]?.isEmpty != true && caughtUp == false && selectDelete.count == infoArray.count {
                         
-                        List {
+                        ScrollView {
                             ForEach(infoArray.indices, id: \.self) { index in
                                 
-                                // each assignment
-                                VStack {
-                                    HStack {
-                                        
-                                        Text("")
-                                            .overlay(
-                                                Image(systemName: selectDelete[index] ? "checkmark.circle.fill" : "checkmark")
-                                                    .resizable()
-                                                    .frame(width: deleted ? 0 : 75, height: deleted ? 0 : 75, alignment: .center)
-                                                    .scaleEffect(selectDelete[index] ? 1.0 : 0.5)
-                                                    .foregroundStyle(selectDelete[index] ? .red : .blue)
-                                                    .animation(.snappy(extraBounce: 0.4))
-                                                
-                                            )
-                                        
-                                        // only works on mac
-                                            .onHover { hovering in
-                                                if hovering {
-                                                    selectDelete[index] = true
-                                                } else {
-                                                    selectDelete = Array(repeating: false, count: infoArray.count)
-                                        
-                                                }
-                                            }
-                                            .offset(x: 50)
-                                            .onChange(of: names[index]) {
-                                                selectDelete[index] = false
-                                            }
-                                            .onChange(of: subjects[index]) {
-                                                selectDelete[index] = false
-                                            }
-                                            .onChange(of: infoArray[index]) {
-                                                selectDelete[index] = false
-                                            }
-                                            .onChange(of: dueDates[index]) {
-                                                selectDelete[index] = false
-                                            }
-                                            .onTapGesture {
-                                                selectDelete[index].toggle()
-                                                
-                                                if selectDelete[index] == false {
-                                                    selectDelete.remove(at: index)
-                                                    infoArray.remove(at: index)
-                                                    names.remove(at: index)
-                                                    subjects.remove(at: index)
-                                                    dates.remove(at: index)
-                                                    dueDates.remove(at: index)
-                                                    
-                                                    bigDic[currentTab]!["names"]! = names
-                                                    bigDic[currentTab]!["subjects"]! = subjects
-                                                    bigDic[currentTab]!["description"]! = infoArray
-                                                    bigDic[currentTab]!["date"]! = dates
-                                                    dueDic[currentTab]! = dueDates
-                                                    
-                                                    UserDefaults.standard.set(bigDic, forKey: "DicKey")
-                                                    UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
-                                                    
-                                                    
-                                                    if infoArray.isEmpty {
-                                                        selectDelete = []
-                                                        caughtUp = true
-                                                    }
-                                                }
-                                            }
-                                        
-                                        Divider()
-                                            .offset(x: 100)
-                                        
-                                        VStack {
-                                            HStack {
-                                                TextField("\(subjects[index])", text: $subjects[index])
-                                                    .textFieldStyle(.automatic)
-                                                    .fixedSize()
-                                                    .foregroundStyle(Color(hex: subjectColor))
-                                                    .onChange(of: infoArray) {
-                                                        bigDic[currentTab]!["subjects"] = subjects
-                                                        UserDefaults.standard.set(bigDic, forKey: "DicKey")
-                                                    }
-                                                
-                                                Divider()
-                                                
-                                                TextField("\(names[index])", text: $names[index])
-                                                    .textFieldStyle(.automatic)
-                                                    .fixedSize()
-                                                    .foregroundStyle(Color(hex: titleColor))
-                                                    .onChange(of: names) {
-                                                        bigDic[currentTab]!["names"] = names
-                                                        UserDefaults.standard.set(bigDic, forKey: "DicKey")
-                                                    }
-                                            }
+                                Spacer()
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 15)
+                                        .foregroundColor(.black) // Adjust color as needed
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 15)
+                                                .stroke(.gray, lineWidth: 2)
+                                              //  .frame(width: screenWidth/2.1)
                                             
-                                            Divider()
-                                                .frame(maxWidth: screenWidth / 5)
+                                        )
+                                        .shadow(radius: 5)
+                                      //  .frame(width: screenWidth/2.1)
+                                    
+                                    VStack {
+                                        HStack {
+                                            
+                                            Text("")
+                                                .overlay(
+                                                    Image(systemName: selectDelete[index] ? "checkmark.circle.fill" : "checkmark")
+                                                        .resizable()
+                                                        .frame(width: deleted ? 0 : 75, height: deleted ? 0 : 75, alignment: .center)
+                                                        .scaleEffect(selectDelete[index] ? 1.0 : 0.5)
+                                                        .foregroundStyle(selectDelete[index] ? .red : .blue)
+                                                        .animation(.snappy(extraBounce: 0.4))
+                                                    
+                                                )
+                                            
+                                            // only works on mac
+                                                .onHover { hovering in
+                                                    if hovering {
+                                                        selectDelete[index] = true
+                                                    } else {
+                                                        selectDelete = Array(repeating: false, count: infoArray.count)
+                                                        
+                                                    }
+                                                }
+                                                .offset(x: 50)
+                                                .onChange(of: names[index]) {
+                                                    selectDelete[index] = false
+                                                }
+                                                .onChange(of: subjects[index]) {
+                                                    selectDelete[index] = false
+                                                }
+                                                .onChange(of: infoArray[index]) {
+                                                    selectDelete[index] = false
+                                                }
+                                                .onChange(of: dueDates[index]) {
+                                                    selectDelete[index] = false
+                                                }
+                                                .onTapGesture {
+                                                    selectDelete[index].toggle()
+                                                    
+                                                    if selectDelete[index] == false {
+                                                        selectDelete.remove(at: index)
+                                                        infoArray.remove(at: index)
+                                                        names.remove(at: index)
+                                                        subjects.remove(at: index)
+                                                        dates.remove(at: index)
+                                                        dueDates.remove(at: index)
+                                                        
+                                                        bigDic[currentTab]!["names"]! = names
+                                                        bigDic[currentTab]!["subjects"]! = subjects
+                                                        bigDic[currentTab]!["description"]! = infoArray
+                                                        bigDic[currentTab]!["date"]! = dates
+                                                        dueDic[currentTab]! = dueDates
+                                                        
+                                                        UserDefaults.standard.set(bigDic, forKey: "DicKey")
+                                                        UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
+                                                        
+                                                        
+                                                        if infoArray.isEmpty {
+                                                            selectDelete = []
+                                                            caughtUp = true
+                                                        }
+                                                    }
+                                                }
                                             
                                             VStack {
-                                                TextField("\(infoArray[index])", text: $infoArray[index])
-                                                    .textFieldStyle(.automatic)
-                                                    .fixedSize()
-                                                    .foregroundStyle(Color(hex: descriptionColor))
-                                                    .onChange(of: infoArray) {
-                                                        bigDic[currentTab]!["description"] = infoArray
-                                                        UserDefaults.standard.set(bigDic, forKey: "DicKey")
-                                                    }
+                                                HStack {
+                                                    TextField("\(subjects[index])", text: $subjects[index])
+                                                        .textFieldStyle(.automatic)
+                                                        .fixedSize()
+                                                        .foregroundStyle(Color(hex: subjectColor))
+                                                        .onChange(of: infoArray) {
+                                                            bigDic[currentTab]!["subjects"] = subjects
+                                                            UserDefaults.standard.set(bigDic, forKey: "DicKey")
+                                                        }
+                                                    
+                                                    Divider()
+                                                    
+                                                    TextField("\(names[index])", text: $names[index])
+                                                        .textFieldStyle(.automatic)
+                                                        .fixedSize()
+                                                        .foregroundStyle(Color(hex: titleColor))
+                                                        .onChange(of: names) {
+                                                            bigDic[currentTab]!["names"] = names
+                                                            UserDefaults.standard.set(bigDic, forKey: "DicKey")
+                                                        }
+                                                }
                                                 
                                                 Divider()
-                                                    .offset(x: 100)
+                                                    .frame(maxWidth: screenWidth / 5)
                                                 
-                                                
-                                                HStack {
-                                                    Text("Due: ")
+                                                VStack {
+                                                    TextField("\(infoArray[index])", text: $infoArray[index])
+                                                        .textFieldStyle(.automatic)
+                                                        .fixedSize()
+                                                        .foregroundStyle(Color(hex: descriptionColor))
+                                                        .onChange(of: infoArray) {
+                                                            bigDic[currentTab]!["description"] = infoArray
+                                                            UserDefaults.standard.set(bigDic, forKey: "DicKey")
+                                                        }
+                                                    
+                                                    Divider()
                                                         .offset(x: 100)
                                                     
-                                                    DatePicker(
-                                                        "",
-                                                        selection: $dueDates[index],
-                                                        displayedComponents: [.hourAndMinute, .date]
-                                                        
-                                                    )
-                                                    .offset(x: -485)
-                                                    .onChange(of: dueDates) {
-                                                        dueDic[currentTab]! = dueDates
-                                                        UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
-                                                    }
+                                                        HStack {
+                                                            
+                                                            Text("Due: ")
+                                                                .offset(x: 100)
+                                                            
+                                                            DatePicker(
+                                                                "",
+                                                                selection: $dueDates[index],
+                                                                displayedComponents: [.hourAndMinute, .date]
+                                                                
+                                                            )
+                                                            .offset(x: (-1 * (screenWidth/2.35)))
+                                                            .onChange(of: dueDates) {
+                                                                dueDic[currentTab]! = dueDates
+                                                                UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
+                                                            }
+                                                            .datePickerStyle(.compact)
+                                                            
+                                                            
+                                                            Text("Created: \(dates[index])")
+                                                        }
                                                     
-                                                    
-                                                    Text("Created: \(dates[index])")
                                                 }
                                             }
+                                            
                                         }
-                                        
                                     }
+                                  //  .frame(width: screenWidth/2)
+                                    .padding(20)
                                 }
+                                .padding(7.5)
+
                             }
                             .foregroundStyle(.blue)
                             .padding(10)
