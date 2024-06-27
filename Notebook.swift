@@ -290,9 +290,13 @@ struct Notebook: View {
                                             )
                                         
                                         // only works on mac
-                                            .onHover { _ in
-                                                if infoArray.isEmpty != true {
-                                                    selectDelete[index].toggle()
+                                            .onHover { hovering in
+                                                if hovering {
+                                                    selectDelete[index] = true
+                                                } else {
+                                                    if infoArray != [] {
+                                                        selectDelete[index] = false
+                                                    }
                                                 }
                                             }
                                             .offset(x: 50)
