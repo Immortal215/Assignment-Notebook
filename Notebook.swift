@@ -3,7 +3,7 @@ import SwiftUI
 struct Notebook: View {
     @State var screenWidth = UIScreen.main.bounds.width
     @State var screenHeight = UIScreen.main.bounds.height
-    
+        
     @AppStorage("currentTab") var currentTab = "Basic List"
     
     @State var retrieveBigDic: [String: [String: [String]]] = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? ["Basic List": ["subjects": [String()], "names": [String()], "description": [String()], "date": [String()]]]
@@ -294,9 +294,8 @@ struct Notebook: View {
                                                 if hovering {
                                                     selectDelete[index] = true
                                                 } else {
-                                                    if infoArray != [] {
-                                                        selectDelete[index] = false
-                                                    }
+                                                    selectDelete = Array(repeating: false, count: infoArray.count)
+                                        
                                                 }
                                             }
                                             .offset(x: 50)
@@ -564,3 +563,4 @@ struct Notebook: View {
         }
     }
 }
+
