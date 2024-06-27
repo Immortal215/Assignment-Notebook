@@ -134,8 +134,7 @@ struct Homepage: View {
                                 
                                 ForEach(0..<min(infoArray.count, 3), id: \.self) { index in
                                     
-                                    VStack {
-                                        
+                                    VStack { 
                                         HStack {
                                             
                                             Text("")
@@ -154,9 +153,8 @@ struct Homepage: View {
                                                     if hovering {
                                                         selectDelete[index] = true
                                                     } else {
-                                                        if infoArray != [] {
-                                                            selectDelete[index] = false
-                                                        }
+                                                        selectDelete = Array(repeating: false, count: infoArray.count)
+                                                        
                                                     }
                                                 }
                                                 .offset(x: -50)
@@ -193,6 +191,7 @@ struct Homepage: View {
                                             Divider()
                                             
                                             VStack {
+                                                
                                                 HStack {
                                                     
                                                     Text(subjects[index])
@@ -202,7 +201,6 @@ struct Homepage: View {
                                                     
                                                     Text(names[index])
                                                         .foregroundStyle(Color(hex: titleColor))
-                                                    
                                                 }
                                                 
                                                 Divider()
@@ -216,13 +214,16 @@ struct Homepage: View {
                                                     
                                                     
                                                     Text("Due : \(dueDates[index].formatted()) ")
+                                                        .fixedSize()
                                                     
                                                 }
                                             }
                                             
                                         }
+                                        
                                     }
                                     .foregroundStyle(dueDates[index] < Date().addingTimeInterval(86400) ? (dueDates[index] < Date().addingTimeInterval(3600) ? .red : .orange) : .green)
+                                    
                                 }
                                 
                                 
@@ -284,7 +285,6 @@ struct Homepage: View {
                                                     .onChange(of: breakText) {
                                                         currentColor = $0 ? .green : .pink
                                                     }
-                                                
                                                 
                                             }
                                             .frame(width:50, height:50)
@@ -434,3 +434,4 @@ func resetDefaults() {
         defaults.removeObject(forKey: key)
     }
 }
+
