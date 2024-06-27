@@ -108,7 +108,7 @@ struct NoteView: View {
 https://github.com/Immortal215/The-Drawing-Board-Swift/assets/97135755/63ee69be-ad83-4495-bb6a-e1a51c13b7ad
 
 
-* ### Lastly, here's an example snippet of how you might make a timer wheel:
+* ### Lastly, here's an example snippet of how you might make a timer wheel, it is a little more complex as you need 2 Circle's :
 
 ```swift
 Struct TimerWheel: View {
