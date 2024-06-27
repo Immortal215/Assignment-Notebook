@@ -10,7 +10,7 @@
 > [!IMPORTANT]
 *Use a Playgrounds or Xcode folder to run on home device*
 
-#### In case any code breaks for any reason, (it won't) use and call this function in .onAppear
+<!-- #### In case any code breaks for any reason, (it won't) use and call this function in .onAppear
 ```Swift
 func resetDefaults() {
     let defaults = UserDefaults.standard
@@ -19,7 +19,7 @@ func resetDefaults() {
         defaults.removeObject(forKey: key)
     }
 }
-```
+``` -->
 
 ## Features 
 
