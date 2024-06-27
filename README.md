@@ -78,6 +78,7 @@ struct TimerView: View {
     }
 }
 ```
+https://github.com/Immortal215/The-Drawing-Board-Swift/assets/97135755/07115ebc-a69d-4749-bd4b-f39b9c96ffd3
 
 * ### Here's an example snippet of how you might configure a simple note-adding effect in SwiftUI:
 
@@ -104,6 +105,8 @@ struct NoteView: View {
     }
 }
 ```
+https://github.com/Immortal215/The-Drawing-Board-Swift/assets/97135755/63ee69be-ad83-4495-bb6a-e1a51c13b7ad
+
 
 * ### Lastly, here's an example snippet of how you might make a timer wheel:
 
@@ -155,4 +158,7 @@ Struct TimerWheel: View {
     
 }
 ```
+https://github.com/Immortal215/The-Drawing-Board-Swift/assets/97135755/bc83b711-17dd-4172-973e-e3ba2edc33dd
+
+
 
