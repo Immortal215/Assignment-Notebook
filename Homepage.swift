@@ -129,106 +129,124 @@ struct Homepage: View {
                         
                         if loadedData && bigDic[currentTab]?["description"]?.isEmpty != true && caughtUp == false {
                             
-                            List {
+                            ScrollView {
                                 
                                 
                                 ForEach(0..<min(infoArray.count, 3), id: \.self) { index in
-                                    
-                                    VStack { 
-                                        HStack {
-                                            
-                                            Text("")
-                                                .overlay(
-                                                    Image(systemName: selectDelete[index] ? "checkmark.circle.fill" : "checkmark")
-                                                        .resizable()
-                                                        .frame(width: deleted ? 0 : 75, height: deleted ? 0 : 75, alignment: .center)
-                                                        .scaleEffect(selectDelete[index] ? 1.0 : 0.5)
-                                                        .foregroundStyle(selectDelete[index] ? .red : .blue)
-                                                        .animation(.snappy(extraBounce: 0.4))
-                                                    
-                                                )
-                                            
-                                            // only works on mac
-                                                .onHover { hovering in
-                                                    if hovering {
-                                                        selectDelete[index] = true
-                                                    } else {
-                                                        selectDelete = Array(repeating: false, count: infoArray.count)
+                                    Spacer()
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 15)
+                                            .foregroundColor(.black) // Adjust color as needed
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 15)
+                                                    .stroke(.gray, lineWidth: 2)
+                                                    .frame(width: screenWidth/2.1)
+
+                                            )
+                                            .shadow(radius: 5)
+                                            .frame(width: screenWidth/2.1)
+
+                                        VStack {
+                                            HStack {
+                                                
+                                                Text("")
+                                                    .overlay(
+                                                        Image(systemName: selectDelete[index] ? "checkmark.circle.fill" : "checkmark")
+                                                            .resizable()
+                                                            .frame(width: deleted ? 0 : 75, height: deleted ? 0 : 75, alignment: .center)
+                                                            .scaleEffect(selectDelete[index] ? 1.0 : 0.5)
+                                                            .foregroundStyle(selectDelete[index] ? .red : .blue)
+                                                            .animation(.snappy(extraBounce: 0.4))
                                                         
-                                                    }
-                                                }
-                                                .offset(x: -50)
-                                                .onTapGesture {
-                                                    selectDelete[index].toggle()
-                                                    
-                                                    if selectDelete[index] == false {
-                                                        selectDelete.remove(at: index)
-                                                        infoArray.remove(at: index)
-                                                        names.remove(at: index)
-                                                        subjects.remove(at: index)
-                                                        dates.remove(at: index)
-                                                        dueDates.remove(at: index)
-                                                        
-                                                        bigDic[currentTab]!["names"]! = names
-                                                        bigDic[currentTab]!["subjects"]! = subjects
-                                                        bigDic[currentTab]!["description"]! = infoArray
-                                                        bigDic[currentTab]!["date"]! = dates
-                                                        dueDic[currentTab]! = dueDates
-                                                        
-                                                        UserDefaults.standard.set(bigDic, forKey: "DicKey")
-                                                        UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
-                                                        
-                                                        
-                                                        if infoArray.isEmpty {
-                                                            selectDelete = []
-                                                            caughtUp = true
+                                                    )
+                                                    .frame(width:0, height:0)
+                                                
+                                                // only works on mac
+                                                    .onHover { hovering in
+                                                        if hovering {
+                                                            selectDelete[index] = true
+                                                        } else {
+                                                            selectDelete = Array(repeating: false, count: infoArray.count)
+                                                            
                                                         }
                                                     }
-                                                }
-                                            
-                                            
-                                            
-                                            Divider()
-                                            
-                                            VStack {
+                                                    .offset(x: -50)
+                                                    .onTapGesture {
+                                                        selectDelete[index].toggle()
+                                                        
+                                                        if selectDelete[index] == false {
+                                                            selectDelete.remove(at: index)
+                                                            infoArray.remove(at: index)
+                                                            names.remove(at: index)
+                                                            subjects.remove(at: index)
+                                                            dates.remove(at: index)
+                                                            dueDates.remove(at: index)
+                                                            
+                                                            bigDic[currentTab]!["names"]! = names
+                                                            bigDic[currentTab]!["subjects"]! = subjects
+                                                            bigDic[currentTab]!["description"]! = infoArray
+                                                            bigDic[currentTab]!["date"]! = dates
+                                                            dueDic[currentTab]! = dueDates
+                                                            
+                                                            UserDefaults.standard.set(bigDic, forKey: "DicKey")
+                                                            UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
+                                                            
+                                                            
+                                                            if infoArray.isEmpty {
+                                                                selectDelete = []
+                                                                caughtUp = true
+                                                            }
+                                                        }
+                                                    }
                                                 
-                                                HStack {
-                                                    
-                                                    Text(subjects[index])
-                                                        .foregroundStyle(Color(hex: subjectColor))
-                                                    
-                                                    Divider()
-                                                    
-                                                    Text(names[index])
-                                                        .foregroundStyle(Color(hex: titleColor))
-                                                }
                                                 
-                                                Divider()
-                                                    .frame(maxWidth: screenWidth/5)
+                                                
+                                                //  Divider()
                                                 
                                                 VStack {
-                                                    Text(infoArray[index])
-                                                        .foregroundStyle(Color(hex: descriptionColor))
+                                                    Spacer()
+                                                    HStack {
+                                                        
+                                                        Text(subjects[index])
+                                                            .foregroundStyle(Color(hex: subjectColor))
+                                                        
+                                                        Divider()
+                                                        
+                                                        Text(names[index])
+                                                            .foregroundStyle(Color(hex: titleColor))
+                                                    }
+                                                    
                                                     Divider()
-                                                        .frame(maxWidth: screenWidth/3)
+                                                        .frame(maxWidth: screenWidth/5)
                                                     
-                                                    
-                                                    Text("Due : \(dueDates[index].formatted()) ")
-                                                        .fixedSize()
-                                                    
+                                                    VStack {
+                                                        Text(infoArray[index])
+                                                            .foregroundStyle(Color(hex: descriptionColor))
+                                                        Divider()
+                                                            .frame(maxWidth: screenWidth/3)
+                                                        
+                                                        
+                                                        Text("Due : \(dueDates[index].formatted()) ")
+                                                            .fixedSize()
+                                                        Spacer()
+                                                        
+                                                    }
                                                 }
+                                                
                                             }
                                             
                                         }
+                                        .foregroundStyle(dueDates[index] < Date().addingTimeInterval(86400) ? (dueDates[index] < Date().addingTimeInterval(3600) ? .red : .orange) : .green)
+                                        .offset(x: 25)
+                                        .frame(width: screenWidth/2)
+                                        .padding(10)
                                         
                                     }
-                                    .foregroundStyle(dueDates[index] < Date().addingTimeInterval(86400) ? (dueDates[index] < Date().addingTimeInterval(3600) ? .red : .orange) : .green)
+                                    .padding(7.5)
                                     
                                 }
                                 
                                 
-                                .padding(10)
-                                .offset(x:100)
                             }
                             .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.8, blendDuration: 1.0))
                             
