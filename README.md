@@ -1,6 +1,6 @@
 
 # Made using SwiftUi
-### An app to re-organize and add structure into your life by keeping you focused and on task!
+### An app built to add structure into our lives, keeping focus at the forefront.
 
 > [!Warning]
 > *Built and optimized for primarily iPad Gen 10*
