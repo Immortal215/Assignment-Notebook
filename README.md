@@ -45,7 +45,7 @@ Sure! Here's the complete README with the additional example at the end:
 
 ## 📄 Basic Example Code For Use
 
-Here's an example snippet of how you might configure a basic timer in SwiftUI:
+* ### Here's an example snippet of how you might configure a basic timer in SwiftUI:
 
 ```swift
 struct TimerView: View {
@@ -79,7 +79,7 @@ struct TimerView: View {
 }
 ```
 
-Here's an example snippet of how you might configure a simple note-adding effect in SwiftUI:
+* ### Here's an example snippet of how you might configure a simple note-adding effect in SwiftUI:
 
 ```swift
 struct NoteView: View {
@@ -105,7 +105,7 @@ struct NoteView: View {
 }
 ```
 
-Lastly, here's an example snippet of how you might make a timer wheel:
+* ### Lastly, here's an example snippet of how you might make a timer wheel:
 
 ```swift
 Struct TimerWheel: View {
