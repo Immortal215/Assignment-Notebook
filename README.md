@@ -43,7 +43,7 @@ Sure! Here's the complete README with the additional example at the end:
 
 * **Change organization, timing, and color throughout the app**
 
-## 📄 Basic Example Code For Use
+## 📄 Basic iOS SwiftUi Example Code For Use
 
 * ### Here's an example snippet of how you might configure a basic timer in SwiftUI:
 
