@@ -131,21 +131,22 @@ struct Homepage: View {
                             
                             ScrollView {
                                 
-                                
                                 ForEach(0..<min(infoArray.count, 3), id: \.self) { index in
                                     Spacer()
+                                    
                                     ZStack {
+                                        
                                         RoundedRectangle(cornerRadius: 15)
-                                            .foregroundColor(.black) // Adjust color as needed
+                                            .foregroundColor(.black)
                                             .overlay(
                                                 RoundedRectangle(cornerRadius: 15)
                                                     .stroke(.gray, lineWidth: 2)
                                                     .frame(width: screenWidth/2.1)
-
+                                                
                                             )
                                             .shadow(radius: 5)
                                             .frame(width: screenWidth/2.1)
-
+                                        
                                         VStack {
                                             HStack {
                                                 
@@ -266,24 +267,25 @@ struct Homepage: View {
                         
                         VStack {
                             if progressTimePomo != pomoTime || progressTime != 0 {
-                                List {
+                                ScrollView {
                                     if progressTime != 0 {
                                         HStack {
                                             Text("Stop Watch")
+                                            
                                             Divider()
-                                                .frame(width:100)
+                                            
                                             Text("\(hours):\(minutes):\(seconds)")
+                                                
                                         }
                                         .font(.system(size: 25))
+                                        .fixedSize()
                                     }
                                     if progressTimePomo != pomoTime {
                                         HStack {
                                             Text("\(breakText ? "Break" : "Pomodoro") Timer")
-                                            Divider()
-                                                .frame(width:100)
-                                            Text("\(minutesPomo):\(secondsPomo)")
-                                            Spacer()
-                                            
+                                                .fixedSize()
+                                                .padding()
+                                          
                                             
                                             ZStack {
                                                 
@@ -292,6 +294,7 @@ struct Homepage: View {
                                                     .opacity(0.3)
                                                     .foregroundColor(.gray)
                                                     .animation(.linear(duration: 1))
+                                                    .frame(width:75, height:75)
                                                 
                                                 RoundedRectangle(cornerRadius: CGFloat(cornerRadius/6))
                                                     .trim(from: 0.0, to: CGFloat(breakText ? Double(progressTimePomo)/Double(breakTime) : Double(progressTimePomo)/Double(pomoTime)))
@@ -303,15 +306,20 @@ struct Homepage: View {
                                                     .onChange(of: breakText) {
                                                         currentColor = $0 ? .green : .pink
                                                     }
+                                                    .frame(width:75, height:75)
+                                                
+                                                Text("\(minutesPomo):\(secondsPomo)")
+                                                    .frame(width:100, height:50)
+                                                
                                                 
                                             }
-                                            .frame(width:50, height:50)
+                                            .padding()
                                             
                                         }
                                         .font(.system(size:25))
                                     }
                                 }
-                                .animation(.snappy(duration: 0.3, extraBounce: 0.3))
+                                //.animation(.snappy(duration: 0.3))
                             }
                             
                             
@@ -320,12 +328,14 @@ struct Homepage: View {
                 }
                 
                 
-            }
+            } 
             .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.8, blendDuration: 1.0))
             
         }
         .onAppear {
-            currentTab = "Basic List"
+            if currentTab == "+erder" {
+                currentTab = "Basic List"
+            }
             
             retrieveBigDic = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? [:]
             retrieveDueDic = UserDefaults.standard.dictionary(forKey: "DueDicKey") as? [String : [Date]] ?? [:]
