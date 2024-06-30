@@ -18,6 +18,8 @@ Sure! Here's the complete README with the additional example at the end:
 
 * **Shows the most urgent assignments in the list chosen! (3 most urgent)**
 * **Shows your current stopwatch and Pomo for easy viewing**
+> [!NOTE]
+> 🔔 *Will send notifications/alarms to you, alerting you when assignemnts are due in less than one day/hour or for pomo/break change*
 
 ### [⏲️ Pomo Timer](PomoTimer.swift)
 <hr>
