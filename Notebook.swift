@@ -234,6 +234,9 @@ struct Notebook: View {
                                         } else {
                                             boxesFilled = true
                                         }
+                                        subject = ""
+                                        name = ""
+                                        description = ""
                                     }
                                 }
                                 
@@ -277,7 +280,7 @@ struct Notebook: View {
                                 Spacer()
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 15)
-                                        .foregroundColor(.black) // Adjust color as needed
+                                        .foregroundColor(.black) 
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 15)
                                                 .stroke(.gray, lineWidth: 2)
@@ -378,40 +381,40 @@ struct Notebook: View {
                                                     .frame(maxWidth: screenWidth / 5)
                                                 
                                                 VStack {
-                                                    TextField("\(infoArray[index])", text: $infoArray[index])
+                                                        TextField("\(infoArray[index])", text: $infoArray[index])
                                                         .textFieldStyle(.automatic)
                                                         .fixedSize()
                                                         .foregroundStyle(Color(hex: descriptionColor))
-                                                        .onChange(of: infoArray) {
-                                                            bigDic[currentTab]!["description"] = infoArray
-                                                            UserDefaults.standard.set(bigDic, forKey: "DicKey")
-                                                        }
-                                                    
+                                                            .onChange(of: infoArray) {
+                                                                bigDic[currentTab]!["description"] = infoArray
+                                                                UserDefaults.standard.set(bigDic, forKey: "DicKey")
+                                                            }
+                                                   
+
                                                     Divider()
                                                         .offset(x: 100)
                                                     
-                                                        HStack {
-                                                            
-                                                            Text("Due: ")
-                                                                .offset(x: 100)
-                                                            
-                                                            DatePicker(
-                                                                "",
-                                                                selection: $dueDates[index],
-                                                                displayedComponents: [.hourAndMinute, .date]
-                                                                
-                                                            )
-                                                            .offset(x: (-1 * (screenWidth/2.35)))
-                                                            .onChange(of: dueDates) {
-                                                                dueDic[currentTab]! = dueDates
-                                                                UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
-                                                            }
-                                                            .datePickerStyle(.compact)
-                                                            
-                                                            
-                                                            Text("Created: \(dates[index])")
-                                                        }
                                                     
+                                                    HStack {
+                                                        Text("Due: ")
+                                                            .offset(x: 100)
+                                                        
+                                                        DatePicker(
+                                                            "",
+                                                            selection: $dueDates[index],
+                                                            displayedComponents: [.hourAndMinute, .date]
+                                                            
+                                                        )
+                                                        .offset(x: (-1 * (screenWidth/2.4)))
+                                                        .onChange(of: dueDates) {
+                                                            dueDic[currentTab]! = dueDates
+                                                            UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
+                                                        }
+                                                        .datePickerStyle(.compact)
+                                                        
+                                                        
+                                                        Text("Created: \(dates[index])")
+                                                    }
                                                 }
                                             }
                                             
@@ -516,7 +519,7 @@ struct Notebook: View {
         }
         .onAppear {
             
-            currentTab = "Basic List"
+         //   currentTab = "Basic List"
             
             retrieveBigDic = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? [:]
             
