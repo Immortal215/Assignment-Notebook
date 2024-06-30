@@ -45,7 +45,7 @@ struct Homepage: View {
     @State var selectDelete: [Bool] = []
     @State var assignmentAnimation = false
     @State var notificationer = false
-    @State var foregroundStyle = .green
+    @State var foregroundStyle = Color.green
     
     
     
@@ -240,9 +240,20 @@ struct Homepage: View {
                                         .foregroundStyle(foregroundStyler(dueDate: dueDates[index], assignment: names[index]))
                                         .onAppear {
                                             Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-                                               foregroundStyle = foregroundStyler(dueDate: dueDates[index], assignment: names[index])
+                                                if dueDates.count < index {
+                                                    foregroundStyle = foregroundStyler(dueDate: dueDates[index], assignment: names[index] )
+                                                }
                                             }
                                            styleNotification(dueDate: dueDates[index], assignment: names[index])
+                                        }
+                                        .onChange(of: names) {
+                                    
+                                            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+                                                if dueDates.count < index {
+                                                    foregroundStyle = foregroundStyler(dueDate: dueDates[index], assignment: names[index] )
+                                                }
+                                            }
+                                            styleNotification(dueDate: dueDates[index], assignment: names[index])
                                         }
                                         .offset(x: 25)
                                         .frame(width: screenWidth/2)
