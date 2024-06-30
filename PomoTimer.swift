@@ -46,14 +46,15 @@ struct Pomo: View {
             if progressTimePomo > 0 {
                 progressTimePomo -= 1
             } else if progressTimePomo == 0 {
-                if breakText == false {
-                    breakText = true
-                    progressTimePomo = breakTime
-                    currentBreaks += 1
-                } else {
-                    breakText = false
-                    progressTimePomo = pomoTime
-                }
+                    if breakText == false {
+                        breakText = true
+                        progressTimePomo = breakTime
+                        currentBreaks += 1
+                    } else {
+                        breakText = false
+                        progressTimePomo = pomoTime
+                    }
+                
             }
         }
     }
@@ -297,13 +298,13 @@ struct Pomo: View {
             myTimerPomo?.invalidate()
         }
         .onChange(of: breakText) {
-            scheduleTimeBasedNotification(breaker: breakText)
+            scheduleTimeBasedNotification(title: "\(breakText ? "Break" : "Pomo") Time!", body: "\(breakText ? "Pomo" : "Break") Completed!", sound: UNNotificationSound(named: UNNotificationSoundName(rawValue: "myalarm.mp3")))
         }
         
     }
 }
 
-func scheduleTimeBasedNotification(breaker : Bool) {
+func scheduleTimeBasedNotification(title: String, body: String, sound: UNNotificationSound) {
     
     UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
         if granted {
@@ -311,12 +312,13 @@ func scheduleTimeBasedNotification(breaker : Bool) {
             print("Permission granted")
             
             let content = UNMutableNotificationContent()
-            content.title = "\(breaker ? "Break" : "Pomo") Time!"
-            content.body = "\(breaker ? "Pomo" : "Break") Completed!"
-            content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "myalarm.mp3"))
-         //   content.sound = UNNotificationSound.defaultCritical
+            content.title = title
+            content.body = body
+            content.sound = sound
+            // UNNotificationSound(named: UNNotificationSoundName(rawValue: "myalarm.mp3"))
+         //  UNNotificationSound.defaultCritical
             
-        
+            
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
             
             
