@@ -44,6 +44,8 @@ struct Homepage: View {
     @State var settings = false
     @State var selectDelete: [Bool] = []
     @State var assignmentAnimation = false
+    @State var notificationer = false
+    @State var foregroundStyle = .green
     
     
     
@@ -230,14 +232,18 @@ struct Homepage: View {
                                                         Text("Due : \(dueDates[index].formatted()) ")
                                                             .fixedSize()
                                                         Spacer()
-                                                        
                                                     }
                                                 }
-                                                
                                             }
                                             
                                         }
-                                        .foregroundStyle(dueDates[index] < Date().addingTimeInterval(86400) ? (dueDates[index] < Date().addingTimeInterval(3600) ? .red : .orange) : .green)
+                                        .foregroundStyle(foregroundStyler(dueDate: dueDates[index], assignment: names[index]))
+                                        .onAppear {
+                                            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+                                               foregroundStyle = foregroundStyler(dueDate: dueDates[index], assignment: names[index])
+                                            }
+                                           styleNotification(dueDate: dueDates[index], assignment: names[index])
+                                        }
                                         .offset(x: 25)
                                         .frame(width: screenWidth/2)
                                         .padding(10)
@@ -275,7 +281,7 @@ struct Homepage: View {
                                             Divider()
                                             
                                             Text("\(hours):\(minutes):\(seconds)")
-                                                
+                                            
                                         }
                                         .font(.system(size: 25))
                                         .fixedSize()
@@ -285,7 +291,7 @@ struct Homepage: View {
                                             Text("\(breakText ? "Break" : "Pomodoro") Timer")
                                                 .fixedSize()
                                                 .padding()
-                                          
+                                            
                                             
                                             ZStack {
                                                 
@@ -328,7 +334,7 @@ struct Homepage: View {
                 }
                 
                 
-            } 
+            }
             .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.8, blendDuration: 1.0))
             
         }
@@ -361,7 +367,7 @@ struct Homepage: View {
                     
                     var sortedIndices = dueDates.indices.sorted(by: { dueDates[$0] < dueDates[$1] })
                     
-                    // Rearrange all arrays based on sorted indices
+                    // rearrange all arrays based on sorted indices
                     subjects = sortedIndices.map { bigDic[currentTab]!["subjects"]![$0] }
                     names = sortedIndices.map { bigDic[currentTab]!["names"]![$0] }
                     infoArray = sortedIndices.map { bigDic[currentTab]!["description"]![$0] }
@@ -442,8 +448,9 @@ struct Homepage: View {
             }
         }
         .onChange(of: breakText) {
-            scheduleTimeBasedNotification(breaker: breakText)
+            scheduleTimeBasedNotification(title: "\(breakText ? "Break" : "Pomo") Time!", body: "\(breakText ? "Pomo" : "Break") Completed!", sound: UNNotificationSound(named: UNNotificationSoundName(rawValue: "myalarm.mp3")))
         }
+        
     }
 }
 
@@ -463,3 +470,36 @@ func resetDefaults() {
     }
 }
 
+func foregroundStyler(dueDate: Date, assignment: String) -> Color {
+    
+    if dueDate < Date().addingTimeInterval(86400) {
+        if dueDate < Date().addingTimeInterval(3600) {
+            return Color.red
+        } else {
+            return Color.orange
+        }
+    } else {
+        return Color.green
+        
+    }
+        
+    
+}
+
+func styleNotification(dueDate: Date, assignment: String) {
+    var number = 0
+
+    Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+        if dueDate < Date().addingTimeInterval(86400) {
+                if dueDate < Date().addingTimeInterval(3600) && number == 1 {
+            
+                    scheduleTimeBasedNotification(title: "\(assignment) is due in less than one hour!", body: "", sound: UNNotificationSound(named: UNNotificationSoundName(rawValue: "myalarm.mp3")))
+                    number += 1
+                    
+                } else if number == 0 {
+                        scheduleTimeBasedNotification(title: "\(assignment) is due in less than one day!", body: "", sound: UNNotificationSound.defaultCritical)
+                        number += 1
+                }
+            }
+    }
+}
