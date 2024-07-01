@@ -10,6 +10,8 @@
 > 🛠️ *Use Playgrounds or an Xcode project folder to run on your home device*
 
 ## ✨ Features 
+> [!NOTE]
+> 💾 *Data saves on the device*
 
 ### [🏠 Home Screen](Homepage.swift)
 <hr>
@@ -34,9 +36,6 @@
 * **Add assignment titles, descriptions, subjects, and change the due date if necessary. (Editable afterward as well)**
 * **Delete assignments individually or delete them all at once**
 * **MULTIPLE LISTS! You can create and edit separate planners for organization** 
-
-> [!NOTE]
-> 💾 *Data saves on the device*
 
 ### [⚙️ Settings](Settings.swift)
 <hr>
