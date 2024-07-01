@@ -1,5 +1,3 @@
-Sure! Here's the complete README with the additional example at the end:
-
 # 📱 Made using SwiftUI
 ### An app built to add structure into our lives, keeping focus at the forefront.
 
