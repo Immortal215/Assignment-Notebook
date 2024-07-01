@@ -54,45 +54,6 @@ struct Notebook: View {
     var body: some View {
         ZStack {
             
-            // useless
-//            Button {
-//                retrieveBigDic = UserDefaults.standard.dictionary(forKey: "DicKey") as? [String: [String: [String]]] ?? [:]
-//                retrieveDueDic = UserDefaults.standard.dictionary(forKey: "DueDicKey") as? [String : [Date]] ?? [:]
-//                
-//                if loadedData == false {
-//                    names = bigDic[currentTab]!["names"]!
-//                    infoArray = bigDic[currentTab]!["description"]!
-//                    subjects = bigDic[currentTab]!["subjects"]!
-//                    dates = bigDic[currentTab]!["date"]!
-//                    dueDates = dueDic[currentTab]!
-//                    
-//                    selectDelete = []
-//                    for _ in 0..<infoArray.count {
-//                        selectDelete.append(false)
-//                    }
-//                    DateFormatter().dateFormat = "M/d/yyyy, h:mm a"
-//                }
-//                
-//                if infoArray != [] {
-//                    caughtUp = false
-//                } else {
-//                    caughtUp = true
-//                }
-//                error = false
-//                loadedData = true
-//            } label: {
-//                VStack {
-//                    Image(systemName: loadedData ? "checkmark.icloud.fill" : "exclamationmark.icloud.fill")
-//                        .resizable()
-//                        .frame(width: 50, height: 37.5, alignment: .center)
-//                        .foregroundStyle(loadedData ? .green : .red)
-//                    
-//                    Text(loadedData ? "Data Loaded" : "Need to load data")
-//                        .foregroundStyle(loadedData ? .green : .red)
-//                }
-//            }
-//            .offset(x: (screenWidth/2.5), y: -(screenHeight/3))
-            
             VStack {
                 Text("Planner")
                     .font(.system(size: 75))
@@ -488,16 +449,25 @@ struct Notebook: View {
                                     if bigDic.keys.contains(createTab) {
                                         addWarning = true
                                     } else {
-                                        
-                                        bigDic["\(createTab) List"] = [
-                                            "subjects": [],
-                                            "names": [],
-                                            "description": [],
-                                            "date": []
-                                        ]
-                                        
-                                        dueDic["\(createTab) List"] = []
-                                        
+                                        if createTab.hasSuffix(" List") {
+                                            bigDic["\(createTab)"] = [
+                                                "subjects": [],
+                                                "names": [],
+                                                "description": [],
+                                                "date": []
+                                            ]
+                                            
+                                            dueDic["\(createTab)"] = []
+                                        } else {
+                                            bigDic["\(createTab) List"] = [
+                                                "subjects": [],
+                                                "names": [],
+                                                "description": [],
+                                                "date": []
+                                            ]
+                                            
+                                            dueDic["\(createTab) List"] = []
+                                        }
                                         UserDefaults.standard.set(bigDic, forKey: "DicKey")
                                         UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
                                     }
