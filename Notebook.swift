@@ -213,7 +213,7 @@ struct Notebook: View {
                     
                     Picker("",selection: $currentTab) {
                         ForEach(Array(bigDic.keys), id: \.self) { i in
-                            if i.hasSuffix(" List") {
+                            if i.lowercased().hasSuffix(" list") {
                                 Text(i).tag(i)
                             }
                         }
@@ -405,7 +405,7 @@ struct Notebook: View {
                                 
                                 Picker("Delete",selection: $deleteTabs) {
                                     ForEach(Array(bigDic.keys), id: \.self) { i in
-                                        if i.hasSuffix(" List") {
+                                        if i.lowercased().hasSuffix(" list") {
                                             Text(i).tag(i)
                                         }
                                     }
@@ -449,7 +449,8 @@ struct Notebook: View {
                                     if bigDic.keys.contains(createTab) {
                                         addWarning = true
                                     } else {
-                                        if createTab.hasSuffix(" List") {
+                                        if createTab.lowercased().hasSuffix(" list") {
+                            
                                             bigDic["\(createTab)"] = [
                                                 "subjects": [],
                                                 "names": [],
@@ -458,7 +459,12 @@ struct Notebook: View {
                                             ]
                                             
                                             dueDic["\(createTab)"] = []
+                                            
+                                            UserDefaults.standard.set(bigDic, forKey: "DicKey")
+                                            UserDefaults.standard.set(dueDic, forKey: "DueDicKey")
+                                            
                                         } else {
+                                            
                                             bigDic["\(createTab) List"] = [
                                                 "subjects": [],
                                                 "names": [],
