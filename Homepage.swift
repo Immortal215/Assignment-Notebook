@@ -114,7 +114,7 @@ struct Homepage: View {
                         
                         Picker("",selection: $currentTab) {
                             ForEach(Array(bigDic.keys), id: \.self) { i in
-                                if i.hasSuffix(" List") {
+                                if i.lowercased().hasSuffix(" list") {
                                     Text(i).tag(i)
                                 }
                             }
@@ -238,15 +238,16 @@ struct Homepage: View {
                                             
                                         }
                                         .foregroundStyle(foregroundStyler(dueDate: dueDates[index], assignment: names[index]))
-                                        .onAppear {
-                                            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-                                                if dueDates.count < index {
-                                                    foregroundStyle = foregroundStyler(dueDate: dueDates[index], assignment: names[index] )
-                                                }
-                                            }
-                                           styleNotification(dueDate: dueDates[index], assignment: names[index])
-                                        }
-                                        .onChange(of: names) {
+                                        // try without
+//                                        .onAppear {
+//                                            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+//                                                if dueDates.count < index {
+//                                                    foregroundStyle = foregroundStyler(dueDate: dueDates[index], assignment: names[index] )
+//                                                }
+//                                            }
+//                                           styleNotification(dueDate: dueDates[index], assignment: names[index])
+//                                        }
+                                        .onChange(of: dueDates[index]) {
                                     
                                             Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
                                                 if dueDates.count < index {
@@ -505,7 +506,11 @@ func styleNotification(dueDate: Date, assignment: String) {
                 if dueDate < Date().addingTimeInterval(3600) && number == 1 {
             
                     scheduleTimeBasedNotification(title: "\(assignment) is due in less than one hour!", body: "", sound: UNNotificationSound(named: UNNotificationSoundName(rawValue: "myalarm.mp3")))
-                    number += 1
+                          number += 1
+                    if dueDate == Date() && number == 2{
+                        scheduleTimeBasedNotification(title: "\(assignment) is due now!", body: "", sound: UNNotificationSound(named: UNNotificationSoundName(rawValue: "myalarm.mp3")))
+                        number += 1
+                    }
                     
                 } else if number == 0 {
                         scheduleTimeBasedNotification(title: "\(assignment) is due in less than one day!", body: "", sound: UNNotificationSound.defaultCritical)
@@ -514,3 +519,4 @@ func styleNotification(dueDate: Date, assignment: String) {
             }
     }
 }
+
